@@ -1,5 +1,5 @@
 .App {
-  display:flex;
+  display: flex;
 }
 
 .App-logo {
@@ -26,4 +26,7 @@
 
 .App-link {
   color: #61dafb;
+}
+.countryOutline {
+  opacity: 0.8;
 }
