@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/neander/IVIS_Project/static/css/main.2025c15b.css",
-    "main.js": "/neander/IVIS_Project/static/js/main.1b44bffa.js",
-    "static/js/787.70e14c31.chunk.js": "/neander/IVIS_Project/static/js/787.70e14c31.chunk.js",
-    "index.html": "/neander/IVIS_Project/index.html",
-    "main.2025c15b.css.map": "/neander/IVIS_Project/static/css/main.2025c15b.css.map",
-    "main.1b44bffa.js.map": "/neander/IVIS_Project/static/js/main.1b44bffa.js.map",
-    "787.70e14c31.chunk.js.map": "/neander/IVIS_Project/static/js/787.70e14c31.chunk.js.map"
+    "main.css": "/pages/neander/IVIS_Project/static/css/main.2025c15b.css",
+    "main.js": "/pages/neander/IVIS_Project/static/js/main.6c67b44f.js",
+    "static/js/787.70e14c31.chunk.js": "/pages/neander/IVIS_Project/static/js/787.70e14c31.chunk.js",
+    "index.html": "/pages/neander/IVIS_Project/index.html",
+    "main.2025c15b.css.map": "/pages/neander/IVIS_Project/static/css/main.2025c15b.css.map",
+    "main.6c67b44f.js.map": "/pages/neander/IVIS_Project/static/js/main.6c67b44f.js.map",
+    "787.70e14c31.chunk.js.map": "/pages/neander/IVIS_Project/static/js/787.70e14c31.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2025c15b.css",
-    "static/js/main.1b44bffa.js"
+    "static/js/main.6c67b44f.js"
   ]
 }

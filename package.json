@@ -2,7 +2,7 @@
   "name": "atlas_migration",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://gits-15.sys.kth.se/neander/IVIS_Project",
+  "homepage": " https://gits-15.sys.kth.se/pages/neander/IVIS_Project/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
