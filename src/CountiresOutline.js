@@ -7,6 +7,7 @@ export const CountriesOutline = ({ data }) => (
   <g className="countries">
     {data.features.map((feature) => (
       <svg title={feature.properties.name} key={feature.properties.name}>
+        <title>{feature.properties.name}</title>
         <path
           className="countryOutline"
           onClick={() => console.log(feature.properties.name)}
@@ -19,7 +20,6 @@ export const CountriesOutline = ({ data }) => (
   </g>
 );
 let mouseOver = function (event) {
-  console.log(this);
   d3.selectAll(".countryOutline")
     .transition()
     .duration(200)
