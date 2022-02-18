@@ -40,9 +40,10 @@ function WorldMap() {
         [width, height],
       ])
       .translateExtent([
-        [-Infinity, -Infinity],
-        [Infinity, Infinity],
+        [-Infinity, 0],
+        [Infinity, height],
       ])
+
       .on("zoom", (event) => {
         zoomed(event);
       });
