@@ -20,7 +20,7 @@ function NavBar() {
   return (
     /* use svg element */
       <div className = "nav">
-        <h1>This could be a Navbar {stat}</h1>
+        <h1>About</h1>
       </div>
   );
 }
