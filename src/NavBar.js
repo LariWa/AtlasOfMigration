@@ -20,9 +20,7 @@ function NavBar() {
   return (
     /* use svg element */
       <div className = "nav">
-        <button> click!  </button>
-        <h1>This could be a Navbar {stat}</h1>{" "}
-        <p>And some text but not in a paragraph </p>{" "}
+        <h1>This could be a Navbar {stat}</h1>
       </div>
   );
 }

@@ -1,7 +1,12 @@
-.App {
-  display: flex;
+
+/* Temp CSS ------------------------------------------ */
+
+.container {
+  display: grid;
 }
 
+
+/*  START old react stuff ----------------------------------------------------- */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -27,6 +32,10 @@
 .App-link {
   color: #61dafb;
 }
+
+/* END Old react stuff ----------------------------------------------------- */
+
+
 .countryOutline {
   opacity: 0.8;
 }
