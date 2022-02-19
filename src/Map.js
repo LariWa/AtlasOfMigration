@@ -9,7 +9,7 @@ function Map() {
 
  let stat = 2;
 
- /*  use LayoutEffect() for updating d3 components? */
+ /*  use LayoutEffect() for updating d3 components?  this is a test*/
   useEffect(() => {
     //d3.select("body").style("background-color", "green");
     d3.selectAll(".map").style("color", "red");

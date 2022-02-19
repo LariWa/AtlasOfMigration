@@ -9,10 +9,10 @@ import WorldMap from "./WorldMap";
 function App() {
   return (
     <div>
-      <NavBar />
+      {/* <NavBar /> */}
       <WorldMap />
-      <Map />
-      <Test />
+      {/* <Map />
+      <Test /> */}
     </div>
   );
 }
