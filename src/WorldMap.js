@@ -1,17 +1,20 @@
 import { useMapData } from "./useMapData";
 import * as d3module from "d3";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import useWindowDimensions from "./useWindowDimensions";
 import d3tip from "d3-tip";
 const d3 = {
   ...d3module,
   tip: d3tip,
 };
-function WorldMap() {
+function WorldMap(props) {
   const { height, width } = useWindowDimensions();
   const mapContainerRef = useRef();
   const svgRef = useRef();
   const data = useMapData();
+  /* data for total migration for each country. Saved as [{Country:value}]*/
+  const [yearData, setYearData] = useState(null);
+
   var selectedCountry;
 
   useEffect(() => {
@@ -19,6 +22,19 @@ function WorldMap() {
 
     const projection = d3.geoEquirectangular().fitSize([width, height], data); //TODO descide on projection
     const svg = d3.select(svgRef.current);
+
+
+    /*  Get total mig data from model for props.model.year.
+     Year can be set to test and get different years from 1980-2010 */
+    //props.model.setYear('2000_2005');
+    //props.model.year = ('2000_2005');
+    props.model.getData()
+      .then(res => {
+        setYearData(res)
+        console.log(res)
+      });
+
+
 
     //tooltip-----------------------------------------------------------
     var tip = d3
@@ -85,7 +101,12 @@ function WorldMap() {
         .attr("d", (feature) => path(feature));
     }
   }, [data]);
-  if (!data) {
+
+  /*   just added a conditional render to test yearData*/
+  if (!data && yearData != null) {
+    /* so this is the structure now for each country but can be rearranged */
+      console.log(yearData[0].Armenia);
+      console.log(yearData[0].Panama);
     return <pre>Loading...</pre>;
   }
   return (
