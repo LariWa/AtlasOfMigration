@@ -102,15 +102,14 @@ function WorldMap(props) {
     }
   }, [data]);
 
-  /*   just added a conditional render to test yearData*/
-  if (!data && yearData != null) {
-    /* so this is the structure now for each country but can be rearranged */
-      console.log(yearData[0].Armenia);
-      console.log(yearData[0].Panama);
+  /* so this is the structure now for each country but can be rearranged */
+  if (!data) {
     return <pre>Loading...</pre>;
   }
   return (
     <div ref={mapContainerRef}>
+        {yearData && console.log(yearData[0].Armenia)}
+        {yearData && console.log(yearData[0].Panama)}
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
