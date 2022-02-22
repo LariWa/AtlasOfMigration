@@ -12,9 +12,14 @@ function WorldMap(props) {
   const mapContainerRef = useRef();
   const svgRef = useRef();
   const data = useMapData();
+  const min = -30;
+  const max = 30; //TODO adapt to data
+  const colorScale = d3
+    .scaleLinear()
+    .domain([min, 0, max])
+    .range(["red", "white", "blue"]);
   /* data for total migration for each country. Saved as [{Country:value}]*/
   const [yearData, setYearData] = useState(null);
-
   var selectedCountry;
 
   useEffect(() => {
@@ -23,18 +28,14 @@ function WorldMap(props) {
     const projection = d3.geoEquirectangular().fitSize([width, height], data); //TODO descide on projection
     const svg = d3.select(svgRef.current);
 
-
     /*  Get total mig data from model for props.model.year.
      Year can be set to test and get different years from 1980-2010 */
     //props.model.setYear('2000_2005');
     //props.model.year = ('2000_2005');
-    props.model.getData()
-      .then(res => {
-        setYearData(res)
-        console.log(res)
-      });
-
-
+    props.model.getData().then((res) => {
+      setYearData(res);
+      console.log(res);
+    });
 
     //tooltip-----------------------------------------------------------
     var tip = d3
@@ -77,6 +78,7 @@ function WorldMap(props) {
     }
     mapContainer.call(zoom);
     //------------------------------------------------------------------------------
+
     var path = d3.geoPath(projection);
     if (data) {
       svg
@@ -84,7 +86,7 @@ function WorldMap(props) {
         .data(data.features)
         .join("path")
         .attr("id", (feature) => feature.properties.name)
-
+        .attr("fill", (feature) => getColor(feature.properties.name))
         .on("click", (event) => {
           clickedACB(event);
         })
@@ -105,8 +107,8 @@ function WorldMap(props) {
   /*   just added a conditional render to test yearData*/
   if (!data && yearData != null) {
     /* so this is the structure now for each country but can be rearranged */
-      console.log(yearData[0].Armenia);
-      console.log(yearData[0].Panama);
+    console.log(yearData[0].Armenia);
+    console.log(yearData[0].Panama);
     return <pre>Loading...</pre>;
   }
   return (
@@ -116,9 +118,9 @@ function WorldMap(props) {
   );
   function clickedACB(event) {
     //TODO topography
-    if (selectedCountry) selectedCountry.style.fill = "black";
+    if (selectedCountry) selectedCountry.style.fill = getColor(event.target.id);
     selectedCountry = event.target;
-    event.target.style.fill = "red";
+    event.target.style.fill = "green";
   }
   function mouseOverACB(event) {
     d3.selectAll(".country").transition().duration(200).style("opacity", 0.5);
@@ -127,6 +129,11 @@ function WorldMap(props) {
   function mouseLeaveACB(event) {
     d3.selectAll(".country").transition().duration(200).style("opacity", 1);
     d3.select(this).transition().duration(200).style("stroke", "transparent");
+  }
+  function getColor(country) {
+    //TODO get real data
+    console.log(country);
+    return colorScale(Math.random() * (max - min) + min);
   }
 }
 
