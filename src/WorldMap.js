@@ -12,8 +12,8 @@ function WorldMap(props) {
   const mapContainerRef = useRef();
   const svgRef = useRef();
   const data = useMapData();
-  const min = -30;
-  const max = 30; //TODO adapt to data
+  const min = -20;
+  const max = 20; //TODO adapt to data
   const colorScale = d3
     .scaleLinear()
     .domain([min, 0, max])
@@ -42,7 +42,7 @@ function WorldMap(props) {
       .tip()
       .attr("class", "d3-tip")
       .html(function (event) {
-        return event.target.id;
+        return event.target.getAttribute("name");
       });
     const mapContainer = d3.select(mapContainerRef.current);
     svg.call(tip);
@@ -85,8 +85,11 @@ function WorldMap(props) {
         .selectAll(".country")
         .data(data.features)
         .join("path")
-        .attr("id", (feature) => feature.properties.name)
+        .attr("id", (feature) => feature.id)
+        .attr("name", (feature)=>feature.properties.name)
         .attr("fill", (feature) => getColor(feature.properties.name))
+                .style("stroke","lightgrey")
+
         .on("click", (event) => {
           clickedACB(event);
         })
@@ -118,7 +121,7 @@ function WorldMap(props) {
   );
   function clickedACB(event) {
     //TODO topography
-    if (selectedCountry) selectedCountry.style.fill = getColor(event.target.id);
+    if (selectedCountry) selectedCountry.style.fill = getColor(event.target.getAttribute("name"));
     selectedCountry = event.target;
     event.target.style.fill = "green";
   }
@@ -132,8 +135,9 @@ function WorldMap(props) {
   }
   function getColor(country) {
     //TODO get real data
-    console.log(country);
-    return colorScale(Math.random() * (max - min) + min);
+    console.log(country)
+    console.log(yearData[0][country]);
+    return colorScale(yearData[0][country]);
   }
 }
 
