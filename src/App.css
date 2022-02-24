@@ -2,8 +2,11 @@
 /* Temp CSS ------------------------------------------ */
 
 .container {
-  display: grid;
+  display: flex;
+  flex-direction: row;
 }
+
+
 
 
 /*  START old react stuff ----------------------------------------------------- */

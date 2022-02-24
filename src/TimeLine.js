@@ -1,22 +1,27 @@
 import React, {useEffect} from "react";
 import * as d3 from "d3";
+import "./App.css";
+
 /* https://github.com/vasturiano/timelines-chart */
 import TimelinesChart from 'timelines-chart';
-import "./App.css";
+
+
 
 /* just some test to see that d3 works*/
 function TimeLine() {
 
-/* could use one of these ready made component
 
- const myChart = TimelinesChart();
- myChart.data([])
-   (document.getElementById('timeLine'));
-  */
+ const myChart = new TimelinesChart();
+
+
+ // myChart.data([12,34,45,56])
+ //   (document.getElementById('timeLine'));
+
 
  /*  use LayoutEffect() for updating d3 components? */
   useEffect(() => {
     d3.select(".test").style("background-color", "green");
+
   }, []);
 
   const onMouseClick = () => {
@@ -28,6 +33,7 @@ function TimeLine() {
   return (
     /* use svg element */
       <div className = "test" id = "timeLine" >
+      Timeline
       </div>
   );
 }
