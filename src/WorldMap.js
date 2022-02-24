@@ -20,12 +20,14 @@ function WorldMap(props) {
     .range(["red", "white", "blue"]);
   /* data for total migration for each country. Saved as [{Country:value}]*/
   const [yearData, setYearData] = useState(null);
-  var selectedCountry;
-
+  const [selectedCountry, setSelectedCountry] = useState(null);
   useEffect(() => {
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
-    const projection = d3.geoEquirectangular().fitSize([width, height], data); //TODO descide on projection
+    const projection = d3
+      .geoEquirectangular()
+      .fitSize([width, height], selectedCountry || data)
+      .precision(50); //TODO descide on projection
     const svg = d3.select(svgRef.current);
 
     /*  Get total mig data from model for props.model.year.
@@ -34,7 +36,7 @@ function WorldMap(props) {
     //props.model.year = ('2000_2005');
     props.model.getData().then((res) => {
       setYearData(res);
-      console.log(res);
+      // console.log(res);
     });
 
     //tooltip-----------------------------------------------------------
@@ -80,19 +82,23 @@ function WorldMap(props) {
     //------------------------------------------------------------------------------
 
     var path = d3.geoPath(projection);
+
     if (data) {
       svg
         .selectAll(".country")
         .data(data.features)
         .join("path")
         .attr("id", (feature) => feature.id)
-        .attr("name", (feature)=>feature.properties.name)
-        .attr("fill", (feature) => getColor(feature.properties.name))
-                .style("stroke","lightgrey")
+        .attr("name", (feature) => feature.properties.name)
+        .style("stroke", "lightgrey")
 
-        .on("click", (event) => {
+        .on("click", (event, feature) => {
+          tip.hide(event);
+
           clickedACB(event);
+          setSelectedCountry(selectedCountry === feature ? null : feature);
         })
+
         .on("mouseover", function (d) {
           tip.show(d, this);
           mouseOverACB(d);
@@ -101,11 +107,13 @@ function WorldMap(props) {
           tip.hide(event);
           mouseLeaveACB(event);
         })
-        .attr("class", "country")
         .transition()
+        .attr("fill", (feature) => getColor(feature.properties.name))
+
+        .attr("class", "country")
         .attr("d", (feature) => path(feature));
     }
-  }, [data]);
+  }, [data, selectedCountry]);
 
   /*   just added a conditional render to test yearData*/
   if (!data && yearData != null) {
@@ -121,8 +129,11 @@ function WorldMap(props) {
   );
   function clickedACB(event) {
     //TODO topography
-    if (selectedCountry) selectedCountry.style.fill = getColor(event.target.getAttribute("name"));
-    selectedCountry = event.target;
+    if (selectedCountry) {
+      var prevCountry = document.getElementById(selectedCountry.id);
+      prevCountry.style.fill = getColor(selectedCountry.properties.name);
+    }
+    // setSelectedCountry(event.target);
     event.target.style.fill = "green";
   }
   function mouseOverACB(event) {
@@ -135,8 +146,8 @@ function WorldMap(props) {
   }
   function getColor(country) {
     //TODO get real data
-    console.log(country)
-    console.log(yearData[0][country]);
+    // console.log(country);
+    // console.log(yearData[0][country]);
     return colorScale(yearData[0][country]);
   }
 }
