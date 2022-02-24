@@ -30,7 +30,6 @@ class DataModel {
    })
     .then(res => res.json())
     .then(resData => {
-      //console.log("fetch res: "+ resData);
       return resData;
     })
     .catch(_ => console.log(_))

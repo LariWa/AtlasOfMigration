@@ -30,7 +30,7 @@ function SideBar() {
         <h2>Explanation</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque et enim blandit, ultricies sem at, auctor nisl. Nunc eget lorem quis nunc auctor posuere. Sed enim nisi, luctus eu laoreet eu, condimentum non erat. Etiam venenatis erat vel tempor tincidunt. Aliquam mattis, purus eget venenatis ornare, felis nisi placerat lorem, a viverra justo nisl eu urna.</p>
 
-        <div class="filter">
+        <div className="filter">
           <button>Show Immigration</button>
           <button>Show Net Migration</button>
           <button>Show Emigration</button>

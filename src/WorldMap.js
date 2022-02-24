@@ -36,7 +36,7 @@ function WorldMap(props) {
     //props.model.year = ('2000_2005');
     props.model.getData().then((res) => {
       setYearData(res);
-      // console.log(res);
+      console.log(res);
     });
 
     //tooltip-----------------------------------------------------------
@@ -83,7 +83,8 @@ function WorldMap(props) {
 
     var path = d3.geoPath(projection);
 
-    if (data) {
+    /* check so both data and yearData are not null */
+    if (data && yearData) {
       svg
         .selectAll(".country")
         .data(data.features)
@@ -115,15 +116,13 @@ function WorldMap(props) {
     }
   }, [data, selectedCountry]);
 
-  /*   just added a conditional render to test yearData*/
-  if (!data && yearData != null) {
-    /* so this is the structure now for each country but can be rearranged */
-    console.log(yearData[0].Armenia);
-    console.log(yearData[0].Panama);
+  if (!data) {
     return <pre>Loading...</pre>;
   }
   return (
     <div ref={mapContainerRef}>
+    {yearData && console.log(yearData[0]['Armenia'])}
+    {yearData && console.log(yearData[0].Panama)}
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
@@ -146,8 +145,8 @@ function WorldMap(props) {
   }
   function getColor(country) {
     //TODO get real data
-    // console.log(country);
-    // console.log(yearData[0][country]);
+    //console.log(country);
+    //console.log(yearData[0][country]);
     return colorScale(yearData[0][country]);
   }
 }
