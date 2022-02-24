@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/pages/neander/IVIS_Project/static/css/main.415cf5fe.css",
-    "main.js": "/pages/neander/IVIS_Project/static/js/main.1a2a1790.js",
+    "main.css": "/pages/neander/IVIS_Project/static/css/main.dde8423d.css",
+    "main.js": "/pages/neander/IVIS_Project/static/js/main.ea4c1f96.js",
     "static/js/787.70e14c31.chunk.js": "/pages/neander/IVIS_Project/static/js/787.70e14c31.chunk.js",
     "index.html": "/pages/neander/IVIS_Project/index.html",
-    "main.415cf5fe.css.map": "/pages/neander/IVIS_Project/static/css/main.415cf5fe.css.map",
-    "main.1a2a1790.js.map": "/pages/neander/IVIS_Project/static/js/main.1a2a1790.js.map",
+    "main.dde8423d.css.map": "/pages/neander/IVIS_Project/static/css/main.dde8423d.css.map",
+    "main.ea4c1f96.js.map": "/pages/neander/IVIS_Project/static/js/main.ea4c1f96.js.map",
     "787.70e14c31.chunk.js.map": "/pages/neander/IVIS_Project/static/js/787.70e14c31.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.415cf5fe.css",
-    "static/js/main.1a2a1790.js"
+    "static/css/main.dde8423d.css",
+    "static/js/main.ea4c1f96.js"
   ]
 }
