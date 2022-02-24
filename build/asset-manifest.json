@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/pages/neander/IVIS_Project/static/css/main.415cf5fe.css",
-    "main.js": "/pages/neander/IVIS_Project/static/js/main.7a8660cd.js",
+    "main.js": "/pages/neander/IVIS_Project/static/js/main.1a2a1790.js",
     "static/js/787.70e14c31.chunk.js": "/pages/neander/IVIS_Project/static/js/787.70e14c31.chunk.js",
     "index.html": "/pages/neander/IVIS_Project/index.html",
     "main.415cf5fe.css.map": "/pages/neander/IVIS_Project/static/css/main.415cf5fe.css.map",
-    "main.7a8660cd.js.map": "/pages/neander/IVIS_Project/static/js/main.7a8660cd.js.map",
+    "main.1a2a1790.js.map": "/pages/neander/IVIS_Project/static/js/main.1a2a1790.js.map",
     "787.70e14c31.chunk.js.map": "/pages/neander/IVIS_Project/static/js/787.70e14c31.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.415cf5fe.css",
-    "static/js/main.7a8660cd.js"
+    "static/js/main.1a2a1790.js"
   ]
 }
