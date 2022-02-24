@@ -1,6 +1,6 @@
 import React from "react";
 import * as d3 from "d3";
-import NavBar from "./NavBar";
+import SideBar from "./SideBar";
 import TimeLine from "./TimeLine";
 import "./App.css";
 import WorldMap from "./WorldMap";
@@ -14,7 +14,7 @@ const dataModel = new DataModel()
 function App() {
   return (
     <div className = 'container'>
-      <NavBar />
+      <SideBar />
       <WorldMap model = {dataModel}/>
       <TimeLine model = {dataModel} />
     </div>
