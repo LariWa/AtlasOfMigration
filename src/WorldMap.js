@@ -31,10 +31,10 @@ function WorldMap(props) {
     props.model.getData()
       .then(res => {
         setYearData(res)
-        //console.log(res)
+        console.log(props.model.yearData)
       });
 
-      
+
 
 
     //tooltip-----------------------------------------------------------
