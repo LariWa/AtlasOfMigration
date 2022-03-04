@@ -6,12 +6,28 @@ class DataModel {
     this.getMigrationData().then((res) => {
       this.migrationData = res;
       //this.data = null;
+      this.imigrationData = this.getImmigrationData();
+      this.emigrationData = this.getEmigrationData();
+      //total imigration in 1990 900 is ID for World
+      console.log(this.getImigrationValue(900, 1990));
     });
   }
   getMigrationValue(origin, destination, year) {
     if (this.migrationData)
       return this.migrationData.filter(function findValue(data) {
         return data.DestinationID == destination && data.OriginID == origin;
+      })[0][year];
+  }
+  getImigrationValue(destination, year) {
+    if (this.imigrationData)
+      return this.imigrationData.filter(function findValue(data) {
+        return data.DestinationID == destination;
+      })[0][year];
+  }
+  getEmigrationValue(origin, year) {
+    if (this.emigrationData)
+      return this.emigrationData.filter(function findValue(data) {
+        return data.OriginID == origin;
       })[0][year];
   }
   setYear(x) {
@@ -54,6 +70,16 @@ class DataModel {
         return resData;
       })
       .catch((_) => console.log(_));
+  }
+  getImmigrationData() {
+    return this.migrationData.filter(function findValue(data) {
+      return data.OriginID == 900; //people coming from the whole world --> total number of immigrants
+    });
+  }
+  getEmigrationData() {
+    return this.migrationData.filter(function findValue(data) {
+      return data.DestinationID == 900; //people leaving from the whole world --> total number of emigrants
+    });
   }
 }
 export default DataModel;
