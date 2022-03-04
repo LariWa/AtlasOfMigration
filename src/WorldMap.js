@@ -17,10 +17,6 @@ function WorldMap(props) {
   const data = useMapData();
   const min = -20;
   const max = 20; //TODO adapt to data
-  const colorScale = d3
-    .scaleLinear()
-    .domain([min, 0, max])
-    .range(["red", "white", "blue"]);
 
   const colorScales = [
     //immigration
@@ -30,8 +26,9 @@ function WorldMap(props) {
     //netmigration
     d3.scaleLinear().domain([0.0, 1.0, 2.0]).range(["red", "white", "blue"]),
   ];
-
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [arrows, setArrows] = useState(null);
+
   useEffect(() => {
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
@@ -127,39 +124,15 @@ function WorldMap(props) {
       var sweden = 752;
       var thailand = 764;
       var germany = 276;
-      if (countryCenters) {
-        var link = [
-          {
-            type: "LineString",
-            coordinates: [
-              [
-                countryCenters[sweden].longitude,
-                countryCenters[sweden].latitude,
-              ],
-              [
-                countryCenters[thailand].longitude,
-                countryCenters[thailand].latitude,
-              ],
-            ],
-          },
-          {
-            type: "LineString",
-            coordinates: [
-              [
-                countryCenters[sweden].longitude,
-                countryCenters[sweden].latitude,
-              ],
-              [
-                countryCenters[germany].longitude,
-                countryCenters[germany].latitude,
-              ],
-            ],
-          },
-        ];
+      console.log(arrows);
 
+      if (countryCenters && arrows && selectedCountry) {
+        console.log("draw arrows");
+        console.log(arrows);
+        svg.selectAll("myPath").remove();
         svg
           .selectAll("myPath")
-          .data(link)
+          .data(arrows)
           .enter()
           .append("path")
           .attr("d", function (d) {
@@ -187,6 +160,30 @@ function WorldMap(props) {
       prevCountry.style.fill = getColor(selectedCountry.id);
     }
     event.target.style.fill = "green";
+    console.log(props.model.getImmigrantionCountries(752));
+    createArrows(event.target.id);
+  }
+  function createArrows(countryId) {
+    var val = props.model.getImmigrantionCountries(countryId);
+
+    setArrows(
+      val.map((item) => {
+        return {
+          type: "LineString",
+          coordinates: [
+            [
+              countryCenters[countryId].longitude,
+              countryCenters[countryId].latitude,
+            ],
+            [
+              countryCenters[item.originId].longitude,
+              countryCenters[item.originId].latitude,
+            ],
+          ],
+        };
+      })
+    );
+    console.log(arrows);
   }
   function mouseOverACB(event) {
     d3.selectAll(".country").transition().duration(200).style("opacity", 0.5);

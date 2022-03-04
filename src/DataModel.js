@@ -1,6 +1,7 @@
 /* handles state (year, country) of the app and fetches data from database  */
 class DataModel {
   constructor(year = 2020, country = null) {
+    this.numberOfArrows = 5;
     this.year = year;
     this.country = country;
     this.getMigrationData().then((res) => {
@@ -10,6 +11,9 @@ class DataModel {
       this.emigrationData = this.getEmigrationData();
       //total imigration in 1990 900 is ID for World
       //  console.log(this.getImigrationValue(900, 1990));
+    });
+    this.getCountryNameAndId().then((res) => {
+      this.countryNameAndId = res;
     });
   }
   getMigrationValue(origin, destination, year) {
@@ -28,6 +32,30 @@ class DataModel {
         return parseInt(value[0][year].split(" ").join(""));
       }
     }
+  }
+  getImmigrantionCountries(countryId) {
+    var component = this;
+    var imiCountries = this.migrationData.filter(function findValue(data) {
+      return data.DestinationID == countryId && isCountry(data.OriginID);
+    });
+    function isCountry(countryId) {
+      var validCountries = component.countryNameAndId.filter(
+        (item) => item.id == countryId
+      );
+      if (validCountries.length > 0) {
+        return true;
+      }
+    }
+    imiCountries = imiCountries.map(function getYearData(entry) {
+      return {
+        origin: entry.OriginName,
+        originId: entry.OriginID,
+        value: parseInt(entry[component.year].split(" ").join("")),
+      };
+    });
+    return imiCountries
+      .sort(this.sortBy("value"))
+      .slice(0, this.numberOfArrows);
   }
   getNetRatioMigrationValue(country, year) {
     //TODO decide on ratio or substract
@@ -90,6 +118,20 @@ class DataModel {
       })
       .catch((_) => console.log(_));
   }
+  getCountryNameAndId() {
+    /* fetch data for country x */
+    return fetch(`./data/CountryNameId.json`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((resData) => {
+        return resData;
+      })
+      .catch((_) => console.log(_));
+  }
   getImmigrationData() {
     return this.migrationData.filter(function findValue(data) {
       return data.OriginID == 900; //people coming from the whole world --> total number of immigrants
@@ -99,6 +141,17 @@ class DataModel {
     return this.migrationData.filter(function findValue(data) {
       return data.DestinationID == 900; //people leaving from the whole world --> total number of emigrants
     });
+  }
+  sortBy(prop) {
+    //descending
+    return function (a, b) {
+      if (a[prop] > b[prop]) {
+        return -1;
+      } else if (a[prop] < b[prop]) {
+        return 1;
+      }
+      return 0;
+    };
   }
 }
 export default DataModel;
