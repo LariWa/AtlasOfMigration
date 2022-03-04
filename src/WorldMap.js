@@ -8,8 +8,9 @@ const d3 = {
   tip: d3tip,
 };
 function WorldMap(props) {
-  var migrationData;
   const [countryCenters, setCenters] = useState(null);
+  const [view, setView] = useState(1); //immigration = 0, emmigration 1, net migration=2
+
   const { height, width } = useWindowDimensions();
   const mapContainerRef = useRef();
   const svgRef = useRef();
@@ -20,11 +21,16 @@ function WorldMap(props) {
     .scaleLinear()
     .domain([min, 0, max])
     .range(["red", "white", "blue"]);
-  /* data for total migration for each country. Saved as [{Country:value}]*/
 
-  console.log(props.model.getMigrationValue(900, 900, 1990));
+  const colorScales = [
+    //immigration
+    d3.scaleLinear().domain([0, 50000000]).range(["white", "blue"]),
+    //emigration
+    d3.scaleLinear().domain([0, 50000000]).range(["white", "red"]),
+    //netmigration
+    d3.scaleLinear().domain([min, 0, max]).range(["red", "white", "blue"]),
+  ];
 
-  const [yearData, setYearData] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
   useEffect(() => {
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
@@ -35,25 +41,19 @@ function WorldMap(props) {
     //   .precision(50); //TODO descide on projection
     const svg = d3.select(svgRef.current);
 
-    /*  Get total mig data from model for props.model.year.
-     Year can be set to test and get different years from 1980-2010 */
-    //props.model.setYear('2000_2005');
-    //props.model.year = ('2000_2005');
-    props.model.getData().then((res) => {
-      setYearData(res);
-      console.log(res);
-    });
-
     getCenters().then((data) => {
       setCenters(data);
-      console.log(data);
     });
     //tooltip-----------------------------------------------------------
     var tip = d3
       .tip()
       .attr("class", "d3-tip")
       .html(function (event) {
-        return event.target.getAttribute("name");
+        return (
+          event.target.getAttribute("name") +
+          "<br>" +
+          getMigrationDataByCountry(event.target.id).toLocaleString()
+        );
       });
     const mapContainer = d3.select(mapContainerRef.current);
     svg.call(tip);
@@ -93,7 +93,7 @@ function WorldMap(props) {
     var path = d3.geoPath(projection);
 
     /* check so both data and yearData are not null */
-    if (data && yearData) {
+    if (data) {
       svg
         .selectAll(".country")
         .data(data.features)
@@ -118,14 +118,14 @@ function WorldMap(props) {
           mouseLeaveACB(event);
         })
         .transition()
-        .attr("fill", (feature) => getColor(feature.properties.name))
+        .attr("fill", (feature) => getColor(feature.id))
 
         .attr("class", "country")
         .attr("d", (feature) => path(feature));
       var sweden = 752;
       var thailand = 764;
       var germany = 276;
-
+      console.log(props.model.max);
       if (countryCenters) {
         var link = [
           {
@@ -176,8 +176,6 @@ function WorldMap(props) {
   }
   return (
     <div ref={mapContainerRef}>
-      {yearData && console.log(yearData[0]["Armenia"])}
-      {yearData && console.log(yearData[0].Panama)}
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
@@ -185,7 +183,7 @@ function WorldMap(props) {
     //TODO topography
     if (selectedCountry) {
       var prevCountry = document.getElementById(selectedCountry.id);
-      prevCountry.style.fill = getColor(selectedCountry.properties.name);
+      prevCountry.style.fill = getColor(selectedCountry.id);
     }
     // setSelectedCountry(event.target);
     event.target.style.fill = "green";
@@ -202,7 +200,14 @@ function WorldMap(props) {
     //TODO get real data
     //console.log(country);
     //console.log(yearData[0][country]);
-    return colorScale(yearData[0][country]);
+    var color = colorScales[view](getMigrationDataByCountry(country));
+    //  console.log(props.model.getImigrationValue(country));
+    return color;
+  }
+  function getMigrationDataByCountry(countryId) {
+    if (view === 0) return props.model.getImigrationValue(countryId);
+    if (view === 1) return props.model.getEmigrationValue(countryId);
+    if (view === 2) return props.model.getNetMigrationValue(countryId);
   }
 
   function getCenters() {

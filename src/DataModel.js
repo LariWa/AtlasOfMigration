@@ -1,15 +1,16 @@
 /* handles state (year, country) of the app and fetches data from database  */
 class DataModel {
-  constructor(year = "1980_1985", country = null) {
+  constructor(year = 2000, country = null) {
     this.year = year;
     this.country = country;
+    this.max = 0;
     this.getMigrationData().then((res) => {
       this.migrationData = res;
       //this.data = null;
       this.imigrationData = this.getImmigrationData();
       this.emigrationData = this.getEmigrationData();
       //total imigration in 1990 900 is ID for World
-      console.log(this.getImigrationValue(900, 1990));
+      //  console.log(this.getImigrationValue(900, 1990));
     });
   }
   getMigrationValue(origin, destination, year) {
@@ -19,17 +20,37 @@ class DataModel {
       })[0][year];
   }
   getImigrationValue(destination, year) {
-    if (this.imigrationData)
-      return this.imigrationData.filter(function findValue(data) {
+    if (!year) year = this.year;
+    if (this.imigrationData) {
+      var value = this.imigrationData.filter(function findValue(data) {
         return data.DestinationID == destination;
-      })[0][year];
+      });
+      if (value && value[0]) {
+        //  console.log(value[0][year]);
+        if (this.max < parseInt(value[0][year].split(" ").join("")))
+          this.max = parseInt(value[0][year].split(" ").join(""));
+        return parseInt(value[0][year].split(" ").join(""));
+      } else return "";
+    }
+  }
+  getNetMigrationValue(destination, year) {
+    //TODO implement net migration
+    return 0;
   }
   getEmigrationValue(origin, year) {
+    if (!year) year = this.year;
     if (this.emigrationData)
-      return this.emigrationData.filter(function findValue(data) {
+      var value = this.emigrationData.filter(function findValue(data) {
         return data.OriginID == origin;
-      })[0][year];
+      });
+    if (value && value[0]) {
+      //  console.log(value[0][year]);
+      if (this.max < parseInt(value[0][year].split(" ").join("")))
+        this.max = parseInt(value[0][year].split(" ").join(""));
+      return parseInt(value[0][year].split(" ").join(""));
+    } else return "";
   }
+
   setYear(x) {
     this.year = x;
   }
@@ -66,7 +87,6 @@ class DataModel {
     })
       .then((res) => res.json())
       .then((resData) => {
-        console.log(resData);
         return resData;
       })
       .catch((_) => console.log(_));
