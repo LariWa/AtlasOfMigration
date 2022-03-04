@@ -8,6 +8,8 @@ const d3 = {
   tip: d3tip,
 };
 function WorldMap(props) {
+  var migrationData;
+  const [countryCenters, setCenters] = useState(null);
   const { height, width } = useWindowDimensions();
   const mapContainerRef = useRef();
   const svgRef = useRef();
@@ -19,6 +21,9 @@ function WorldMap(props) {
     .domain([min, 0, max])
     .range(["red", "white", "blue"]);
   /* data for total migration for each country. Saved as [{Country:value}]*/
+
+  console.log(props.model.getMigrationValue(900, 900, 1990));
+
   const [yearData, setYearData] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
   useEffect(() => {
@@ -26,8 +31,8 @@ function WorldMap(props) {
 
     const projection = d3
       .geoEquirectangular()
-      .fitSize([width, height], selectedCountry || data)
-      .precision(50); //TODO descide on projection
+      .fitSize([width, height], selectedCountry || data);
+    //   .precision(50); //TODO descide on projection
     const svg = d3.select(svgRef.current);
 
     /*  Get total mig data from model for props.model.year.
@@ -39,6 +44,10 @@ function WorldMap(props) {
       console.log(res);
     });
 
+    getCenters().then((data) => {
+      setCenters(data);
+      console.log(data);
+    });
     //tooltip-----------------------------------------------------------
     var tip = d3
       .tip()
@@ -113,6 +122,52 @@ function WorldMap(props) {
 
         .attr("class", "country")
         .attr("d", (feature) => path(feature));
+      var sweden = 752;
+      var thailand = 764;
+      var germany = 276;
+
+      if (countryCenters) {
+        var link = [
+          {
+            type: "LineString",
+            coordinates: [
+              [
+                countryCenters[sweden].longitude,
+                countryCenters[sweden].latitude,
+              ],
+              [
+                countryCenters[thailand].longitude,
+                countryCenters[thailand].latitude,
+              ],
+            ],
+          },
+          {
+            type: "LineString",
+            coordinates: [
+              [
+                countryCenters[sweden].longitude,
+                countryCenters[sweden].latitude,
+              ],
+              [
+                countryCenters[germany].longitude,
+                countryCenters[germany].latitude,
+              ],
+            ],
+          },
+        ];
+
+        svg
+          .selectAll("myPath")
+          .data(link)
+          .enter()
+          .append("path")
+          .attr("d", function (d) {
+            return path(d);
+          })
+          .style("fill", "none")
+          .style("stroke", "orange")
+          .style("stroke-width", 3);
+      }
     }
   }, [data, selectedCountry]);
 
@@ -121,8 +176,8 @@ function WorldMap(props) {
   }
   return (
     <div ref={mapContainerRef}>
-    {yearData && console.log(yearData[0]['Armenia'])}
-    {yearData && console.log(yearData[0].Panama)}
+      {yearData && console.log(yearData[0]["Armenia"])}
+      {yearData && console.log(yearData[0].Panama)}
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
@@ -148,6 +203,21 @@ function WorldMap(props) {
     //console.log(country);
     //console.log(yearData[0][country]);
     return colorScale(yearData[0][country]);
+  }
+
+  function getCenters() {
+    /* fetch data for country x */
+    return fetch(`./data/centerCountries.json`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((resData) => {
+        return resData;
+      })
+      .catch((_) => console.log(_));
   }
 }
 
