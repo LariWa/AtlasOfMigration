@@ -1,9 +1,8 @@
 /* handles state (year, country) of the app and fetches data from database  */
 class DataModel {
-  constructor(year = 2000, country = null) {
+  constructor(year = 2020, country = null) {
     this.year = year;
     this.country = country;
-    this.max = 0;
     this.getMigrationData().then((res) => {
       this.migrationData = res;
       //this.data = null;
@@ -26,15 +25,16 @@ class DataModel {
         return data.DestinationID == destination;
       });
       if (value && value[0]) {
-        //  console.log(value[0][year]);
-        if (this.max < parseInt(value[0][year].split(" ").join("")))
-          this.max = parseInt(value[0][year].split(" ").join(""));
         return parseInt(value[0][year].split(" ").join(""));
-      } else return "";
+      }
     }
   }
-  getNetMigrationValue(destination, year) {
-    //TODO implement net migration
+  getNetRatioMigrationValue(country, year) {
+    //TODO decide on ratio or substract
+    if (!year) year = this.year;
+    var immi = this.getImigrationValue(country, year);
+    var emmi = this.getEmigrationValue(country, year);
+    if (immi && emmi) return immi / emmi;
     return 0;
   }
   getEmigrationValue(origin, year) {
@@ -44,11 +44,10 @@ class DataModel {
         return data.OriginID == origin;
       });
     if (value && value[0]) {
-      //  console.log(value[0][year]);
       if (this.max < parseInt(value[0][year].split(" ").join("")))
         this.max = parseInt(value[0][year].split(" ").join(""));
       return parseInt(value[0][year].split(" ").join(""));
-    } else return "";
+    }
   }
 
   setYear(x) {
