@@ -9,10 +9,10 @@ class DataModel {
   this.year = year
   this.country = country;
   this.jsondata = d3.blob("./data/1990_Origin_Destination.csv").then(res => {
-    console.log(res.text());
+    //console.log(res.text());
     papa.parse(res, {
       complete: x => {
-        console.log(x.data);
+      //  console.log(x.data);
         this.yearData = x.data
       }
     })
@@ -20,6 +20,12 @@ class DataModel {
     .catch(_ => console.log(_))
 
 }
+
+//http://data.un.org/ws/rest/
+
+
+
+
 
   setYear(x){
     this.year = x

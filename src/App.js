@@ -9,7 +9,8 @@ import Main from './Main';
 
 
 const dataModel = new DataModel()
-console.log((dataModel.jsondata))
+dataModel.getCsvData()
+//console.log((dataModel.jsondata))
 
 
 function App() {
