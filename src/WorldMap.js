@@ -8,41 +8,52 @@ const d3 = {
   tip: d3tip,
 };
 function WorldMap(props) {
+  var migrationData;
+  const [countryCenters, setCenters] = useState(null);
   const { height, width } = useWindowDimensions();
   const mapContainerRef = useRef();
   const svgRef = useRef();
   const data = useMapData();
+  const min = -20;
+  const max = 20; //TODO adapt to data
+  const colorScale = d3
+    .scaleLinear()
+    .domain([min, 0, max])
+    .range(["red", "white", "blue"]);
   /* data for total migration for each country. Saved as [{Country:value}]*/
+
+  console.log(props.model.getMigrationValue(900, 900, 1990));
+
   const [yearData, setYearData] = useState(null);
-
-  var selectedCountry;
-
+  const [selectedCountry, setSelectedCountry] = useState(null);
   useEffect(() => {
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
-    const projection = d3.geoEquirectangular().fitSize([width, height], data); //TODO descide on projection
+    const projection = d3
+      .geoEquirectangular()
+      .fitSize([width, height], selectedCountry || data);
+    //   .precision(50); //TODO descide on projection
     const svg = d3.select(svgRef.current);
-
 
     /*  Get total mig data from model for props.model.year.
      Year can be set to test and get different years from 1980-2010 */
     //props.model.setYear('2000_2005');
     //props.model.year = ('2000_2005');
-    props.model.getData()
-      .then(res => {
-        setYearData(res)
-        console.log(props.model.yearData)
-      });
+    props.model.getData().then((res) => {
+      setYearData(res);
+      console.log(res);
+    });
 
-
-
-
+    getCenters().then((data) => {
+      setCenters(data);
+      console.log(data);
+    });
     //tooltip-----------------------------------------------------------
     var tip = d3
       .tip()
       .attr("class", "d3-tip")
       .html(function (event) {
-        return event.target.id;
+        return event.target.getAttribute("name");
       });
     const mapContainer = d3.select(mapContainerRef.current);
     svg.call(tip);
@@ -78,17 +89,26 @@ function WorldMap(props) {
     }
     mapContainer.call(zoom);
     //------------------------------------------------------------------------------
+
     var path = d3.geoPath(projection);
-    if (data) {
+
+    /* check so both data and yearData are not null */
+    if (data && yearData) {
       svg
         .selectAll(".country")
         .data(data.features)
         .join("path")
-        .attr("id", (feature) => feature.properties.name)
+        .attr("id", (feature) => feature.id)
+        .attr("name", (feature) => feature.properties.name)
+        .style("stroke", "lightgrey")
 
-        .on("click", (event) => {
+        .on("click", (event, feature) => {
+          tip.hide(event);
+
           clickedACB(event);
+          setSelectedCountry(selectedCountry === feature ? null : feature);
         })
+
         .on("mouseover", function (d) {
           tip.show(d, this);
           mouseOverACB(d);
@@ -97,28 +117,78 @@ function WorldMap(props) {
           tip.hide(event);
           mouseLeaveACB(event);
         })
-        .attr("class", "country")
         .transition()
-        .attr("d", (feature) => path(feature));
-    }
-  }, [data]);
+        .attr("fill", (feature) => getColor(feature.properties.name))
 
-  /* so this is the structure now for each country but can be rearranged */
+        .attr("class", "country")
+        .attr("d", (feature) => path(feature));
+      var sweden = 752;
+      var thailand = 764;
+      var germany = 276;
+
+      if (countryCenters) {
+        var link = [
+          {
+            type: "LineString",
+            coordinates: [
+              [
+                countryCenters[sweden].longitude,
+                countryCenters[sweden].latitude,
+              ],
+              [
+                countryCenters[thailand].longitude,
+                countryCenters[thailand].latitude,
+              ],
+            ],
+          },
+          {
+            type: "LineString",
+            coordinates: [
+              [
+                countryCenters[sweden].longitude,
+                countryCenters[sweden].latitude,
+              ],
+              [
+                countryCenters[germany].longitude,
+                countryCenters[germany].latitude,
+              ],
+            ],
+          },
+        ];
+
+        svg
+          .selectAll("myPath")
+          .data(link)
+          .enter()
+          .append("path")
+          .attr("d", function (d) {
+            return path(d);
+          })
+          .style("fill", "none")
+          .style("stroke", "orange")
+          .style("stroke-width", 3);
+      }
+    }
+  }, [data, selectedCountry]);
+
   if (!data) {
     return <pre>Loading...</pre>;
   }
   return (
     <div ref={mapContainerRef}>
-        {yearData && console.log(yearData[0].Armenia)}
-        {yearData && console.log(yearData[0].Panama)}
+      {yearData && console.log(yearData[0]["Armenia"])}
+      {yearData && console.log(yearData[0].Panama)}
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
   function clickedACB(event) {
     //TODO topography
-    if (selectedCountry) selectedCountry.style.fill = "black";
-    selectedCountry = event.target;
-    event.target.style.fill = "red";
+    if (selectedCountry) {
+      var prevCountry = document.getElementById(selectedCountry.id);
+      prevCountry.style.fill = getColor(selectedCountry.properties.name);
+    }
+    // setSelectedCountry(event.target);
+    event.target.style.fill = "green";
   }
   function mouseOverACB(event) {
     d3.selectAll(".country").transition().duration(200).style("opacity", 0.5);
@@ -127,6 +197,27 @@ function WorldMap(props) {
   function mouseLeaveACB(event) {
     d3.selectAll(".country").transition().duration(200).style("opacity", 1);
     d3.select(this).transition().duration(200).style("stroke", "transparent");
+  }
+  function getColor(country) {
+    //TODO get real data
+    //console.log(country);
+    //console.log(yearData[0][country]);
+    return colorScale(yearData[0][country]);
+  }
+
+  function getCenters() {
+    /* fetch data for country x */
+    return fetch(`./data/centerCountries.json`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((resData) => {
+        return resData;
+      })
+      .catch((_) => console.log(_));
   }
 }
 
