@@ -48,12 +48,37 @@ class DataModel {
     }
     imiCountries = imiCountries.map(function getYearData(entry) {
       return {
-        origin: entry.OriginName,
-        originId: entry.OriginID,
+        name: entry.OriginName,
+        id: entry.OriginID,
         value: parseInt(entry[component.year].split(" ").join("")),
       };
     });
     return imiCountries
+      .sort(this.sortBy("value"))
+      .slice(0, this.numberOfArrows);
+  }
+
+  getEmigrantionCountries(countryId) {
+    var component = this;
+    var emiCountries = this.migrationData.filter(function findValue(data) {
+      return data.OriginID == countryId && isCountry(data.DestinationID);
+    });
+    function isCountry(countryId) {
+      var validCountries = component.countryNameAndId.filter(
+        (item) => item.id == countryId
+      );
+      if (validCountries.length > 0) {
+        return true;
+      }
+    }
+    emiCountries = emiCountries.map(function getYearData(entry) {
+      return {
+        name: entry.DestinationName,
+        id: entry.DestinationID,
+        value: parseInt(entry[component.year].split(" ").join("")),
+      };
+    });
+    return emiCountries
       .sort(this.sortBy("value"))
       .slice(0, this.numberOfArrows);
   }
