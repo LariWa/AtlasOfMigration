@@ -9,7 +9,7 @@ const d3 = {
 };
 function WorldMap(props) {
   const [countryCenters, setCenters] = useState(null);
-  const [view, setView] = useState(0); //immigration = 0, emmigration 1, net migration=2
+  const [view, setView] = useState(1); //immigration = 0, emmigration 1, net migration=2
 
   const { height, width } = useWindowDimensions();
   const mapContainerRef = useRef();
@@ -41,7 +41,7 @@ function WorldMap(props) {
       setCenters(data);
     });
     //tooltip-----------------------------------------------------------
-    var tip = d3
+    var countryTip = d3
       .tip()
       .attr("class", "d3-tip")
       .html(function (event) {
@@ -51,8 +51,16 @@ function WorldMap(props) {
           displayMigrationValue(event.target.id)
         );
       });
+    var arrowTip = d3
+      .tip()
+      .attr("class", "d3-tip")
+      .html(function (event) {
+        return migrationCountries.find((el) => el.id == event.target.id).value;
+        return "test";
+      });
     const mapContainer = d3.select(mapContainerRef.current);
-    svg.call(tip);
+    svg.call(countryTip);
+    svg.call(arrowTip);
 
     //zoom-------------------------------------------------------------
     var yaw = d3.scaleLinear().domain([0, width]).range([0, 360]);
@@ -101,29 +109,32 @@ function WorldMap(props) {
         .attr("class", "country")
         .attr("d", (feature) => path(feature))
         .on("click", (event, feature) => {
-          tip.hide(event);
+          countryTip.hide(event);
           clickedACB(event);
           setSelectedCountry(selectedCountry === feature ? null : feature);
         })
 
         .on("mouseover", function (d) {
-          tip.show(d, this);
+          countryTip.show(d, this);
           mouseOverACB(d);
         })
 
         .on("mouseleave", (event) => {
-          tip.hide(event);
+          countryTip.hide(event);
           mouseLeaveACB(event);
         });
 
       //arrows
       if (countryCenters && arrows && selectedCountry) {
         svg.selectAll(".arrow").remove();
+        console.log(arrows);
         svg
           .selectAll("arrows")
           .data(arrows)
-          .enter()
-          .append("path")
+          .join("path")
+
+          .attr("id", (feature) => feature.data)
+
           .attr("class", "arrow")
           .attr("d", function (d) {
             return path(d);
@@ -131,11 +142,16 @@ function WorldMap(props) {
           .style("fill", "none")
           .style("stroke", getArrowColor())
           .style("stroke-width", 3)
+          .attr("markerWidth", 50)
+          .attr("markerHeight", 50)
+          .attr("marker-end", "url(#arrow)")
+          .attr("marker-start", "url(#arrow)")
+
           .on("mouseover", function (d) {
-            tip.show(d, this);
+            arrowTip.show(d, this);
           })
           .on("mouseleave", (event) => {
-            tip.hide(event);
+            arrowTip.hide(event);
           });
       }
     }
@@ -168,6 +184,7 @@ function WorldMap(props) {
         val.map((item) => {
           return {
             type: "LineString",
+            data: item.id,
             coordinates: [
               [
                 countryCenters[countryId].longitude,
