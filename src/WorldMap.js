@@ -22,7 +22,7 @@ function WorldMap(props) {
     .range(["red", "white", "blue"]);
   /* data for total migration for each country. Saved as [{Country:value}]*/
 
-  console.log(props.model.getMigrationValue(900, 900, 1990));
+//  console.log(props.model.getMigrationValue(900, 900, 1990));
 
   const [yearData, setYearData] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -39,15 +39,20 @@ function WorldMap(props) {
      Year can be set to test and get different years from 1980-2010 */
     //props.model.setYear('2000_2005');
     //props.model.year = ('2000_2005');
+
+
     props.model.getData().then((res) => {
       setYearData(res);
-      console.log(res);
+    //  console.log(res);
     });
+
 
     getCenters().then((data) => {
       setCenters(data);
-      console.log(data);
+    //  console.log(data);
     });
+
+
     //tooltip-----------------------------------------------------------
     var tip = d3
       .tip()
@@ -93,6 +98,9 @@ function WorldMap(props) {
     var path = d3.geoPath(projection);
 
     /* check so both data and yearData are not null */
+    yearData && console.log('yearData: ');
+    data && console.log('data: ');
+
     if (data && yearData) {
       svg
         .selectAll(".country")
@@ -176,8 +184,8 @@ function WorldMap(props) {
   }
   return (
     <div ref={mapContainerRef}>
-      {yearData && console.log(yearData[0]["Armenia"])}
-      {yearData && console.log(yearData[0].Panama)}
+      {/*yearData && console.log(yearData[0]["Armenia"])*/}
+      {/*yearData && console.log(yearData[0].Panama)*/}
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );

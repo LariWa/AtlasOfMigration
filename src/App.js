@@ -9,7 +9,7 @@ import Main from './Main';
 
 
 const dataModel = new DataModel()
-dataModel.getCsvData()
+//dataModel.getCsvData()
 //console.log((dataModel.jsondata))
 
 
@@ -18,9 +18,9 @@ function App() {
   <>
     <div className = 'container'>
       <SideBar />
+      <TimeLine model = {dataModel} />
       <WorldMap model = {dataModel}/>
     </div>
-  <TimeLine width = '500px' heigth ='100px' model = {dataModel} />
 </>
   );
 }

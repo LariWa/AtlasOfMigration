@@ -1,6 +1,9 @@
+//const path = `./data/${this.year}.json`;
+const path = "./data/1990_Origin_Destination.csv";
+
 /* handles state (year, country) of the app and fetches data from database  */
 class DataModel {
-  constructor(year = "1980_1985", country = null) {
+  constructor(year = "1990", country = null) {
     this.year = year;
     this.country = country;
     this.getMigrationData().then((res) => {
@@ -9,7 +12,7 @@ class DataModel {
       this.imigrationData = this.getImmigrationData();
       this.emigrationData = this.getEmigrationData();
       //total imigration in 1990 900 is ID for World
-      console.log(this.getImigrationValue(900, 1990));
+    //  console.log(this.getImigrationValue(900, 1990));
     });
   }
   getMigrationValue(origin, destination, year) {
@@ -39,25 +42,25 @@ class DataModel {
 
 
 /* fetch data as csv for year x, return file. TODO error handling */
-getCsvData(x = ""){
-  return fetch(path
-    ,{headers : {
-    'Content-Type': 'text/csv;charset=UTF-8',
-   }
- })
- .then(res => res.blob())
- .then(blob => {
-   this.data = blob;
-   return blob.text()
- })
- .then(resData => {
-    console.log("fetch csv: "+ resData);
-    //console.log(resData instanceof Blob);
-    //console.log(this.data instanceof Blob);
-    return resData;
-  })
-  .catch(_ => console.log(_))
-}
+// getCsvData(x = ""){
+//   return fetch(path
+//     ,{headers : {
+//     'Content-Type': 'text/csv;charset=UTF-8',
+//    }
+//  })
+//  .then(res => res.blob())
+//  .then(blob => {
+//    this.data = blob;
+//    return blob.text()
+//  })
+//  .then(resData => {
+//     console.log("fetch csv: "+ resData);
+//     //console.log(resData instanceof Blob);
+//     //console.log(this.data instanceof Blob);
+//     return resData;
+//   })
+//   .catch(_ => console.log(_))
+// }
 
 // papa.parse(getCsvData(), {
 //   complete: results => {
@@ -67,13 +70,11 @@ getCsvData(x = ""){
 // });
 
 
-  /* param: country
-    return: number of incoming migrants per country as fields
-    country: number
+  /*
     TODO: error handling */
   getData(x = "") {
     /* fetch data for country x */
-    return fetch(`./data/${this.year}.json`, {
+    return fetch(`./data/Data.json`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

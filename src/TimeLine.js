@@ -1,62 +1,109 @@
-import React, {useEffect, useLayoutEffect} from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import useWindowDimensions from "./useWindowDimensions.js";
 import * as d3 from "d3";
 import "./App.css";
 import "./TimeLine.css";
 
 /* https://github.com/vasturiano/timelines-chart */
-import TimelinesChart from 'timelines-chart';
+import TimelinesChart from "timelines-chart";
 //const myChart = new TimelinesChart();
 // myChart.data([12,34,45,56])
-//   (document.getElementById('timeLine'));
 
-//test time runs 1990-2020, in 5 year interval + 2017 and 2019
-const productionDataset = [1990, 1995, 2000, 2005, 2010, 2015, 2020]
-const downtimeDataset = [0,1,2,3,4,5,6,7,8]
-const powerOffDataset = [0,1,2,3,4,5,6,7,8]
-const data = [0,1,2,3,4,5,6,7,8]
+/* time runs 1990-2020, in 5 year interval + 2017 and 2019 */
+const yearRange = [
+  new Date(1990, 0, 1),
+  new Date(1995, 0, 1),
+  new Date(2000, 0, 1),
+  new Date(2005, 0, 1),
+  new Date(2010, 0, 1),
+  new Date(2015, 0, 1),
+  new Date(2017, 0, 1),
+  new Date(2019, 0, 1),
+  new Date(2020, 0, 1),
+];
 
+const data = ["Net Migration", "Wars", "Gender"];
 
-/* https://github.com/petrjahoda/medium_d3_timeline/blob/master/js/homepage.js */
+function TimeLine(props) {
+  const containerRef = useRef(null);
+  const [year, setYear] = useState(props.model.year);
+  //const width = containerRef.current.clientWidth / (data.length + 1)
 
-function TimeLine(productionDataset, downtimeDataset, powerOffDataset, data) {
-
-  // access data
-     const xAccessor = d => d["Date"]
-     const yAccessor = d => d["Value"]
-
-     //set dimensions
-     let dimensions = {
-         //width: screen.width - 500,
-         width: window.screen.width - 500,
-         height: 100,
-         margin: {top: 0, right: 40, bottom: 20, left: 40,},
-     }
-     //draw canvas
-     const wrapper = d3.select("#timeline")
-         .append("svg")
-         .attr("viewBox", "0 0 " + dimensions.width + " " + dimensions.height)
-     const bounds = wrapper.append("g")
-
-
-
-
- /*  use LayoutEffect() for updating d3 components? */
-  useLayoutEffect(() => {
-  //  d3.select(".test").style("background-color", "green");
-
-  }, []);
-
-  const onMouseClick = () => {
-    d3.selectAll(".test").style("color", "blue");
+  const dimensions = {
+    width: useWindowDimensions().width,
+    height: useWindowDimensions().height - 500, //TODO calculate param height
+    margin: { top: 0, right: 350, bottom: 20, left: 250 },
   };
 
+  // const start = (d) => d[0];
+  // const end = (d) => d[d.length-1];
 
+  // let svg = d3.select("#res")
+  //   .append("svg")
+  //   .attr("width", 1000)
+  //
+  //   const xScale = d3.scaleTime()
+  //        .domain([chartStartsAt, chartEndsAt])
+  //    const yScale = d3.scaleLinear()
+  //        .domain(d3.extent(productionDataset, yAccessor))
+  //        .range([dimensions.height - dimensions.margin.bottom, 0])
 
+  //  useLayoutEffect(() => {
+  useEffect(() => {
+    const x = d3
+      .scaleTime()
+      .domain(d3.extent(yearRange))
+      .range([
+        dimensions.margin.left,
+        dimensions.width - dimensions.margin.right,
+      ]);
+
+    const y = d3.scaleBand()
+      .domain(data)
+      .range([dimensions.height, 0])
+
+    if (Array.isArray(data)) {
+      d3.select("#bottom")
+        .attr("transform", "translate(0,100)")
+        .call(d3.axisBottom(x).tickValues(yearRange));
+        //.call(d3.axisBottom(x).ticks(d3.timeYear.every(5)))
+      d3.select("#left")
+        .attr("transform", "translate(230,-130)")
+        .call(d3.axisLeft(y))
+
+      // const update = d3.select("g").selectAll("circle").data(data);
+      //
+      // update
+      //   .enter()
+      //   .append("circle")
+      //   .merge(update)
+      //   .attr("r", (d) => d)
+      //   .attr("cx", (_, i) => dimensions.width * (i + 1))
+      //   .attr("cy", () => Math.random() * 100)
+      //   .attr("stroke", (_, i) => (i % 2 === 0 ? "#f80" : "#aaf"))
+      //   .attr("fill", (_, i) => (i % 2 === 0 ? "orange" : "#44f"));
+      //
+      // update.exit().remove();
+    }
+  });
+
+  /* update this local or update model? */
+  const updateYear = (x) => {
+    props.model.year = x;
+  };
+
+  //TODO: set transform to responsive measurements
   return (
-    /* use svg element */
-      <div className = "test" id = "timeline" >
-      Timeline
-      </div>
+    <div className="wrapper" id="timeline" style={{backgroundColor: "#F6F6F2" }} >
+      <svg id="content"
+        width={dimensions.width}
+        height={dimensions.height}
+        ref={containerRef}
+      >
+        <g id = "left"/>
+        <g id = "bottom"/>
+      </svg>
+    </div>
   );
 }
 
