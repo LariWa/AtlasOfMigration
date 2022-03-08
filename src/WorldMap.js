@@ -8,47 +8,37 @@ const d3 = {
   tip: d3tip,
 };
 function WorldMap(props) {
-
-  let migrationData;
   const [countryCenters, setCenters] = useState(null);
+  const [view, setView] = useState(0); //immigration = 0, emmigration 1, net migration=2
+
   const { height, width } = useWindowDimensions();
   const mapContainerRef = useRef();
   const svgRef = useRef();
   const data = useMapData();
-  const min = -20;
-  const max = 20; //TODO adapt to data
-  const colorScale = d3
-    .scaleLinear()
-    .domain([min, 0, max])
-    .range(["red", "white", "blue"]);
-  /* data for total migration for each country. Saved as [{Country:value}]*/
-//  console.log(props.model.getMigrationValue(900, 900, 1990));
 
-  const [yearData, setYearData] = useState(null);
+  const colorScales = [
+    //immigration
+    d3.scaleLinear().domain([0, 50000000]).range(["white", "blue"]),
+    //emigration
+    d3.scaleLinear().domain([0, 50000000]).range(["white", "red"]),
+    //netmigration
+    d3.scaleLinear().domain([0.0, 1.0, 2.0]).range(["red", "white", "blue"]),
+  ];
   const [selectedCountry, setSelectedCountry] = useState(null);
-
-
+  const [arrows, setArrows] = useState(null);
+  const [migrationCountries, setMigrationCountries] = useState(null);
 
   useEffect(() => {
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
-    const projection = d3
-      .geoEquirectangular()
-      .fitSize([width, height], selectedCountry || data);
-    //   .precision(50); //TODO descide on projection
+    const projection = d3.geoEquirectangular().fitSize([width, height], data);
+
+    //  .fitSize([width, height], selectedCountry || data);
+    //   .precision(50); //might be good to avoid glitching
     const svg = d3.select(svgRef.current);
-
-    //setYearData(props.model.getData())
-
-    // props.model.getData().then((res) => {
-    //   setYearData(res);
-    // //  console.log(res);
-    // });
-
 
     getCenters().then((data) => {
       setCenters(data);
-    //  console.log(data);
     });
 
 
@@ -57,7 +47,11 @@ function WorldMap(props) {
       .tip()
       .attr("class", "d3-tip")
       .html(function (event) {
-        return event.target.getAttribute("name");
+        return (
+          event.target.getAttribute("name") +
+          "<br>" +
+          displayMigrationValue(event.target.id)
+        );
       });
     const mapContainer = d3.select(mapContainerRef.current);
     svg.call(tip);
@@ -97,9 +91,6 @@ function WorldMap(props) {
     var path = d3.geoPath(projection);
 
     /* check so both data and yearData are not null */
-    //yearData && console.log('yearData: ');
-    //data && console.log('data: ');
-
     if (data) {
       svg
         .selectAll(".country")
@@ -107,11 +98,12 @@ function WorldMap(props) {
         .join("path")
         .attr("id", (feature) => feature.id)
         .attr("name", (feature) => feature.properties.name)
-        .style("stroke", "lightgrey")
-
+        .style("stroke", "darkgrey")
+        .attr("fill", (feature) => getColor(feature.id))
+        .attr("class", "country")
+        .attr("d", (feature) => path(feature))
         .on("click", (event, feature) => {
           tip.hide(event);
-
           clickedACB(event);
           setSelectedCountry(selectedCountry === feature ? null : feature);
         })
@@ -120,64 +112,36 @@ function WorldMap(props) {
           tip.show(d, this);
           mouseOverACB(d);
         })
+
         .on("mouseleave", (event) => {
           tip.hide(event);
           mouseLeaveACB(event);
-        })
-        .transition()
-        .attr("fill", (feature) => getColor(feature.properties.name))
+        });
 
-        .attr("class", "country")
-        .attr("d", (feature) => path(feature));
-      var sweden = 752;
-      var thailand = 764;
-      var germany = 276;
-
-      if (countryCenters) {
-        var link = [
-          {
-            type: "LineString",
-            coordinates: [
-              [
-                countryCenters[sweden].longitude,
-                countryCenters[sweden].latitude,
-              ],
-              [
-                countryCenters[thailand].longitude,
-                countryCenters[thailand].latitude,
-              ],
-            ],
-          },
-          {
-            type: "LineString",
-            coordinates: [
-              [
-                countryCenters[sweden].longitude,
-                countryCenters[sweden].latitude,
-              ],
-              [
-                countryCenters[germany].longitude,
-                countryCenters[germany].latitude,
-              ],
-            ],
-          },
-        ];
-
+      //arrows
+      if (countryCenters && arrows && selectedCountry) {
+        svg.selectAll(".arrow").remove();
         svg
-          .selectAll("myPath")
-          .data(link)
+          .selectAll("arrows")
+          .data(arrows)
           .enter()
           .append("path")
+          .attr("class", "arrow")
           .attr("d", function (d) {
             return path(d);
           })
           .style("fill", "none")
-          .style("stroke", "orange")
-          .style("stroke-width", 3);
+          .style("stroke", getArrowColor())
+          .style("stroke-width", 3)
+          .on("mouseover", function (d) {
+            tip.show(d, this);
+          })
+          .on("mouseleave", (event) => {
+            tip.hide(event);
+          });
       }
     }
-  }, [data, countryCenters, selectedCountry, height, width]);
-  /*  ^^ all these param were added to make the map render, but should rewrite this */
+  }, [data, selectedCountry, migrationCountries]);
 
   if (!data && !yearData) {
     //console.log("loading");
@@ -185,20 +149,43 @@ function WorldMap(props) {
   }
   return (
     <div ref={mapContainerRef}>
-      {/*yearData && console.log(yearData[0]["Armenia"])*/}
-      {/*yearData && console.log(yearData[0].Panama)*/}
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
 
   function clickedACB(event) {
-    //TODO topography
-    if (selectedCountry) {
-      var prevCountry = document.getElementById(selectedCountry.id);
-      prevCountry.style.fill = getColor(selectedCountry.properties.name);
+    //TODO topography, if time
+    showDetailView(event);
+  }
+  function showDetailView(event) {
+    createArrows(event.target.id);
+  }
+  function createArrows(countryId) {
+    var val;
+
+    if (view == 0) val = props.model.getImmigrantionCountries(countryId);
+    else if (view == 1) val = props.model.getEmigrantionCountries(countryId);
+    if (val) {
+      console.log(val);
+      setMigrationCountries(val);
+      setArrows(
+        val.map((item) => {
+          return {
+            type: "LineString",
+            coordinates: [
+              [
+                countryCenters[countryId].longitude,
+                countryCenters[countryId].latitude,
+              ],
+              [
+                countryCenters[item.id].longitude,
+                countryCenters[item.id].latitude,
+              ],
+            ],
+          };
+        })
+      );
     }
-    // setSelectedCountry(event.target);
-    event.target.style.fill = "green";
   }
   function mouseOverACB(event) {
     d3.selectAll(".country").transition().duration(200).style("opacity", 0.5);
@@ -210,14 +197,50 @@ function WorldMap(props) {
   }
   /*    */
   function getColor(country) {
-    //TODO get real data
-    //console.log(country);
-    //console.log(yearData[0][country]);
-    return colorScale(yearData[0][country]);
+    if (selectedCountry) return getDetailViewColor(country);
+    var val = getMigrationDataByCountry(country);
+    if (!val) return "black"; //no data available
+    return colorScales[view](val);
+  }
+  function getDetailViewColor(country) {
+    if (
+      migrationCountries &&
+      migrationCountries.find((item) => item.id == country)
+    ) {
+      if (view == 0) return "red";
+      if (view == 1) return "blue";
+      if (view == 2) return "LightGrey";
+    }
+    if (selectedCountry.id == country) {
+      if (view == 0) return "blue";
+      if (view == 1) return "red";
+      if (view == 2) {
+        var val = getMigrationDataByCountry(country);
+        if (!val) return "black";
+        return colorScales[view](val);
+      }
+    }
+    return "lightgrey";
+  }
+  function getArrowColor() {
+    if (view == 0) return "darkred";
+    if (view == 1) return "darkblue";
+  }
+  function getMigrationDataByCountry(countryId) {
+    if (view === 0) return props.model.getImigrationValue(countryId);
+    if (view === 1) return props.model.getEmigrationValue(countryId);
+    if (view === 2) return props.model.getNetRatioMigrationValue(countryId);
+  }
+  function displayMigrationValue(countryId) {
+    var val = getMigrationDataByCountry(countryId);
+    if (val) return val.toFixed(2).toLocaleString();
+    else return " -";
   }
 
   function getCenters() {
-    /* fetch data for country x */
+    /* fetch data for country center */
+    //TODO needs to be adabted, some countries are missing,
+    //some centers are outside if countries consist of multible areas, or have complicated shape
     return fetch(`./data/centerCountries.json`, {
       headers: {
         "Content-Type": "application/json",
