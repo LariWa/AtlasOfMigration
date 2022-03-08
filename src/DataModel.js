@@ -9,7 +9,7 @@ class DataModel {
       //this.data = null;
       this.imigrationData = this.getImmigrationData();
       this.emigrationData = this.getEmigrationData();
-      this.populationData = this.getPopulationData();
+      this.populationData = this.getCountryPopulationData();
       //total imigration in 1990 900 is ID for World
       //  console.log(this.getImigrationValue(900, 1990));
     });
@@ -210,6 +210,12 @@ class DataModel {
         return resData;
       })
       .catch((_) => console.log(_));
+  }
+  getCountryPopulationData() {
+    //Not sure with the naming!
+    return this.populationData.filter(function findValue(data) {
+      return data.id == 900; // whole world population
+    });
   }
   getImmigrationData() {
     return this.migrationData.filter(function findValue(data) {
