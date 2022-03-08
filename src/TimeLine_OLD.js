@@ -144,11 +144,6 @@ function TimeLine(productionDataset, downtimeDataset, powerOffDataset, data) {
 
 
 
-
-
-
-
-
  /*  use LayoutEffect() for updating d3 components? */
   useEffect(() => {
   //  d3.select(".test").style("background-color", "green");

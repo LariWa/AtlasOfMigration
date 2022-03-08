@@ -9,8 +9,9 @@ import Main from './Main';
 
 
 const dataModel = new DataModel()
-//dataModel.getCsvData()
-//console.log((dataModel.jsondata))
+//fetching data for year and center
+
+//console.log((dataModel.MigrationData))
 
 
 function App() {

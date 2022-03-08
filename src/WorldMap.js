@@ -8,7 +8,8 @@ const d3 = {
   tip: d3tip,
 };
 function WorldMap(props) {
-  var migrationData;
+
+  let migrationData;
   const [countryCenters, setCenters] = useState(null);
   const { height, width } = useWindowDimensions();
   const mapContainerRef = useRef();
@@ -21,11 +22,13 @@ function WorldMap(props) {
     .domain([min, 0, max])
     .range(["red", "white", "blue"]);
   /* data for total migration for each country. Saved as [{Country:value}]*/
-
 //  console.log(props.model.getMigrationValue(900, 900, 1990));
 
   const [yearData, setYearData] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
+
+
+
   useEffect(() => {
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
@@ -35,16 +38,12 @@ function WorldMap(props) {
     //   .precision(50); //TODO descide on projection
     const svg = d3.select(svgRef.current);
 
-    /*  Get total mig data from model for props.model.year.
-     Year can be set to test and get different years from 1980-2010 */
-    //props.model.setYear('2000_2005');
-    //props.model.year = ('2000_2005');
+    //setYearData(props.model.getData())
 
-
-    props.model.getData().then((res) => {
-      setYearData(res);
-    //  console.log(res);
-    });
+    // props.model.getData().then((res) => {
+    //   setYearData(res);
+    // //  console.log(res);
+    // });
 
 
     getCenters().then((data) => {
@@ -98,10 +97,10 @@ function WorldMap(props) {
     var path = d3.geoPath(projection);
 
     /* check so both data and yearData are not null */
-    yearData && console.log('yearData: ');
-    data && console.log('data: ');
+    //yearData && console.log('yearData: ');
+    //data && console.log('data: ');
 
-    if (data && yearData) {
+    if (data) {
       svg
         .selectAll(".country")
         .data(data.features)
@@ -177,9 +176,11 @@ function WorldMap(props) {
           .style("stroke-width", 3);
       }
     }
-  }, [data, selectedCountry]);
+  }, [data, countryCenters, selectedCountry, height, width]);
+  /*  ^^ all these param were added to make the map render, but should rewrite this */
 
-  if (!data) {
+  if (!data && !yearData) {
+    //console.log("loading");
     return <pre>Loading...</pre>;
   }
   return (
@@ -189,6 +190,7 @@ function WorldMap(props) {
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
+
   function clickedACB(event) {
     //TODO topography
     if (selectedCountry) {
@@ -206,6 +208,7 @@ function WorldMap(props) {
     d3.selectAll(".country").transition().duration(200).style("opacity", 1);
     d3.select(this).transition().duration(200).style("stroke", "transparent");
   }
+  /*    */
   function getColor(country) {
     //TODO get real data
     //console.log(country);

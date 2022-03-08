@@ -1,5 +1,5 @@
 //const path = `./data/${this.year}.json`;
-const path = "./data/1990_Origin_Destination.csv";
+const path = "./data/Data.json";
 
 /* handles state (year, country) of the app and fetches data from database  */
 class DataModel {
@@ -15,6 +15,7 @@ class DataModel {
     //  console.log(this.getImigrationValue(900, 1990));
     });
   }
+
   getMigrationValue(origin, destination, year) {
     if (this.migrationData)
       return this.migrationData.filter(function findValue(data) {
@@ -72,20 +73,22 @@ class DataModel {
 
   /*
     TODO: error handling */
-  getData(x = "") {
-    /* fetch data for country x */
-    return fetch(`./data/Data.json`, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((resData) => {
-        return resData;
+
+  async getData() {
+    try {
+      this.res = await fetch(`./data/Data.json`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
       })
-      .catch((_) => console.log(_));
+    } catch(e) {
+      console.log(e);
+      this.c_data = await this.res.json()
+      console.log(this.c_data);
+    }
   }
+
 
   getMigrationData() {
     /* fetch data for country x */
