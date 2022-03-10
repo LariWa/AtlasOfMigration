@@ -105,7 +105,7 @@ class DataModel {
     if (!year) year = this.year;
     var pop = this.getPopulationValue(country, year);
     var emmi = this.getEmigrationValue(country, year);
-    if (pop && netmig) return emmi / (pop * 1000); // I multiplied the population value by 1000
+    if (pop && emmi) return emmi / (pop * 1000); // I multiplied the population value by 1000
     // as the value is presented in thousands;
     return 0;
   }
