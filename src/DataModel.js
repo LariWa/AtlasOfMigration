@@ -16,12 +16,14 @@ class DataModel {
       this.countryNameAndId = res;
     });
   }
+  // gets the migration value between specified countries (not used at the moment)
   getMigrationValue(origin, destination, year) {
     if (this.migrationData)
       return this.migrationData.filter(function findValue(data) {
         return data.DestinationID == destination && data.OriginID == origin;
       })[0][year];
   }
+  //gets immigration value for specified destination (use 900 as destination to get total immigration)
   getImigrationValue(destination, year) {
     if (!year) year = this.year;
     if (this.imigrationData) {
@@ -33,6 +35,8 @@ class DataModel {
       }
     }
   }
+  //get top immigration countries for a specified country
+  //numberOfArrows specifies number of results
   getImmigrantionCountries(countryId) {
     var component = this;
     var imiCountries = this.migrationData.filter(function findValue(data) {
@@ -58,6 +62,7 @@ class DataModel {
       .slice(0, this.numberOfArrows);
   }
 
+  //get top emigration countries for a specified country
   getEmigrantionCountries(countryId) {
     var component = this;
     var emiCountries = this.migrationData.filter(function findValue(data) {
@@ -82,6 +87,7 @@ class DataModel {
       .sort(this.sortBy("value"))
       .slice(0, this.numberOfArrows);
   }
+  //get NetRatio
   getNetRatioMigrationValue(country, year) {
     //TODO decide on ratio or substract
     if (!year) year = this.year;
@@ -90,6 +96,7 @@ class DataModel {
     if (immi && emmi) return immi / emmi;
     return 0;
   }
+  //get Emigration value for a specified country
   getEmigrationValue(origin, year) {
     if (!year) year = this.year;
     if (this.emigrationData)
