@@ -9,12 +9,14 @@ class DataModel {
       //this.data = null;
       this.imigrationData = this.getImmigrationData();
       this.emigrationData = this.getEmigrationData();
-      this.populationData = this.getCountryPopulationData();
       //total imigration in 1990 900 is ID for World
       //  console.log(this.getImigrationValue(900, 1990));
     });
     this.getCountryNameAndId().then((res) => {
       this.countryNameAndId = res;
+    });
+    this.getPopulationData().then((res) => {
+      this.populationData = res;
     });
   }
   // gets the migration value between specified countries (not used at the moment)
@@ -97,6 +99,7 @@ class DataModel {
     if (immi && emmi) return immi / emmi;
     return 0;
   }
+  //this calculation does not make sense for a ratio?
   getNetRatioOverPopulationValue(country, year) {
     //(The Net migration value / the population value) * 1000
     if (!year) year = this.year;
@@ -111,7 +114,7 @@ class DataModel {
     if (!year) year = this.year;
     var pop = this.getPopulationValue(country, year);
     var emmi = this.getEmigrationValue(country, year);
-    if (pop && netmig) return emmi / (pop * 1000); // I multiplied the population value by 1000
+    if (pop && emmi) return (emmi / (pop * 1000)) * 100; // I multiplied the population value by 1000
     // as the value is presented in thousands;
     return 0;
   }
@@ -120,7 +123,9 @@ class DataModel {
     if (!year) year = this.year;
     var pop = this.getPopulationValue(country, year);
     var immi = this.getImigrationValue(country, year);
-    if (pop && immi) return immi / (pop * 1000); // I multiplied the population value by 1000
+    if (pop && immi) {
+      return (immi / (pop * 1000)) * 100;
+    } // I multiplied the population value by 1000
     // as the value is presented in thousands
     return 0;
   }
@@ -141,11 +146,9 @@ class DataModel {
     if (!year) year = this.year;
     if (this.populationData)
       var value = this.populationData.filter(function findValue(data) {
-        return (data.id = country);
+        return data.id == country;
       });
     if (value && value[0]) {
-      if (this.max < parseInt(value[0][year].split(" ").join("")))
-        this.max = parseInt(value[0][year].split(" ").join(""));
       return parseInt(value[0][year].split(" ").join(""));
     }
   }
