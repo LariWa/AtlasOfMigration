@@ -9,6 +9,7 @@ class DataModel {
       //this.data = null;
       this.imigrationData = this.getImmigrationData();
       this.emigrationData = this.getEmigrationData();
+      this.populationData = this.getCountryPopulationData();
       //total imigration in 1990 900 is ID for World
       //  console.log(this.getImigrationValue(900, 1990));
     });
@@ -96,12 +97,51 @@ class DataModel {
     if (immi && emmi) return immi / emmi;
     return 0;
   }
-  //get Emigration value for a specified country
+  getNetRatioOverPopulationValue(country, year) {
+    //(The Net migration value / the population value) * 1000
+    if (!year) year = this.year;
+    var pop = this.getPopulationValue(country, year);
+    var netmig = this.getNetRatioMigrationValue(country, year);
+    if (pop && netmig) return netmig / (pop * 1000); // I multiplied the population value by 1000
+    // as the value is presented in thousands
+    return 0;
+  }
+  getEmigrationOverPopulation(country, year) {
+    // Emigration value / popualtion value
+    if (!year) year = this.year;
+    var pop = this.getPopulationValue(country, year);
+    var emmi = this.getEmigrationValue(country, year);
+    if (pop && netmig) return emmi / (pop * 1000); // I multiplied the population value by 1000
+    // as the value is presented in thousands;
+    return 0;
+  }
+  getImigrationOverPopulation(country, year) {
+    // Emigration value / popualtion value
+    if (!year) year = this.year;
+    var pop = this.getPopulationValue(country, year);
+    var immi = this.getImigrationValue(country, year);
+    if (pop && immi) return immi / (pop * 1000); // I multiplied the population value by 1000
+    // as the value is presented in thousands
+    return 0;
+  }
+  //get emigration value for specified country
   getEmigrationValue(origin, year) {
     if (!year) year = this.year;
     if (this.emigrationData)
       var value = this.emigrationData.filter(function findValue(data) {
         return data.OriginID == origin;
+      });
+    if (value && value[0]) {
+      if (this.max < parseInt(value[0][year].split(" ").join("")))
+        this.max = parseInt(value[0][year].split(" ").join(""));
+      return parseInt(value[0][year].split(" ").join(""));
+    }
+  }
+  getPopulationValue(country, year) {
+    if (!year) year = this.year;
+    if (this.populationData)
+      var value = this.populationData.filter(function findValue(data) {
+        return (data.id = country);
       });
     if (value && value[0]) {
       if (this.max < parseInt(value[0][year].split(" ").join("")))
@@ -163,6 +203,26 @@ class DataModel {
         return resData;
       })
       .catch((_) => console.log(_));
+  }
+  getPopulationData() {
+    /* fetch pupulation data for country x */
+    return fetch(`./data/population.json`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((resData) => {
+        return resData;
+      })
+      .catch((_) => console.log(_));
+  }
+  getCountryPopulationData() {
+    //Not sure with the naming!
+    return this.populationData.filter(function findValue(data) {
+      return data.id == 900; // whole world population
+    });
   }
   getImmigrationData() {
     return this.migrationData.filter(function findValue(data) {
