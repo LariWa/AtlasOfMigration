@@ -4,53 +4,64 @@ import * as d3 from "d3";
 import "./App.css";
 import "./TimeLine.css";
 
-/* https://github.com/vasturiano/timelines-chart */
-import TimelinesChart from "timelines-chart";
-//const myChart = new TimelinesChart();
-// myChart.data([12,34,45,56])
-
 /* time runs 1990-2020, in 5 year interval + 2017 and 2019 */
 const yearRange = [
-  new Date(1990, 0, 1),
-  new Date(1995, 0, 1),
-  new Date(2000, 0, 1),
-  new Date(2005, 0, 1),
-  new Date(2010, 0, 1),
-  new Date(2015, 0, 1),
-  new Date(2017, 0, 1),
-  new Date(2019, 0, 1),
-  new Date(2020, 0, 1),
+  new Date(1990, 5, 1),
+  new Date(1995, 5, 1),
+  new Date(2000, 5, 1),
+  new Date(2005, 5, 1),
+  new Date(2010, 5, 1),
+  new Date(2015, 5, 1),
+  // new Date(2017, 5, 1),
+  // new Date(2019, 5, 1),
+  new Date(2020, 5, 1),
 ];
 
-const data = ["Net Migration", "Wars", "Gender"];
+const data = ["Pandemics", "Nature disaster"];
+const timeFormat = d3.timeFormat("%Y");
+
 
 function TimeLine(props) {
-  const containerRef = useRef(null);
+  const svgContainerRef = useRef(null);
   const [year, setYear] = useState(props.model.year);
-  //const width = containerRef.current.clientWidth / (data.length + 1)
+  const [countryID, setCountryID] = useState(props.model.country)
+  const worldData = props.model.migrationData
+  const migrationData = props.model.getMigrationValueAll(900, 900)
 
-  const dimensions = {
-    width: useWindowDimensions().width,
-    height: useWindowDimensions().height - 500, //TODO calculate param height
-    margin: { top: 0, right: 350, bottom: 20, left: 250 },
+  /* get data for one year */
+  let groupYear = d3.group(worldData,
+      d => d.DestinationID,
+      d => d.OriginID)
+      .get(900)
+      .get(900)
+    console.log(groupYear);
+
+  //console.log(migrationData);
+
+  let totalData = worldData && worldData.filter( (data) => data.DestinationID == "900" && data.OriginID == "900")[0]
+  //console.log(totalData )
+
+  /* update this local or update model? */
+  const updateYear = (x) => {
+    props.model.year = x;
   };
 
-  // const start = (d) => d[0];
-  // const end = (d) => d[d.length-1];
 
-  // let svg = d3.select("#res")
-  //   .append("svg")
-  //   .attr("width", 1000)
-  //
-  //   const xScale = d3.scaleTime()
-  //        .domain([chartStartsAt, chartEndsAt])
-  //    const yScale = d3.scaleLinear()
-  //        .domain(d3.extent(productionDataset, yAccessor))
-  //        .range([dimensions.height - dimensions.margin.bottom, 0])
+  const dimensions = {
+    //width = document.getElementById('timeline').offsetWidth;//includes margin,border,padding
+    //height = document.getElementById('timeline').offsetHeight;//includes margin,border,padding
+    // width: svgContainerRef.current.clientWidth,
+    // height: svgContainerRef.current.clientHeight,
+    width: useWindowDimensions().width,
+    height: useWindowDimensions().height,
+    margin: { top: 600, right: 400, bottom: 0, left: 100 }, //set to responsive
+  };
+
 
   //  useLayoutEffect(() => {
   useEffect(() => {
-    const x = d3
+
+    const xScale = d3
       .scaleTime()
       .domain(d3.extent(yearRange))
       .range([
@@ -58,52 +69,52 @@ function TimeLine(props) {
         dimensions.width - dimensions.margin.right,
       ]);
 
-    const y = d3.scaleBand()
+    const yScale = d3.scaleBand()
       .domain(data)
-      .range([dimensions.height, 0])
+      .range([dimensions.height-dimensions.margin.top, 60])
+
+      // Clear svg content before adding new elements
+      // const svgEl = d3.select(svgRef.current);
+      // svgEl.selectAll("*").remove();
 
     if (Array.isArray(data)) {
-      d3.select("#bottom")
-        .attr("transform", "translate(0,100)")
-        .call(d3.axisBottom(x).tickValues(yearRange));
+        d3.select("#bottom")
+        .attr("transform", "translate(0,80)")
+        .call(d3.axisBottom(xScale)
+          .tickFormat(timeFormat)
+          .tickValues(yearRange))
         //.call(d3.axisBottom(x).ticks(d3.timeYear.every(5)))
+
+      //  Object.keys(migrationData).forEach(p =>console.log(p))
+         /*  add barchart with values corresponding to ... */
+        d3.select("#bottom")
+          .selectAll("rect")
+          .data(yearRange)
+          .join('rect')
+          .attr("x", xScale((d) => d.timeFormat)) //(d) => d.timeFormat )
+          .attr("y", -50)
+          .attr("height", 50) //range of data
+          .attr("width", 30 )
+        // //.attr("width", x.bandwidth() )
+          .style("fill", "black")
+        // //.style("opacity", 0.5)
+
       d3.select("#left")
-        .attr("transform", "translate(230,-130)")
-        .call(d3.axisLeft(y))
-
-      // const update = d3.select("g").selectAll("circle").data(data);
-      //
-      // update
-      //   .enter()
-      //   .append("circle")
-      //   .merge(update)
-      //   .attr("r", (d) => d)
-      //   .attr("cx", (_, i) => dimensions.width * (i + 1))
-      //   .attr("cy", () => Math.random() * 100)
-      //   .attr("stroke", (_, i) => (i % 2 === 0 ? "#f80" : "#aaf"))
-      //   .attr("fill", (_, i) => (i % 2 === 0 ? "orange" : "#44f"));
-      //
-      // update.exit().remove();
+        .attr("transform", "translate(90,-50)")
+        .call(d3.axisLeft(yScale))
     }
-  });
 
-  /* update this local or update model? */
-  const updateYear = (x) => {
-    props.model.year = x;
-  };
+  }, [migrationData]);
 
+ //<div className="wrapper" id="timeline" ref = {timeContainerRef} style={{backgroundColor: "#F6F6F2" }} >
   //TODO: set transform to responsive measurements
   return (
-    <div className="wrapper" id="timeline" style={{backgroundColor: "#F6F6F2" }} >
-      <svg id="content"
-        width={dimensions.width}
-        height={dimensions.height}
-        ref={containerRef}
+      <svg id="timeLine" width = '80%' height = '15%' style={{backgroundColor: "#FF0000" }}
+        ref={svgContainerRef}
       >
         <g id = "left"/>
         <g id = "bottom"/>
       </svg>
-    </div>
   );
 }
 

@@ -9,8 +9,7 @@ const d3 = {
 };
 function WorldMap(props) {
   const [countryCenters, setCenters] = useState(null);
-  const [view, setView] = useState(0); //immigration = 0, emmigration 1, net migration=2
-
+  const [view, setView] = useState(props.view); //immigration = 0, emmigration 1, net migration=2
   const { height, width } = useWindowDimensions();
   const mapContainerRef = useRef();
   const svgRef = useRef();
@@ -29,6 +28,7 @@ function WorldMap(props) {
   const [migrationCountries, setMigrationCountries] = useState(null);
 
   useEffect(() => {
+    setView(props.view)
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
     const projection = d3.geoEquirectangular().fitSize([width, height], data);
@@ -143,7 +143,7 @@ function WorldMap(props) {
     }
   }, [data, selectedCountry, migrationCountries]);
 
-  if (!data && !yearData) {
+  if (!data) {
     //console.log("loading");
     return <pre>Loading...</pre>;
   }
@@ -167,15 +167,17 @@ function WorldMap(props) {
     else if (view == 1) val = props.model.getEmigrantionCountries(countryId);
     if (val) {
       console.log(val);
+      console.log("countryID: ", countryId);
       setMigrationCountries(val);
       setArrows(
         val.map((item) => {
+            console.log("item: ", item.id);
           return {
             type: "LineString",
             coordinates: [
               [
-                countryCenters[countryId].longitude,
-                countryCenters[countryId].latitude,
+                countryCenters[parseInt(countryId, 10)].longitude,
+                countryCenters[parseInt(countryId, 10)].latitude,
               ],
               [
                 countryCenters[item.id].longitude,
@@ -227,7 +229,7 @@ function WorldMap(props) {
     if (view == 1) return "darkblue";
   }
   function getMigrationDataByCountry(countryId) {
-    if (view === 0) return props.model.getImigrationValue(countryId);
+    if (view === 0) return props.model.getimmigrationValue(countryId);
     if (view === 1) return props.model.getEmigrationValue(countryId);
     if (view === 2) return props.model.getNetRatioMigrationValue(countryId);
   }

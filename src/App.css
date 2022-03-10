@@ -1,23 +1,8 @@
-
-/* Temp CSS ------------------------------------------ */
-
 .container {
-  /*display: flex;
-  flex-direction: row;
-  */
   position: relative;
   left: 0;
   top: 0;
 }
-
-#timeline{
-  position: absolute;
-  margin-top: 80vh;
-  margin-left: 20vh;
-}
-
-
-
 
 
 /*  START old react stuff ----------------------------------------------------- */

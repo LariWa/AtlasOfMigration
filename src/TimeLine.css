@@ -1,3 +1,21 @@
+/* Temp CSS ------------------------------------------ */
+
+.container {
+  position: relative;
+  left: 0;
+  top: 0;
+}
+
+#timeLine{
+  position: absolute;
+  left: 20vw;
+  top: 86vh;
+  margin-top: 0;
+  margin-left: 0;
+}
+
+
+
 .tooltip {
     position: absolute;
     text-align: center;
