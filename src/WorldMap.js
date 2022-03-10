@@ -11,7 +11,6 @@ var migrationCountries;
 var selectedCountry;
 
 function WorldMap(props) {
-  const [countryCenters, setCenters] = useState(null);
   const [view, setView] = useState(1); //immigration = 0, emmigration 1, net migration=2
 
   const { height, width } = useWindowDimensions();
@@ -34,7 +33,6 @@ function WorldMap(props) {
 
   useEffect(() => {
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
-    console.log(data);
 
     var projection;
     if (zoomCountries)
@@ -47,9 +45,6 @@ function WorldMap(props) {
     //   .precision(50); //might be good to avoid glitching
     const svg = d3.select(svgRef.current);
 
-    getCenters().then((data) => {
-      setCenters(data);
-    });
     //tooltip-----------------------------------------------------------
     var countryTip = d3
       .tip()
@@ -90,22 +85,23 @@ function WorldMap(props) {
         zoomed(event);
       });
     function zoomed(event) {
-      var scale = rootProjection.scale();
-      var translate = rootProjection.translate();
-      var t = event.transform;
-      var tx = translate[0] - t.invertX(translate[0]);
-      var ty = translate[1] * t.k + t.y;
-      projection
-        .scale(t.k * scale)
-        .rotate([yaw(tx), 0, 0])
-        .translate([translate[0], ty]);
-      mapContainer.selectAll("path").attr("d", path.projection(projection));
+      if (!selectedCountry) {
+        var scale = rootProjection.scale();
+        var translate = rootProjection.translate();
+        var t = event.transform;
+        var tx = translate[0] - t.invertX(translate[0]);
+        var ty = translate[1] * t.k + t.y;
+        projection
+          .scale(t.k * scale)
+          .rotate([yaw(tx), 0, 0])
+          .translate([translate[0], ty]);
+        mapContainer.selectAll("path").attr("d", path.projection(projection));
+      }
     }
     mapContainer.call(zoom);
     //------------------------------------------------------------------------------
 
     var path = d3.geoPath(projection);
-
     /* check so both data and yearData are not null */
     if (data) {
       svg
@@ -136,7 +132,7 @@ function WorldMap(props) {
         });
 
       //arrows
-      if (countryCenters && arrows && selectedCountry) {
+      if (arrows && selectedCountry) {
         svg.selectAll(".arrow").remove();
         svg
           .selectAll("arrows")
@@ -165,6 +161,44 @@ function WorldMap(props) {
           });
       }
     }
+    function clickedACB(event) {
+      //TODO topography, if time
+      showDetailView(event);
+    }
+    function showDetailView(event) {
+      var countryId = event.target.id;
+      if (view == 0)
+        migrationCountries = props.model.getImmigrantionCountries(countryId);
+      else if (view == 1)
+        migrationCountries = props.model.getEmigrantionCountries(countryId);
+      if (migrationCountries) {
+        var zoomFeatures = data.features.filter((country) => {
+          return migrationCountries.some((e) => e.id == country.id);
+        });
+        createArrows(zoomFeatures);
+        zoomFeatures.push(selectedCountry);
+        setZoomCountries({
+          type: "FeatureCollection",
+          features: zoomFeatures,
+        });
+      }
+    }
+    function createArrows(targetCountries) {
+      setArrows(
+        targetCountries.map((targetCountry) => {
+          return {
+            type: "LineString",
+            data: targetCountry.id,
+            coordinates: [getCenter(selectedCountry), getCenter(targetCountry)],
+          };
+        })
+      );
+    }
+
+    function getCenter(feature) {
+      let coords = projection.invert(path.centroid(feature));
+      return coords;
+    }
   }, [data, selectedCountry, zoomCountries]);
 
   if (!data) {
@@ -175,49 +209,7 @@ function WorldMap(props) {
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
-  function clickedACB(event) {
-    //TODO topography, if time
-    showDetailView(event);
-  }
-  function showDetailView(event) {
-    createArrows(event.target.id);
-    var zoomFeatures = data.features.filter((country) => {
-      return migrationCountries.some((e) => e.id == country.id);
-    });
-    console.log(zoomFeatures);
-    zoomFeatures.push(selectedCountry);
-    setZoomCountries({
-      type: "FeatureCollection",
-      features: zoomFeatures,
-    });
-  }
-  function createArrows(countryId) {
-    var val;
 
-    if (view == 0) val = props.model.getImmigrantionCountries(countryId);
-    else if (view == 1) val = props.model.getEmigrantionCountries(countryId);
-    if (val) {
-      migrationCountries = val;
-      setArrows(
-        val.map((item) => {
-          return {
-            type: "LineString",
-            data: item.id,
-            coordinates: [
-              [
-                countryCenters[countryId].longitude,
-                countryCenters[countryId].latitude,
-              ],
-              [
-                countryCenters[item.id].longitude,
-                countryCenters[item.id].latitude,
-              ],
-            ],
-          };
-        })
-      );
-    }
-  }
   function mouseOverACB(event) {
     d3.selectAll(".country").transition().duration(200).style("opacity", 0.5);
     d3.select(event.target).transition().duration(200).style("opacity", 1);
@@ -265,23 +257,6 @@ function WorldMap(props) {
     var val = getMigrationDataByCountry(countryId);
     if (val) return val.toFixed(2).toLocaleString();
     else return " -";
-  }
-
-  function getCenters() {
-    /* fetch data for country center */
-    //TODO needs to be adabted, some countries are missing,
-    //some centers are outside if countries consist of multible areas, or have complicated shape
-    return fetch(`./data/centerCountries.json`, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((resData) => {
-        return resData;
-      })
-      .catch((_) => console.log(_));
   }
 }
 
