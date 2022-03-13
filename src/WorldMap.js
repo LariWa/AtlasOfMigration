@@ -43,6 +43,8 @@ function WorldMap(props) {
   const [arrows, setArrows] = useState(null);
 
   useEffect(() => {
+    console.log(props.year);
+    setView(props.view);
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
     var projection;
@@ -213,6 +215,7 @@ function WorldMap(props) {
   }, [data, selectedCountry, zoomCountries]);
 
   if (!data) {
+    //console.log("loading");
     return <pre>Loading...</pre>;
   }
   return (
@@ -220,7 +223,6 @@ function WorldMap(props) {
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
-
   function mouseOverACB(event) {
     d3.selectAll(".country").transition().duration(200).style("opacity", 0.5);
     d3.select(event.target).transition().duration(200).style("opacity", 1);
@@ -229,6 +231,7 @@ function WorldMap(props) {
     d3.selectAll(".country").transition().duration(200).style("opacity", 1);
     d3.select(this).transition().duration(200).style("stroke", "transparent");
   }
+  /*    */
   function getColor(country) {
     if (selectedCountry) return getDetailViewColor(country);
     var val = getMigrationDataByCountry(country);

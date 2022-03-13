@@ -1,8 +1,7 @@
-
-/* Temp CSS ------------------------------------------ */
-
 .container {
-  display: grid;
+  position: relative;
+  left: 0;
+  top: 0;
 }
 
 

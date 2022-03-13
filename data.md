@@ -21,10 +21,10 @@ Year
     - Country
 
 For each entry:  
-      - Total
-      - Other South
-      - Other North
-      - Afghanistan
-      - Albania
-      - Algeria
-      - etc. ()
+  - Total
+  - Other South
+  - Other North
+  - Afghanistan
+  - Albania
+  - Algeria
+  - etc. ()

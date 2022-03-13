@@ -1,30 +1,37 @@
-import React, {useEffect, useLayoutEffect} from "react";
+import React, {useEffect, useState, useLayoutEffect} from "react";
 import * as d3 from "d3";
 import "./styles/sideBar.min.css";
 
 
 /* just some test to see that d3 works*/
-function SideBar() {
-
- let stat = 1;
+function SideBar({country, year}) {
 
  /*  use LayoutEffect() for updating d3 components? */
-/*  useLayoutEffect(() => {
-    d3.select(".nav").style("background-color", "magenta");
-  }, []);
+ useEffect(() => {
+   // console.log("effect", year)
+   // console.log("effect", country)
 
-  const onMouseClick = () => {
-    d3.selectAll(".nav").style("color", "yellow");
+ }, [year, country]);
+
+  const  SearchCountry = (e) => {
+    if (e.key === 'Enter'){
+      console.log(e.target.value);
+      
+    }
   };
-*/
+
 
   return (
       <div className="sideBar">
         <h1>World Overview</h1>
-
-        <div id="searchBox">
+        <h3> Country: {country} </h3>
+        <h3> Year: {year} </h3>
+        <div id="searchBox" onKeyDown = {SearchCountry}>
           <label>Search for Country</label><br/>
-          <input type="text" placeholder="Search.."/>
+          <input type="text"
+          id="inputField"
+          onChange = {SearchCountry}
+          placeholder="Search.."/>
         </div>
 
         <h2>Explanation</h2>
