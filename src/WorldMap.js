@@ -33,6 +33,8 @@ function WorldMap(props) {
   const [arrows, setArrows] = useState(null);
 
   useEffect(() => {
+    console.log(props.year);
+    setView(props.view)
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
     console.log(data);
 
@@ -50,6 +52,8 @@ function WorldMap(props) {
     getCenters().then((data) => {
       setCenters(data);
     });
+
+
     //tooltip-----------------------------------------------------------
     var countryTip = d3
       .tip()
@@ -168,6 +172,7 @@ function WorldMap(props) {
   }, [data, selectedCountry, zoomCountries]);
 
   if (!data) {
+    //console.log("loading");
     return <pre>Loading...</pre>;
   }
   return (
@@ -175,6 +180,7 @@ function WorldMap(props) {
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
+
   function clickedACB(event) {
     //TODO topography, if time
     showDetailView(event);
@@ -200,13 +206,14 @@ function WorldMap(props) {
       migrationCountries = val;
       setArrows(
         val.map((item) => {
+            console.log("item: ", item.id);
           return {
             type: "LineString",
             data: item.id,
             coordinates: [
               [
-                countryCenters[countryId].longitude,
-                countryCenters[countryId].latitude,
+                countryCenters[parseInt(countryId, 10)].longitude,
+                countryCenters[parseInt(countryId, 10)].latitude,
               ],
               [
                 countryCenters[item.id].longitude,
@@ -226,6 +233,7 @@ function WorldMap(props) {
     d3.selectAll(".country").transition().duration(200).style("opacity", 1);
     d3.select(this).transition().duration(200).style("stroke", "transparent");
   }
+  /*    */
   function getColor(country) {
     if (selectedCountry) return getDetailViewColor(country);
     var val = getMigrationDataByCountry(country);
@@ -257,7 +265,7 @@ function WorldMap(props) {
     if (view == 1) return "darkblue";
   }
   function getMigrationDataByCountry(countryId) {
-    if (view === 0) return props.model.getImigrationValue(countryId);
+    if (view === 0) return props.model.getimmigrationValue(countryId);
     if (view === 1) return props.model.getEmigrationValue(countryId);
     if (view === 2) return props.model.getNetRatioMigrationValue(countryId);
   }

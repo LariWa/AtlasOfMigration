@@ -1,23 +1,43 @@
-import React from "react";
+import React, {useState} from "react";
 import * as d3 from "d3";
 import SideBar from "./SideBar";
 import TimeLine from "./TimeLine";
 import "./App.css";
 import WorldMap from "./WorldMap";
 import DataModel from './DataModel';
+import Start from './Start';
+
 
 
 const dataModel = new DataModel()
-//dataModel.getData().then(res => console.log(res));
-
 
 function App() {
+  const [view, setView] = useState(0); //immigration = 0, emmigration 1, net migration=2
+  const [loading, setLoading] = useState(true);
+  const [pressed, setPressed] = useState(true) /* change this to false to make startpage stay open */
+  const [year, setYear] = useState(dataModel.year) //just a hack to make components rerender on year change
+
+  dataModel.getMigrationData()
+  .then(() => {
+    //console.log(dataModel.getTotalEmigration(300, 0))
+    //console.log(dataModel.getMigrationValueAll(900, 300));
+    setLoading(false);
+  })
+
+
+  //console.log(dataModel.getMigrationValue(900, 900, 2020));
+  //let res = dataModel.getTotalEmigration(300)
+
   return (
+  <>
+    {loading || !pressed ? <Start enter = {setPressed} loading = {loading}/> :
     <div className = 'container'>
-      <SideBar />
-      <WorldMap model = {dataModel}/>
-      <TimeLine model = {dataModel} />
+      <SideBar country = {dataModel.countryName} year = {dataModel.year} />
+      <TimeLine model = {dataModel} setTopYear = {setYear} />
+      <WorldMap model = {dataModel} year = {dataModel.year} view = {view}/>
     </div>
+    }
+</>
   );
 }
 
