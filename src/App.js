@@ -24,8 +24,6 @@ function App() {
     setLoading(false);
   });
 
-  //this works but returns undefined
-  //console.log(dataModel.setCountryID(92));
 
   return (
     <>
@@ -37,6 +35,8 @@ function App() {
             model={dataModel}
             year={year}
             setCountryID={setCountryID}
+            setView = {setView}
+            view = {view}
           />
           <TimeLine
             model={dataModel}
@@ -52,7 +52,5 @@ function App() {
     </>
   );
 }
-// function setCountryIDACB(id) {
-//   dataModel.setCountryID(id);
-// }
+
 export default App;
