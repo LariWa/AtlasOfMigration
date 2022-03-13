@@ -28,6 +28,7 @@ function WorldMap(props) {
   const [migrationCountries, setMigrationCountries] = useState(null);
 
   useEffect(() => {
+    console.log(props.year);
     setView(props.view)
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 

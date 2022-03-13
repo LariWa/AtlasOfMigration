@@ -6,115 +6,158 @@ import "./TimeLine.css";
 
 /* time runs 1990-2020, in 5 year interval + 2017 and 2019 */
 const yearRange = [
-  new Date(1990, 5, 1),
-  new Date(1995, 5, 1),
-  new Date(2000, 5, 1),
-  new Date(2005, 5, 1),
-  new Date(2010, 5, 1),
-  new Date(2015, 5, 1),
-  // new Date(2017, 5, 1),
-  // new Date(2019, 5, 1),
-  new Date(2020, 5, 1),
+  new Date(1990, 6, 1), //6 equals 1 July
+  new Date(1995, 6, 1),
+  new Date(2000, 6, 1),
+  new Date(2005, 6, 1),
+  new Date(2010, 6, 1),
+  new Date(2015, 6, 1),
+  // new Date(2017, 6, 1),
+  // new Date(2019, 6, 1),
+  new Date(2020, 6, 1),
 ];
 
-const data = ["Pandemics", "Nature disaster"];
-const timeFormat = d3.timeFormat("%Y");
+const yData = ["Pandemics", "Nature disaster"];
 
-
-function TimeLine(props) {
+function TimeLine({ model, setTopYear}) {
   const svgContainerRef = useRef(null);
-  const [year, setYear] = useState(props.model.year);
-  const [countryID, setCountryID] = useState(props.model.country)
-  const worldData = props.model.migrationData
-  const migrationData = props.model.getMigrationValueAll(900, 900)
+  const [year, setYear] = useState(model.year);
+  const [countryID, setCountryID] = useState(model.countryID);
+  const [sex, setSex] = useState(0);
+  const dx = 20; //for now, set to responsive
+  const [data, setData] = useState(model.timeData);
+  const timeFormat = d3.timeFormat("%Y");
+  const timeDomain = yearRange.map((x) => timeFormat(x));
+  const axisMargin = 50 //for now
 
   /* get data for one year */
-  let groupYear = d3.group(worldData,
-      d => d.DestinationID,
-      d => d.OriginID)
-      .get(900)
-      .get(900)
-    console.log(groupYear);
-
-  //console.log(migrationData);
-
-  let totalData = worldData && worldData.filter( (data) => data.DestinationID == "900" && data.OriginID == "900")[0]
-  //console.log(totalData )
+  // let groupYear = d3.group(worldData,
+  //     d => d.DestinationID,
+  //     d => d.OriginID)
+  //     .get(900)
+  //     .get(900)
+  //   //console.log(groupYear);
 
   /* update this local or update model? */
   const updateYear = (x) => {
-    props.model.year = x;
+    //format input to right year
+    setYear(x);
+    model.setYear(x)
+    setTopYear(x)
+    //console.log("new year", model.year);
   };
 
-
+  /* set to size of container ? */
   const dimensions = {
-    //width = document.getElementById('timeline').offsetWidth;//includes margin,border,padding
-    //height = document.getElementById('timeline').offsetHeight;//includes margin,border,padding
+    //width = document.getElementById('container').offsetWidth;//includes margin,border,padding
+    //height = document.getElementById('container').offsetHeight;//includes margin,border,padding
     // width: svgContainerRef.current.clientWidth,
     // height: svgContainerRef.current.clientHeight,
-    width: useWindowDimensions().width,
-    height: useWindowDimensions().height,
-    margin: { top: 600, right: 400, bottom: 0, left: 100 }, //set to responsive
+    margin: { top: 600, left:`10vh`, bottom: `10vh`, right: `30vw` }, //set to responsive
+    width: useWindowDimensions().width * 0.7,
+    height: useWindowDimensions().height * 0.2
   };
 
+  const margin = { top: 20, left:40, bottom: 20, right: 50 }
 
   //  useLayoutEffect(() => {
   useEffect(() => {
+      if (data) {
 
     const xScale = d3
       .scaleTime()
       .domain(d3.extent(yearRange))
-      .range([
-        dimensions.margin.left,
-        dimensions.width - dimensions.margin.right,
-      ]);
+      .range([margin.left,dimensions.width-margin.right])
+       .nice();
 
-    const yScale = d3.scaleBand()
-      .domain(data)
-      .range([dimensions.height-dimensions.margin.top, 60])
+    const shiftXAxis = 100
+    const shiftYAxis = 55
 
-      // Clear svg content before adding new elements
-      // const svgEl = d3.select(svgRef.current);
-      // svgEl.selectAll("*").remove();
+    const yScale = d3
+      .scaleLinear()
+      .domain([0, d3.max(data, d => d.total)])
+      .range([dimensions.height- margin.top, margin.bottom])
+        .nice()
 
-    if (Array.isArray(data)) {
-        d3.select("#bottom")
-        .attr("transform", "translate(0,80)")
-        .call(d3.axisBottom(xScale)
-          .tickFormat(timeFormat)
-          .tickValues(yearRange))
-        //.call(d3.axisBottom(x).ticks(d3.timeYear.every(5)))
+    // Clear svg content before adding new elements
+    const svgEl = d3.select(svgContainerRef.current);
+    svgEl.selectAll("*").remove();
 
-      //  Object.keys(migrationData).forEach(p =>console.log(p))
-         /*  add barchart with values corresponding to ... */
-        d3.select("#bottom")
+    console.log(data)
+
+      svgEl.append("g")
+        .attr("transform", `translate(30,${shiftXAxis})`)
+        .attr("id","bottom")
+        .style("font-size", "16px")
+        .attr("color", "red")
+
+      const xAxis = d3
+        .axisBottom(xScale)
+        //.ticks(d3.timeYear.every(5))
+        .ticks(7)
+        //.tickValues(timeFormat)
+        //.tickFormat(x => timeFormat(x))
+      svgEl.select("#bottom")
+        .call(xAxis);
+
+
+
+      /*  add barchart with values corresponding to ... */
+      const yAxis = d3
+        .axisLeft(yScale)
+        .ticks(3)
+        .tickFormat(d3.format(".2s"))
+
+      svgEl.append("g")
+        .attr("transform", `translate(${shiftYAxis} , -15)`)
+        .attr("id","left")
+        .style("font-size", "16px")
+        .attr("color", "red" )
+      svgEl.select('#left')
+        .call(yAxis)
+
+
+
+        data.forEach(x => console.log("total: " ,x.total," --> y: " ,yScale(x.total)))
+        //data.forEach(x => console.log("date: " ,x.date," --> x: " ,xScale(x.date)))
+
+      d3.select("#bottom")
           .selectAll("rect")
-          .data(yearRange)
+          .data(data)
           .join('rect')
-          .attr("x", xScale((d) => d.timeFormat)) //(d) => d.timeFormat )
-          .attr("y", -50)
-          .attr("height", 50) //range of data
-          .attr("width", 30 )
-        // //.attr("width", x.bandwidth() )
-          .style("fill", "black")
-        // //.style("opacity", 0.5)
+          .attr("x", d => xScale((d.date)) - dx)
+          .attr('y', d => yScale(d.total)-shiftXAxis-15) //This value is strange!!
+          .attr('height', (d) => (dimensions.height-margin.top-margin.bottom) - yScale(d.total))
+          //.attr("height", d => yScale(d.total)/2) //base on data
+          .attr("width", dx )
+          .style("fill", "pink")
 
-      d3.select("#left")
-        .attr("transform", "translate(90,-50)")
-        .call(d3.axisLeft(yScale))
+    d3.selectAll("rect")
+        .on("click", (d,i) => {
+          //console.log("click bar " )
+          console.log(timeFormat(i.date));
+          updateYear(timeFormat(i.date))
+        })
+
+        .on("mouseover", (d,i) => {
+          console.log("mouse over bar ",  )
+        })
     }
+  }, [data]);
 
-  }, [migrationData]);
 
- //<div className="wrapper" id="timeline" ref = {timeContainerRef} style={{backgroundColor: "#F6F6F2" }} >
-  //TODO: set transform to responsive measurements
+
+  // position is set with css
   return (
-      <svg id="timeLine" width = '80%' height = '15%' style={{backgroundColor: "#FF0000" }}
-        ref={svgContainerRef}
-      >
-        <g id = "left"/>
-        <g id = "bottom"/>
-      </svg>
+    <svg
+      id="timeLine"
+      width = {dimensions.width}
+      height = {dimensions.height}
+      transform = "translate(250, 600)"
+      style={{ backgroundColor: "#121242" }}
+      ref={svgContainerRef}
+    >
+    </svg>
   );
 }
 
