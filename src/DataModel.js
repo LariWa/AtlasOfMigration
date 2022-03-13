@@ -286,41 +286,45 @@ class DataModel {
       console.log(this.c_data);
     }
   }
-
+  loadData() {
+    const component = this;
+    return Promise.all([getMigrationData(), getPopulationData()]).then();
+    function getMigrationData() {
+      /* fetch data for country x */
+      return fetch(path, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((resData) => {
+          component.migrationData = resData;
+          component.immigrationData = component.getImmigrationData();
+          component.emigrationData = component.getEmigrationData();
+          //this.getCountryNameID(resData)
+          //this.CountryNameID = this.getCountryNameID(res) //map to object from migData
+          //return resData;
+        })
+        .catch((_) => console.log(_));
+    }
+    function getPopulationData() {
+      /* fetch pupulation data for country x */
+      return fetch(`./data/population.json`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((resData) => {
+          component.populationData = resData;
+        })
+        .catch((_) => console.log(_));
+    }
+  }
   /* fetches the data for migration as json */
-  getMigrationData() {
-    /* fetch data for country x */
-    return fetch(path, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((resData) => {
-        this.migrationData = resData;
-        this.immigrationData = this.getImmigrationData();
-        this.emigrationData = this.getEmigrationData();
-        //this.getCountryNameID(resData)
-        //this.CountryNameID = this.getCountryNameID(res) //map to object from migData
-        //return resData;
-      })
-      .catch((_) => console.log(_));
-  }
-  getPopulationData() {
-    /* fetch pupulation data for country x */
-    return fetch(`./data/population.json`, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((resData) => {
-        return resData;
-      })
-      .catch((_) => console.log(_));
-  }
+
   getCountryPopulationData() {
     //Not sure with the naming!
     return this.populationData.filter(function findValue(data) {

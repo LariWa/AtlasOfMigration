@@ -43,7 +43,6 @@ function WorldMap(props) {
   const [arrows, setArrows] = useState(null);
 
   useEffect(() => {
-    console.log(props.year);
     setView(props.view);
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
@@ -212,7 +211,7 @@ function WorldMap(props) {
       let coords = projection.invert(path.centroid(feature));
       return coords;
     }
-  }, [data, selectedCountry, zoomCountries]);
+  }, [data, selectedCountry, zoomCountries, props.year]);
 
   if (!data) {
     //console.log("loading");
