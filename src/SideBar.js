@@ -13,8 +13,11 @@ function SideBar({country, year}) {
 
  }, [year, country]);
 
-  const onMouseClick = () => {
-
+  const  SearchCountry = (e) => {
+    if (e.key === 'Enter'){
+      console.log(e.target.value);
+      
+    }
   };
 
 
@@ -23,9 +26,12 @@ function SideBar({country, year}) {
         <h1>World Overview</h1>
         <h3> Country: {country} </h3>
         <h3> Year: {year} </h3>
-        <div id="searchBox">
+        <div id="searchBox" onKeyDown = {SearchCountry}>
           <label>Search for Country</label><br/>
-          <input type="text" placeholder="Search.."/>
+          <input type="text"
+          id="inputField"
+          onChange = {SearchCountry}
+          placeholder="Search.."/>
         </div>
 
         <h2>Explanation</h2>
