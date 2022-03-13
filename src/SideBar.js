@@ -3,26 +3,28 @@ import * as d3 from "d3";
 import "./styles/sideBar.min.css";
 import { CountryNameID } from "./const/CountryNameID";
 
-function SideBar({country, year, setCountryID}) {
+function SideBar({model, year, setCountryID}) {
   const [input, setInput] = useState('')
   const [nbrChoices, setNbrChoices] = useState(0)
   const [selCountry, setSelCountry] = useState([])
+
 
  useEffect(() => {
    // console.log("effect", year)
    // console.log("effect", country)
 
- }, [year, country]);
+ }, [year, model]);
 
   const  searchCountry = (e) => {
     if (e.key === 'Enter'){
-      console.log(input);
+      //console.log(input);
       if (nbrChoices === 1){
           setInput(selCountry[0].name)
           console.log("country matched");
           //console.log(selCountry);
           console.log(selCountry[0].id);
           setCountryID(selCountry[0].id)
+          model.setCountryID(selCountry[0].id)
       }
     }
   };
@@ -35,8 +37,8 @@ function SideBar({country, year, setCountryID}) {
      x =>
        x.name.toLowerCase().indexOf(input.toLowerCase()) > -1
    );
-    console.log(filteredInput.length);
-    filteredInput.map(x => console.log(x.name));
+    //console.log(filteredInput.length);
+    //filteredInput.map(x => console.log(x.name));
     setNbrChoices(filteredInput.length)
     setSelCountry(filteredInput)
  }
@@ -45,7 +47,7 @@ function SideBar({country, year, setCountryID}) {
   return (
       <div className="sideBar">
         <h1>World Overview</h1>
-        <h3> Country: {country} </h3>
+        <h3> Country: {model.countryName} </h3>
         <h3> Year: {year} </h3>
         <div id="searchBox" >
           <label>Search for Country</label><br/>

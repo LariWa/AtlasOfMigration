@@ -27,32 +27,20 @@ class DataModel {
   }
 
   setCountryID(x) {
-    console.log(x);
-    this.countryID = x;   // <-- this seem to make the rest not execute
-    console.log("id: " ,this.countryID);
+    //console.log(x);
+    this.countryID = x;
+    //console.log("id: " ,this.countryID);
     this.countryName = this.codeToName(x)
-    console.log("name: ",this.countryName);
+    //console.log("name: ",this.countryName);
 
   }
 
   /* get name of a country by code */
-  codeToName(x = 300) {
+  codeToName(x = WORLD) {
     let obj = CountryNameID.filter((item) => item.id === x);
     return obj[0] == null ? null : obj[0].name;
   }
 
-  // xport const CountryNameID = [
-  //   {
-  //     "name": "WORLD",
-  //     "id": 900,
-  //     region: true
-  //   },
-  //
-  //
-  //   for (const [book, price] of Object.entries(books)) {
-  //     if (price === 0) {
-  //       console.log(book);
-  //
 
   /* TODO: return an array with unique objects {name: ID, id: countryname}
     with ID and countrynames as listed in the UN dataset */
@@ -114,6 +102,7 @@ class DataModel {
   getMigrationValue(origin, destination, year) {
     return this.getMigrationValueAll(origin, destination)[year];
   }
+
   //gets immigration value for specified destination (use 900 as destination to get total immigration)
   getImigrationValue(destination, year) {
     if (!year) year = this.year;

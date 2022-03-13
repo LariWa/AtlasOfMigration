@@ -11,12 +11,12 @@ const dataModel = new DataModel();
 
 function App() {
   const [isPopulationView, setPopulationView] = useState(true);
-
   const [view, setView] = useState(0); //immigration = 0, emmigration 1, net migration=2
   const [loading, setLoading] = useState(true);
   const [pressed, setPressed] =
     useState(true); /* change this to false to make startpage stay open */
   const [year, setYear] = useState(dataModel.year); //just a hack to make components rerender on year change
+  const [countryID, setCountryID] = useState(dataModel.countryID);
 
   dataModel.loadData().then(() => {
     //console.log(dataModel.getTotalEmigration(300, 0))
@@ -25,7 +25,7 @@ function App() {
   });
 
   //this works but returns undefined
-  console.log(dataModel.setCountryID(92));
+  //console.log(dataModel.setCountryID(92));
 
   return (
     <>
@@ -34,14 +34,16 @@ function App() {
       ) : (
         <div className="container">
           <SideBar
-            country={dataModel.countryName}
-            year={dataModel.year}
-            setCountryID={setCountryIDACB}
+            model={dataModel}
+            year={year}
+            setCountryID={setCountryID}
           />
-          <TimeLine model={dataModel} setTopYear={setYear} />
+          <TimeLine
+            model={dataModel}
+            setYear={setYear} />
           <WorldMap
             model={dataModel}
-            year={dataModel.year}
+            year={year}
             view={view}
             isPopulationView={isPopulationView}
           />
@@ -50,7 +52,7 @@ function App() {
     </>
   );
 }
-function setCountryIDACB(id) {
-  dataModel.setCountryID(id);
-}
+// function setCountryIDACB(id) {
+//   dataModel.setCountryID(id);
+// }
 export default App;
