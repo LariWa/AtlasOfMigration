@@ -1,24 +1,45 @@
 import React, {useEffect, useState, useLayoutEffect} from "react";
 import * as d3 from "d3";
 import "./styles/sideBar.min.css";
+import { CountryNameID } from "./const/CountryNameID";
 
+function SideBar({country, year, setCountryID}) {
+  const [input, setInput] = useState('')
+  const [nbrChoices, setNbrChoices] = useState(0)
+  const [selCountry, setSelCountry] = useState([])
 
-/* just some test to see that d3 works*/
-function SideBar({country, year}) {
-
- /*  use LayoutEffect() for updating d3 components? */
  useEffect(() => {
    // console.log("effect", year)
    // console.log("effect", country)
 
  }, [year, country]);
 
-  const  SearchCountry = (e) => {
+  const  searchCountry = (e) => {
     if (e.key === 'Enter'){
-      console.log(e.target.value);
-      
+      console.log(input);
+      if (nbrChoices === 1){
+          console.log("country matched");
+          //console.log(selCountry);
+          console.log(selCountry[0].id);
+          setCountryID(selCountry[0].id)
+
+      }
     }
   };
+
+
+ const onInput = (e)=> {
+   setInput(e.target.value) //currentTarget
+
+   const filteredInput = CountryNameID.filter(
+     x =>
+       x.name.toLowerCase().indexOf(input.toLowerCase()) > -1
+   );
+    console.log(filteredInput.length);
+    filteredInput.map(x => console.log(x.name));
+    setNbrChoices(filteredInput.length)
+    setSelCountry(filteredInput)
+ }
 
 
   return (
@@ -26,11 +47,12 @@ function SideBar({country, year}) {
         <h1>World Overview</h1>
         <h3> Country: {country} </h3>
         <h3> Year: {year} </h3>
-        <div id="searchBox" onKeyDown = {SearchCountry}>
+        <div id="searchBox" >
           <label>Search for Country</label><br/>
           <input type="text"
           id="inputField"
-          onChange = {SearchCountry}
+          onChange = {onInput}
+          onKeyDown = {searchCountry}
           placeholder="Search.."/>
         </div>
 

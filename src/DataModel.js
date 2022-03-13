@@ -31,8 +31,15 @@ class DataModel {
     this.year = x;
   //  console.log(x);
   }
-  setCountry(x) {
+
+  setCountryID(x) {
+    //console.log("id: ",this.countryID);
+    console.log(x);
     this.countryID = x;
+    console.log("id: ",this.countryID);
+    this.countryName = this.codeToName(this.countryID)
+    console.log("name: ",this.countryName);
+
   }
 
   /* get name of a country by code */

@@ -24,6 +24,9 @@ function App() {
     setLoading(false);
   })
 
+  // dataModel.setCountryID(108)
+  // console.log(dataModel.countryID);
+  // console.log(dataModel.countryName);
 
   //console.log(dataModel.getMigrationValue(900, 900, 2020));
   //let res = dataModel.getTotalEmigration(300)
@@ -32,7 +35,10 @@ function App() {
   <>
     {loading || !pressed ? <Start enter = {setPressed} loading = {loading}/> :
     <div className = 'container'>
-      <SideBar country = {dataModel.countryName} year = {dataModel.year} />
+      <SideBar
+        country = {dataModel.countryName}
+        year = {dataModel.year}
+        setCountryID = {dataModel.setCountryID}/>
       <TimeLine model = {dataModel} setTopYear = {setYear} />
       <WorldMap model = {dataModel} year = {dataModel.year} view = {view}/>
     </div>
