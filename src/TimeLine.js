@@ -117,6 +117,8 @@ function TimeLine({ model, setYear }) {
       //  data.forEach(x => console.log("total: " ,x.total," --> y: " ,yScale(x.total)))
       //data.forEach(x => console.log("date: " ,x.date," --> x: " ,xScale(x.date)))
 
+      //TODO check for NAN show some warning when value does not exist!
+
       d3.select("#bottom")
         .selectAll("rect")
         .data(data)
@@ -130,7 +132,7 @@ function TimeLine({ model, setYear }) {
         )
         //.attr("height", d => yScale(d.total)/2) //base on data
         .attr("width", dx)
-        .style("fill", "pink");
+        .style("fill", isNaN(d => d.total) ? "blue" : "pink");
 
       d3.selectAll("rect")
         .on("click", (d, i) => {

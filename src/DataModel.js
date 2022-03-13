@@ -104,7 +104,7 @@ class DataModel {
   }
 
   //gets immigration value for specified destination (use 900 as destination to get total immigration)
-  getImigrationValue(destination, year) {
+  getImmigrationValue(destination, year) {
     if (!year) year = this.year;
     if (this.immigrationData) {
       var value = this.immigrationData.filter(function findValue(data) {
@@ -199,7 +199,7 @@ class DataModel {
     // Emigration value / popualtion value
     if (!year) year = this.year;
     var pop = this.getPopulationValue(country, year);
-    var immi = this.getImigrationValue(country, year);
+    var immi = this.getImmigrationValue(country, year);
     if (pop && immi) {
       return (immi / (pop * 1000)) * 100;
     } // I multiplied the population value by 1000
