@@ -17,8 +17,8 @@ class DataModel {
     this.numberOfArrows = 5;
     this.year = year;
     this.countryID = countryID;
-    this.countryName = this.codeToName(this.countryID)
-    this.timeData = this.getTotalEmigration()
+    this.countryName = this.codeToName(this.countryID);
+    this.timeData = this.getTotalEmigration();
     //console.log(this.timeData);
 
     // this.getCountryNameAndId().then((res) => {
@@ -29,16 +29,16 @@ class DataModel {
 
   setYear(x) {
     this.year = x;
-  //  console.log(x);
+    //  console.log(x);
   }
   setCountry(x) {
     this.countryID = x;
   }
 
   /* get name of a country by code */
-  codeToName(x = 300){
-      let obj = CountryNameID.filter(item => item.id === x)
-    return obj[0] == null ? null : obj[0].name
+  codeToName(x = 300) {
+    let obj = CountryNameID.filter((item) => item.id === x);
+    return obj[0] == null ? null : obj[0].name;
   }
 
   // xport const CountryNameID = [
@@ -85,7 +85,7 @@ class DataModel {
       delete data[0].Area; //quick fix
       let res = Object.entries(data[0]).map(([key, value]) => ({
         date: new Date(key, 6), // 6 equals 1 July
-        total: Number(value.replaceAll(' ','')),
+        total: Number(value.replaceAll(" ", "")),
       }));
       //console.log(res);
       return res;
@@ -96,8 +96,6 @@ class DataModel {
     origin: countrycode
     Return: An array of objects with {date: year, total: total immigration} */
   getTotalImmigration(countryID) {}
-
-
 
   /*  Migration from origin to destination for all years
       origin: countryID
@@ -116,8 +114,8 @@ class DataModel {
   getMigrationValue(origin, destination, year) {
     return this.getMigrationValueAll(origin, destination)[year];
   }
-
-  getimmigrationValue(destination, year) {
+  //gets immigration value for specified destination (use 900 as destination to get total immigration)
+  getImigrationValue(destination, year) {
     if (!year) year = this.year;
     if (this.immigrationData) {
       var value = this.immigrationData.filter(function findValue(data) {
@@ -128,7 +126,8 @@ class DataModel {
       }
     }
   }
-
+  //get top immigration countries for a specified country
+  //numberOfArrows specifies number of results
   getImmigrantionCountries(countryId) {
     var component = this;
     var imiCountries = this.migrationData.filter(function findValue(data) {
@@ -154,6 +153,7 @@ class DataModel {
       .slice(0, this.numberOfArrows);
   }
 
+  //get top emigration countries for a specified country
   getEmigrantionCountries(countryId) {
     var component = this;
     var emiCountries = this.migrationData.filter(function findValue(data) {
@@ -178,7 +178,7 @@ class DataModel {
       .sort(this.sortBy("value"))
       .slice(0, this.numberOfArrows);
   }
-
+  //get NetRatio
   getNetRatioMigrationValue(country, year) {
     //TODO decide on ratio or substract
     if (!year) year = this.year;
@@ -187,7 +187,37 @@ class DataModel {
     if (immi && emmi) return immi / emmi;
     return 0;
   }
-
+  //this calculation does not make sense for a ratio?
+  getNetRatioOverPopulationValue(country, year) {
+    //(The Net migration value / the population value) * 1000
+    if (!year) year = this.year;
+    var pop = this.getPopulationValue(country, year);
+    var netmig = this.getNetRatioMigrationValue(country, year);
+    if (pop && netmig) return netmig / (pop * 1000); // I multiplied the population value by 1000
+    // as the value is presented in thousands
+    return 0;
+  }
+  getEmigrationOverPopulation(country, year) {
+    // Emigration value / popualtion value
+    if (!year) year = this.year;
+    var pop = this.getPopulationValue(country, year);
+    var emmi = this.getEmigrationValue(country, year);
+    if (pop && emmi) return (emmi / (pop * 1000)) * 100; // I multiplied the population value by 1000
+    // as the value is presented in thousands;
+    return 0;
+  }
+  getImigrationOverPopulation(country, year) {
+    // Emigration value / popualtion value
+    if (!year) year = this.year;
+    var pop = this.getPopulationValue(country, year);
+    var immi = this.getImigrationValue(country, year);
+    if (pop && immi) {
+      return (immi / (pop * 1000)) * 100;
+    } // I multiplied the population value by 1000
+    // as the value is presented in thousands
+    return 0;
+  }
+  //get emigration value for specified country
   getEmigrationValue(origin, year) {
     if (!year) year = this.year;
     if (this.emigrationData)
@@ -197,6 +227,16 @@ class DataModel {
     if (value && value[0]) {
       if (this.max < parseInt(value[0][year].split(" ").join("")))
         this.max = parseInt(value[0][year].split(" ").join(""));
+      return parseInt(value[0][year].split(" ").join(""));
+    }
+  }
+  getPopulationValue(country, year) {
+    if (!year) year = this.year;
+    if (this.populationData)
+      var value = this.populationData.filter(function findValue(data) {
+        return data.id == country;
+      });
+    if (value && value[0]) {
       return parseInt(value[0][year].split(" ").join(""));
     }
   }
@@ -246,43 +286,51 @@ class DataModel {
       console.log(this.c_data);
     }
   }
-
-  /* fetches the data for migration as json */
-  getMigrationData() {
-    /* fetch data for country x */
-    return fetch(path, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((resData) => {
-        this.migrationData = resData;
-        this.immigrationData = this.getImmigrationData();
-        this.emigrationData = this.getEmigrationData();
-        //this.getCountryNameID(resData)
-        //this.CountryNameID = this.getCountryNameID(res) //map to object from migData
-        //return resData;
+  loadData() {
+    const component = this;
+    return Promise.all([getMigrationData(), getPopulationData()]).then();
+    function getMigrationData() {
+      /* fetch data for country x */
+      return fetch(path, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
       })
-      .catch((_) => console.log(_));
+        .then((res) => res.json())
+        .then((resData) => {
+          component.migrationData = resData;
+          component.immigrationData = component.getImmigrationData();
+          component.emigrationData = component.getEmigrationData();
+          //this.getCountryNameID(resData)
+          //this.CountryNameID = this.getCountryNameID(res) //map to object from migData
+          //return resData;
+        })
+        .catch((_) => console.log(_));
+    }
+    function getPopulationData() {
+      /* fetch pupulation data for country x */
+      return fetch(`./data/population.json`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((resData) => {
+          component.populationData = resData;
+        })
+        .catch((_) => console.log(_));
+    }
   }
+  /* fetches the data for migration as json */
 
-  // getCountryNameAndId() {
-  //   /* fetch data for country x */
-  //   return fetch(`./data/CountryNameId.json`, {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json",
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((resData) => {
-  //       return resData;
-  //     })
-  //     .catch((_) => console.log(_));
-  // }
-
+  getCountryPopulationData() {
+    //Not sure with the naming!
+    return this.populationData.filter(function findValue(data) {
+      return data.id == 900; // whole world population
+    });
+  }
   getImmigrationData() {
     return this.migrationData.filter(function findValue(data) {
       return data.OriginID == 900; //people coming from the whole world --> total number of immigrants

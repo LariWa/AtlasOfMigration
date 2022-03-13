@@ -1,43 +1,49 @@
-import React, {useState} from "react";
+import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import SideBar from "./SideBar";
 import TimeLine from "./TimeLine";
 import "./App.css";
 import WorldMap from "./WorldMap";
-import DataModel from './DataModel';
-import Start from './Start';
+import DataModel from "./DataModel";
+import Start from "./Start";
 
-
-
-const dataModel = new DataModel()
+const dataModel = new DataModel();
 
 function App() {
+  const [isPopulationView, setPopulationView] = useState(true);
+
   const [view, setView] = useState(0); //immigration = 0, emmigration 1, net migration=2
   const [loading, setLoading] = useState(true);
-  const [pressed, setPressed] = useState(true) /* change this to false to make startpage stay open */
-  const [year, setYear] = useState(dataModel.year) //just a hack to make components rerender on year change
+  const [pressed, setPressed] =
+    useState(true); /* change this to false to make startpage stay open */
+  const [year, setYear] = useState(dataModel.year); //just a hack to make components rerender on year change
 
-  dataModel.getMigrationData()
-  .then(() => {
+  dataModel.loadData().then(() => {
     //console.log(dataModel.getTotalEmigration(300, 0))
     //console.log(dataModel.getMigrationValueAll(900, 300));
     setLoading(false);
-  })
-
+  });
 
   //console.log(dataModel.getMigrationValue(900, 900, 2020));
   //let res = dataModel.getTotalEmigration(300)
 
   return (
-  <>
-    {loading || !pressed ? <Start enter = {setPressed} loading = {loading}/> :
-    <div className = 'container'>
-      <SideBar country = {dataModel.countryName} year = {dataModel.year} />
-      <TimeLine model = {dataModel} setTopYear = {setYear} />
-      <WorldMap model = {dataModel} year = {dataModel.year} view = {view}/>
-    </div>
-    }
-</>
+    <>
+      {loading || !pressed ? (
+        <Start enter={setPressed} loading={loading} />
+      ) : (
+        <div className="container">
+          <SideBar country={dataModel.countryName} year={dataModel.year} />
+          <TimeLine model={dataModel} setTopYear={setYear} />
+          <WorldMap
+            model={dataModel}
+            year={dataModel.year}
+            view={view}
+            isPopulationView={isPopulationView}
+          />
+        </div>
+      )}
+    </>
   );
 }
 
