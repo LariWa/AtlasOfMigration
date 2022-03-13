@@ -19,7 +19,7 @@ class DataModel {
     this.countryID = countryID;
     this.countryName = this.codeToName(this.countryID)
     this.timeData = this.getTotalEmigration()
-    console.log(this.timeData);
+    //console.log(this.timeData);
 
     // this.getCountryNameAndId().then((res) => {
     //   this.countryNameAndId = res;
@@ -29,7 +29,7 @@ class DataModel {
 
   setYear(x) {
     this.year = x;
-    console.log(x);
+  //  console.log(x);
   }
   setCountry(x) {
     this.countryID = x;

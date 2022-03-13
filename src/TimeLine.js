@@ -53,7 +53,7 @@ function TimeLine({ model, setTopYear}) {
     //height = document.getElementById('container').offsetHeight;//includes margin,border,padding
     // width: svgContainerRef.current.clientWidth,
     // height: svgContainerRef.current.clientHeight,
-    margin: { top: 600, left:`10vh`, bottom: `10vh`, right: `30vw` }, //set to responsive
+  //  margin: { top: 600, left:`10vh`, bottom: `10vh`, right: `30vw` }, //set to responsive
     width: useWindowDimensions().width * 0.7,
     height: useWindowDimensions().height * 0.2
   };
@@ -83,7 +83,7 @@ function TimeLine({ model, setTopYear}) {
     const svgEl = d3.select(svgContainerRef.current);
     svgEl.selectAll("*").remove();
 
-    console.log(data)
+    //console.log(data)
 
       svgEl.append("g")
         .attr("transform", `translate(30,${shiftXAxis})`)
@@ -118,7 +118,7 @@ function TimeLine({ model, setTopYear}) {
 
 
 
-        data.forEach(x => console.log("total: " ,x.total," --> y: " ,yScale(x.total)))
+      //  data.forEach(x => console.log("total: " ,x.total," --> y: " ,yScale(x.total)))
         //data.forEach(x => console.log("date: " ,x.date," --> x: " ,xScale(x.date)))
 
       d3.select("#bottom")
@@ -135,12 +135,12 @@ function TimeLine({ model, setTopYear}) {
     d3.selectAll("rect")
         .on("click", (d,i) => {
           //console.log("click bar " )
-          console.log(timeFormat(i.date));
+        //  console.log(timeFormat(i.date));
           updateYear(timeFormat(i.date))
         })
 
         .on("mouseover", (d,i) => {
-          console.log("mouse over bar ",  )
+        //  console.log("mouse over bar ",  )
         })
     }
   }, [data]);
