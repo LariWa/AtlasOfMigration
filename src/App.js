@@ -24,8 +24,10 @@ function App() {
     setLoading(false);
   });
 
-  //console.log(dataModel.getMigrationValue(900, 900, 2020));
-  //let res = dataModel.getTotalEmigration(300)
+  //this works but returns undefined
+  console.log(dataModel.setCountryID(92));
+
+
 
   return (
   <>

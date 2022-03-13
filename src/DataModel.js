@@ -30,7 +30,7 @@ class DataModel {
     console.log(x);
     this.countryID = x;   // <-- this seem to make the rest not execute
     console.log("id: " ,this.countryID);
-    this.countryName = this.codeToName(this.countryID)
+    this.countryName = this.codeToName(x)
     console.log("name: ",this.countryName);
 
   }
