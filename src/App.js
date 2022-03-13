@@ -27,22 +27,30 @@ function App() {
   //this works but returns undefined
   console.log(dataModel.setCountryID(92));
 
-
-
   return (
-  <>
-    {loading || !pressed ? <Start enter = {setPressed} loading = {loading}/> :
-    <div className = 'container'>
-      <SideBar
-        country = {dataModel.countryName}
-        year = {dataModel.year}
-        setCountryID = {dataModel.setCountryID}/>
-      <TimeLine model = {dataModel} setTopYear = {setYear} />
-      <WorldMap model = {dataModel} year = {dataModel.year} view = {view} isPopulationView={isPopulationView}/>
-    </div>
-    }
-</>
+    <>
+      {loading || !pressed ? (
+        <Start enter={setPressed} loading={loading} />
+      ) : (
+        <div className="container">
+          <SideBar
+            country={dataModel.countryName}
+            year={dataModel.year}
+            setCountryID={setCountryIDACB}
+          />
+          <TimeLine model={dataModel} setTopYear={setYear} />
+          <WorldMap
+            model={dataModel}
+            year={dataModel.year}
+            view={view}
+            isPopulationView={isPopulationView}
+          />
+        </div>
+      )}
+    </>
   );
 }
-
+function setCountryIDACB(id) {
+  dataModel.setCountryID(id);
+}
 export default App;
