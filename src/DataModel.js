@@ -19,12 +19,6 @@ class DataModel {
     this.countryID = countryID;
     this.countryName = this.codeToName(this.countryID);
     this.timeData = this.getTotalEmigration();
-    //console.log(this.timeData);
-
-    // this.getCountryNameAndId().then((res) => {
-    //   this.countryNameAndId = res;
-    //
-    // });
   }
 
   setYear(x) {
@@ -33,10 +27,9 @@ class DataModel {
   }
 
   setCountryID(x) {
-    //console.log("id: ",this.countryID);
     console.log(x);
-    this.countryID = x;
-    console.log("id: ",this.countryID);
+    this.countryID = x;   // <-- this seem to make the rest not execute
+    console.log("id: " ,this.countryID);
     this.countryName = this.codeToName(this.countryID)
     console.log("name: ",this.countryName);
 

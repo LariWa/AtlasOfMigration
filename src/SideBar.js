@@ -22,7 +22,6 @@ function SideBar({country, year, setCountryID}) {
           //console.log(selCountry);
           console.log(selCountry[0].id);
           setCountryID(selCountry[0].id)
-
       }
     }
   };
