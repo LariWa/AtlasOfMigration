@@ -18,6 +18,7 @@ function SideBar({country, year, setCountryID}) {
     if (e.key === 'Enter'){
       console.log(input);
       if (nbrChoices === 1){
+          setInput(selCountry[0].name)
           console.log("country matched");
           //console.log(selCountry);
           console.log(selCountry[0].id);
@@ -52,6 +53,7 @@ function SideBar({country, year, setCountryID}) {
           id="inputField"
           onChange = {onInput}
           onKeyDown = {searchCountry}
+          value = {input}
           placeholder="Search.."/>
         </div>
 
