@@ -24,6 +24,8 @@ function App() {
     setLoading(false);
   });
 
+  //dataModel.getUNData().then( () => console.log("Un data") )
+
 
   return (
     <>
