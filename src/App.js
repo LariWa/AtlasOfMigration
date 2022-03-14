@@ -33,15 +33,12 @@ function App() {
       ) : (
         <div className="container">
           <SideBar
-            country={countryName}
-            setCountryName={setCountryName}
             model={dataModel}
             year={year}
             setCountryID={setCountryID}
+            countryID={countryID}
             view={view}
             setView={setView}
-            detailView={detailView}
-            setDetailView={setDetailView}
           />
           <TimeLine model={dataModel} setYear={setYear} />
           <WorldMap

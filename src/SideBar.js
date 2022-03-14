@@ -11,29 +11,23 @@ const information = [
 ];
 const headLine = ["Immigration", "Emigration", "Net Migration"];
 
-function SideBar({
-  country,
-  model,
-  year,
-  setCountryID,
-  setView,
-  view,
-  setCountryName,
-}) {
+function SideBar({ model, year, setCountryID, countryID, view, setView }) {
   const [input, setInput] = useState("");
   const [nbrChoices, setNbrChoices] = useState(0);
   const [selCountries, setSelCountries] = useState([]);
-  let countryID = model.countryID;
-  //let name = model.countryName;
-  //const [detailView, setDetailView] = use
-  //useState(false); /* false world , true detail*/
+  //let countryID = model.countryID;
+  const [name, setName] = useState(model.countryName);
+  const [detailView, setDetailView] =
+    useState(false); /* false world , true detail*/
 
   useEffect(() => {
-    //  countryID = model.countryID;
-    //countryName = model.countryName
-    //console.log(model.countryName);
-    //console.log(model.countryName);
-  }, [view, year, model.countryID]);
+    console.log(countryID);
+    console.log(model.countryName);
+    setName(model.countryName);
+    console.log(name);
+    //console.log(countryID);
+    setDetailView(model.countryID != 900);
+  }, [view, year, countryID]);
 
   const searchCountry = (e) => {
     if (e.key === "Enter") {
@@ -45,7 +39,7 @@ function SideBar({
         //console.log(selCountry);
         //  console.log(selCountries[0].id);
         setCountryID(selCountries[0].id);
-        setCountryName(model.codeToName(selCountries[0].id));
+        //setCountryName(model.codeToName(selCountries[0].id));
 
         model.setCountryID(selCountries[0].id);
       }
@@ -70,17 +64,25 @@ function SideBar({
     if (e.target.id === "em") setView(1);
     if (e.target.id === "net") setView(2);
   };
-
+  console.log(model.countryID);
+  console.log(model.countryName);
   return (
     <div className="sideBar">
       {detailView ? (
         <div>
-          <button id="world" onClick={() => setDetailView(false)}>
+          <button
+            id="world"
+            onClick={() => {
+              setDetailView(false);
+              model.setCountryID(900);
+              setCountryID(900);
+            }}
+          >
             {" "}
             Back
           </button>
           <h3> Year: {year} </h3>
-          <h3> Country: {model.countryName} </h3>
+          <h3> Country: {name} </h3>
         </div>
       ) : (
         <>

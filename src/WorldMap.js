@@ -176,6 +176,7 @@ function WorldMap(props) {
     }
     function clickedACB(target) {
       //TODO topography, if time
+      console.log(target.id);
       showDetailView(target);
       props.setDetailView(true);
       props.setCountryID(target.id);
