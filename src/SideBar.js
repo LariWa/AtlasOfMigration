@@ -9,20 +9,18 @@ const information = [
   "Immigration is the international movement of people to a destination country of which they are not natives or where they do not possess citizenship in order to settle as permanent residents or naturalized citizens.",
   "Emigration is the act of leaving a resident country or place of residence with the intent to settle elsewhere (to permanently leave a country).",
   "Net migration is the difference between immigration into and emigration from the area during the year. Net migration is therefore negative when the number of emigrants exceeds the number of immigrants.",
-  "Have you ever thought about why people migrate? Has time influenced our perception of migration? <br/> <br/>With the Atlas of Migration we created a visual tool that allows you to navigate through the increasingly complex landscape of international migration patterns."
+  "Have you ever thought about why people migrate? Has time influenced our perception of migration? The Atlas of Migration is a visual tool that allows you to navigate through the increasingly complex landscape of international migration patterns."
 ];
 const headLine = ["Immigration", "Emigration", "Net Migration", "Welcome"];
 
-function SideBar({ model, year, setCountryID, setView, view }) {
+function SideBar({ model, year, setCountryID, setView, view, setScale, scale }) {
   const [input, setInput] = useState("");
   const [nbrChoices, setNbrChoices] = useState(0);
   const [selCountries, setSelCountries] = useState([]);
   const [detailView, setDetailView] = useState(false); /* false world , true detail*/
+  const [value, setValue] = React.useState([0, 100]);
 
   useEffect(() => {}, [view, year]);
-
-  //const [view, setView] = React.useState(model.view);
-  const [value, setValue] = React.useState([0, 100]);
 
   const searchCountry = (e) => {
      if (e.key === "Enter") {
@@ -57,7 +55,7 @@ function SideBar({ model, year, setCountryID, setView, view }) {
   }
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setScale(newValue);
   };
 
   return (
@@ -81,7 +79,7 @@ function SideBar({ model, year, setCountryID, setView, view }) {
 
       <Slider
         getAriaLabel = {() => ''}
-        value = {value}
+        value = {scale}
         onChange = {handleChange}
         valueLabelDisplay = "auto"
         getAriaValueText = {valuetext}
