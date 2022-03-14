@@ -27,11 +27,11 @@ class DataModel {
   }
 
   setCountryID(x) {
-    //console.log(x);
+    console.log(x);
     this.countryID = x;
-    //console.log("id: " ,this.countryID);
+    console.log("id: ", this.countryID);
     this.countryName = this.codeToName(x);
-    //console.log("name: ",this.countryName);
+    console.log("name: ", this.countryName);
   }
 
   /* get name of a country by code */
@@ -229,32 +229,24 @@ class DataModel {
   }
 
   /* fetch data as csv for year x, return file. TODO error handling */
-  // getCsvData(x = ""){
-  //   return fetch(path
-  //     ,{headers : {
-  //     'Content-Type': 'text/csv;charset=UTF-8',
-  //    }
-  //  })
-  //  .then(res => res.blob())
-  //  .then(blob => {
-  //    this.data = blob;
-  //    return blob.text()
-  //  })
-  //  .then(resData => {
-  //     console.log("fetch csv: "+ resData);
-  //     //console.log(resData instanceof Blob);
-  //     //console.log(this.data instanceof Blob);
-  //     return resData;
-  //   })
-  //   .catch(_ => console.log(_))
-  // }
 
-  // papa.parse(getCsvData(), {
-  //   complete: results => {
-  //     this.data = results.data
-  //     console.log("Finished:", this.data);
+  /*  http://data.un.org/ws/rest/{artifact}/{artifactId}/{parameters}  */
+
+  // async getUNData() {
+  //   try {
+  //     this.res = await fetch("http://data.un.org/ws/rest/", {
+  //       headers: {
+  //          mode: "no-cors",
+  //         "Content-Type": "text/json",
+  //         Accept: "text/json",
+  //       },
+  //     });
+  //   } catch (e) {
+  //     console.log(e);
+  //     this.UN_data = await this.res.json();
+  //     console.log(this.UN_data);
   //   }
-  // });
+  // }
 
   /*
     not used possibly rewrite as async function

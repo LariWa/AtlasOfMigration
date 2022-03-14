@@ -25,6 +25,8 @@ function App() {
     setLoading(false);
   });
 
+  //dataModel.getUNData().then( () => console.log("Un data") )
+
   return (
     <>
       {loading || !pressed ? (
@@ -49,6 +51,7 @@ function App() {
             year={year}
             view={view}
             isPopulationView={isPopulationView}
+            setCountryID={setCountryID}
           />
         </div>
       )}
