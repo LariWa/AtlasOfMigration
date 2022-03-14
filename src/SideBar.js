@@ -11,7 +11,15 @@ const information = [
 ];
 const headLine = ["Immigration", "Emigration", "Net Migration"];
 
-function SideBar({ country, model, year, setCountryID, setView, view }) {
+function SideBar({
+  country,
+  model,
+  year,
+  setCountryID,
+  setView,
+  view,
+  setCountryName,
+}) {
   const [input, setInput] = useState("");
   const [nbrChoices, setNbrChoices] = useState(0);
   const [selCountries, setSelCountries] = useState([]);
@@ -30,6 +38,8 @@ function SideBar({ country, model, year, setCountryID, setView, view }) {
         //console.log(selCountry);
         console.log(selCountries[0].id);
         setCountryID(selCountries[0].id);
+        setCountryName(model.codeToName(selCountries[0].id));
+
         model.setCountryID(selCountries[0].id);
       }
     }

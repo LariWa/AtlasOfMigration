@@ -33,6 +33,7 @@ function App() {
         <div className="container">
           <SideBar
             country={countryName}
+            setCountryName={setCountryName}
             model={dataModel}
             year={year}
             setCountryID={setCountryID}
