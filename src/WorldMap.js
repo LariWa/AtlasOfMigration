@@ -187,9 +187,9 @@ function WorldMap(props) {
       if (target) {
         // just to avoid crash
         var countryId = target.id;
-        if (view == 0)
+        if (props.view == 0)
           migrationCountries = props.model.getImmigrantionCountries(countryId);
-        else if (view == 1)
+        else if (props.view == 1)
           migrationCountries = props.model.getEmigrantionCountries(countryId);
         if (migrationCountries) {
           var zoomFeatures = data.features.filter((country) => {
@@ -279,9 +279,9 @@ function WorldMap(props) {
       if (props.view == 2) return "LightGrey";
     }
     if (selectedCountryFeature.id == country) {
-      if (view == 0) return "blue";
-      if (view == 1) return "red";
-      if (view == 2) {
+      if (props.view == 0) return "blue";
+      if (props.view == 1) return "red";
+      if (props.view == 2) {
         var val = getMigrationDataByCountry(country);
         if (!val) return "black";
         return colorScales[+props.isPopulationView][props.view](val);

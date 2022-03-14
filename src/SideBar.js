@@ -28,8 +28,8 @@ function SideBar({ model, year, setCountryID, countryID, view, setView }) {
     useState(false); /* false world , true detail*/
 
   useEffect(() => {
-    //console.log(countryID);
-    //console.log(model.countryName);
+    console.log(countryID);
+    console.log(model.countryName);
     setName(model.countryName);
     //console.log(name);
     //console.log(countryID);
@@ -66,9 +66,6 @@ function SideBar({ model, year, setCountryID, countryID, view, setView }) {
 
   const changeView = (e) => {
     //console.log(e.target.id);
-    if (e.target.id === "im") setView(0);
-    if (e.target.id === "em") setView(1);
-    if (e.target.id === "net") setView(2);
     setView(e.target.value);
   };
 

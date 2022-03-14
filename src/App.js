@@ -14,7 +14,8 @@ function App() {
   const [isPopulationView, setPopulationView] = useState(true);
   const [view, setView] = useState(0); //immigration = 0, emmigration 1, net migration=2
   const [loading, setLoading] = useState(true);
-  const [pressed, setPressed] = useState(true); /* change this to false to make startpage stay open */
+  const [pressed, setPressed] =
+    useState(true); /* change this to false to make startpage stay open */
   const [year, setYear] = useState(dataModel.year); //just a hack to make components rerender on year change
   const [countryID, setCountryID] = useState(dataModel.countryID);
   const [detailView, setDetailView] = useState(false);
@@ -37,7 +38,6 @@ function App() {
             year={year}
             setCountryID={setCountryID}
             countryID={countryID}
-            view={view}
             setView={setView}
           />
           <TimeLine model={dataModel} setYear={setYear} />
