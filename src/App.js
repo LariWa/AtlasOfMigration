@@ -17,13 +17,13 @@ function App() {
     useState(true); /* change this to false to make startpage stay open */
   const [year, setYear] = useState(dataModel.year); //just a hack to make components rerender on year change
   const [countryID, setCountryID] = useState(dataModel.countryID);
+  const [countryName, setCountryName] = useState(dataModel.countryName);
 
   dataModel.loadData().then(() => {
     //console.log(dataModel.getTotalEmigration(300, 0))
     //console.log(dataModel.getMigrationValueAll(900, 300));
     setLoading(false);
   });
-
 
   return (
     <>
@@ -32,16 +32,18 @@ function App() {
       ) : (
         <div className="container">
           <SideBar
+            country={countryName}
             model={dataModel}
             year={year}
             setCountryID={setCountryID}
-            setView = {setView}
-            view = {view}
+            setView={setView}
+            view={view}
           />
-          <TimeLine
-            model={dataModel}
-            setYear={setYear} />
+          <TimeLine model={dataModel} setYear={setYear} />
           <WorldMap
+            countryId={countryID}
+            setCountryName={setCountryName}
+            setCountryID={setCountryID}
             model={dataModel}
             year={year}
             view={view}

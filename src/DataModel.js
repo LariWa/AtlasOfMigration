@@ -30,17 +30,15 @@ class DataModel {
     //console.log(x);
     this.countryID = x;
     //console.log("id: " ,this.countryID);
-    this.countryName = this.codeToName(x)
+    this.countryName = this.codeToName(x);
     //console.log("name: ",this.countryName);
-
   }
 
   /* get name of a country by code */
   codeToName(x = WORLD) {
-    let obj = CountryNameID.filter((item) => item.id === x);
+    let obj = CountryNameID.filter((item) => item.id == x);
     return obj[0] == null ? null : obj[0].name;
   }
-
 
   /* TODO: return an array with unique objects {name: ID, id: countryname}
     with ID and countrynames as listed in the UN dataset */
