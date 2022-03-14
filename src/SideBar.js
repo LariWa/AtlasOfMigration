@@ -4,9 +4,21 @@ import "./styles/sideBar.min.css";
 
 
 /* just some test to see that d3 works*/
-function SideBar() {
+function SideBar({country, year}) {
 
-  let stat = 1;
+ /*  use LayoutEffect() for updating d3 components? */
+ useEffect(() => {
+   // console.log("effect", year)
+   // console.log("effect", country)
+
+ }, [year, country]);
+
+  const  SearchCountry = (e) => {
+    if (e.key === 'Enter'){
+      console.log(e.target.value);
+
+    }
+  };
 
   function valuetext(value) {
     return `${value}`;
@@ -41,12 +53,11 @@ function SideBar() {
         getAriaValueText = {valuetext}
       />
 
-    <div id = "searchBox" >
+    <div id="searchBox" onKeyDown={SearchCountry}>
       <h2> What country are you looking for ? </h2>
-      <input type="text" placeholder="Search..." / >
+      <input type="text" id="inputField" onChange={SearchCountry} placeholder="Search..." / >
     </div>
     </div>
   );
-}
 
 export default SideBar;
