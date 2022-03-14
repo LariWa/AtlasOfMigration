@@ -177,7 +177,7 @@ function WorldMap(props) {
     function clickedACB(target) {
       //TODO topography, if time
       showDetailView(target);
-      props.setCountryName(props.model.codeToName(target.id));
+      props.setDetailView(true);
       props.setCountryID(target.id);
       props.model.setCountryID(target.id);
     }
@@ -224,7 +224,7 @@ function WorldMap(props) {
     }
     if (
       data &&
-      props.countryId != 900 &&
+      props.detailView &&
       (!selectedCountryFeature ||
         (selectedCountryFeature &&
           props.countryId != selectedCountryFeature.id))
