@@ -176,34 +176,38 @@ function WorldMap(props) {
     }
     function clickedACB(target) {
       //TODO topography, if time
-      console.log(target.id);
       showDetailView(target);
       props.setDetailView(true);
       props.setCountryID(target.id);
       props.model.setCountryID(target.id);
     }
+
     function changeCountry(target) {
       //TODO topography, if time
       showDetailView(target);
     }
     function showDetailView(target) {
-      var countryId = target.id;
-      if (view == 0)
-        migrationCountries = props.model.getImmigrantionCountries(countryId);
-      else if (view == 1)
-        migrationCountries = props.model.getEmigrantionCountries(countryId);
-      if (migrationCountries) {
-        var zoomFeatures = data.features.filter((country) => {
-          return migrationCountries.some((e) => e.id == country.id);
-        });
-        createArrows(zoomFeatures);
-        zoomFeatures.push(selectedCountryFeature);
-        setZoomCountries({
-          type: "FeatureCollection",
-          features: zoomFeatures,
-        });
+      if (target) {
+        // just to avoid crash
+        var countryId = target.id;
+        if (view == 0)
+          migrationCountries = props.model.getImmigrantionCountries(countryId);
+        else if (view == 1)
+          migrationCountries = props.model.getEmigrantionCountries(countryId);
+        if (migrationCountries) {
+          var zoomFeatures = data.features.filter((country) => {
+            return migrationCountries.some((e) => e.id == country.id);
+          });
+          createArrows(zoomFeatures);
+          zoomFeatures.push(selectedCountryFeature);
+          setZoomCountries({
+            type: "FeatureCollection",
+            features: zoomFeatures,
+          });
+        }
       }
     }
+
     function createArrows(targetCountries) {
       setArrows(
         targetCountries.map((targetCountry) => {
