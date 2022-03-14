@@ -124,7 +124,7 @@ function WorldMap(props) {
         .attr("class", "country")
         .attr("d", (feature) => path(feature))
         .on("click", (event, feature) => {
-          selectedCountry = selectedCountry === feature ? null : feature;
+          selectedCountry = feature;
 
           countryTip.hide(event);
           clickedACB(event);
@@ -216,7 +216,14 @@ function WorldMap(props) {
       let coords = projection.invert(path.centroid(feature));
       return coords;
     }
-  }, [data, selectedCountry, zoomCountries, props.year, props.view]);
+  }, [
+    data,
+    selectedCountry,
+    zoomCountries,
+    props.year,
+    props.view,
+    props.scale,
+  ]);
 
   if (!data) {
     //console.log("loading");
@@ -239,8 +246,11 @@ function WorldMap(props) {
   function getColor(country) {
     if (selectedCountry) return getDetailViewColor(country);
     var val = getMigrationDataByCountry(country);
+
     if (!val) return "black"; //no data available
-    return colorScales[+props.isPopulationView][props.view](val);
+    if (val < props.scale[1] && val > props.scale[0])
+      return colorScales[+props.isPopulationView][props.view](val);
+    else return "grey";
   }
   function getDetailViewColor(country) {
     if (
