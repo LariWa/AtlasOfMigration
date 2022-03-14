@@ -175,11 +175,11 @@ function WorldMap(props) {
     }
     function clickedACB(target) {
       //TODO topography, if time
-      console.log(target.originalTarget.id);
-      //console.log(target);
-
+      //console.log(target.originalTarget.id);
+      console.log(target);
+      console.log(target.id)
     // props.setCountryName(props.model.codeToName(target.id));
-    console.log(Number(target.originalTarget.id));
+    //.console.log(Number(target.originalTarget.id));
      props.setCountryID(Number(Number(target.originalTarget.id)));
      props.model.setCountryID(Number(target.originalTarget.id));
        //props.setCountryName(props.model.codeToName(target.id));
