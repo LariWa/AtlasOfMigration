@@ -1,10 +1,54 @@
+@import base
+
 .sideBar
   position: absolute
   left: 0
   top: 0
   width: 20vw
+  min-width: 270px
   height: 100vh
-  background: rgba(235, 235, 235, 0.8)
+  background: rgba(8, 35, 53, 0.5)
+  backdrop-filter: blur(26px)
   padding: 10vh 3vw 0 3vw
+  color: $text-color
+  padding-left: 4vw
+  padding-top: 10vh
+  -webkit-touch-callout: none
+  -webkit-user-select: none
+  -khtml-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
   p
     width: 90%
+  .filter
+    margin-top: 5vh
+    button
+      margin-top: 10px
+      height: 80px
+
+#searchBox
+  background: linear-gradient(180deg, #0F354A 0%, rgba(8, 22, 39, 0.61) 100%)
+  box-shadow: 0px 0px 22px rgba(8, 12, 29, 0.39)
+  border-radius: 14px
+  width: 70%
+  min-width: 265px
+  height: 10vh
+  margin-top: 10vw
+  padding-bottom: 10vh
+  position: absolute
+  bottom: 9vh
+  h2, input
+    margin: 0 12%
+  h2
+    padding-top: 40px
+  input
+    font-size: $text-size
+    color: $text-color
+    width: 76%
+    font-family: $roboto
+    background: none
+    border: none
+    border-bottom: solid 1px $text-color
+    padding-bottom: 5px
+    margin-top: 20px

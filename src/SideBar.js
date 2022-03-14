@@ -1,41 +1,51 @@
-import React, {useEffect, useLayoutEffect} from "react";
-import * as d3 from "d3";
+import React, { useEffect, useLayoutEffect } from "react";
+import Slider from '@mui/material/Slider';
 import "./styles/sideBar.min.css";
 
 
 /* just some test to see that d3 works*/
 function SideBar() {
 
- let stat = 1;
+  let stat = 1;
 
- /*  use LayoutEffect() for updating d3 components? */
-/*  useLayoutEffect(() => {
-    d3.select(".nav").style("background-color", "magenta");
-  }, []);
+  function valuetext(value) {
+    return `${value}`;
+  }
 
-  const onMouseClick = () => {
-    d3.selectAll(".nav").style("color", "yellow");
+  const [value, setValue] = React.useState([0, 100]);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
   };
-*/
 
   return (
-      <div className="sideBar">
-        <h1>World Overview</h1>
+    <div className="sideBar">
+      <h1>Welcome</h1>
+      <p>
+      Have you ever thought about why people migrate ? Has time influenced our perception of migration ? <br/> <br/>
+      With the Atlas of Migration we created a viusial tool that allows you to navigate through the increasingly complex landscape of international migration patterns.
+      </p>
 
-        <div id="searchBox">
-          <label>Search for Country</label><br/>
-          <input type="text" placeholder="Search.."/>
-        </div>
+    <div className="filter">
+    <h2> What do you want to know more about ? </h2>
+      <button> Show Immigration </button>
+      <button> Show Net Migration </button>
+      <button> Show Emigration </button>
+    </div>
 
-        <h2>Explanation</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque et enim blandit, ultricies sem at, auctor nisl. Nunc eget lorem quis nunc auctor posuere. Sed enim nisi, luctus eu laoreet eu, condimentum non erat. Etiam venenatis erat vel tempor tincidunt. Aliquam mattis, purus eget venenatis ornare, felis nisi placerat lorem, a viverra justo nisl eu urna.</p>
+      <Slider
+        getAriaLabel = {() => 'Temperature range'}
+        value = {value}
+        onChange = {handleChange}
+        valueLabelDisplay = "auto"
+        getAriaValueText = {valuetext}
+      />
 
-        <div class="filter">
-          <button>Show Immigration</button>
-          <button>Show Net Migration</button>
-          <button>Show Emigration</button>
-        </div>
-      </div>
+    <div id = "searchBox" >
+      <h2> What country are you looking for ? </h2>
+      <input type="text" placeholder="Search..." / >
+    </div>
+    </div>
   );
 }
 
