@@ -17,7 +17,7 @@ function App() {
     useState(true); /* change this to false to make startpage stay open */
   const [year, setYear] = useState(dataModel.year); //just a hack to make components rerender on year change
   const [countryID, setCountryID] = useState(dataModel.countryID);
-  const [detailView, setDetailView] = useState(false)
+  const [detailView, setDetailView] = useState(false);
 
   dataModel.loadData().then(() => {
     //console.log(dataModel.getTotalEmigration(300, 0))
@@ -33,25 +33,26 @@ function App() {
       ) : (
         <div className="container">
           <SideBar
+            country={countryName}
+            setCountryName={setCountryName}
             model={dataModel}
             year={year}
             setCountryID={setCountryID}
-            view ={view}
-            setView = {setView}
-            detailView = {detailView}
-            setDetailView = {setDetailView}
+            view={view}
+            setView={setView}
+            detailView={detailView}
+            setDetailView={setDetailView}
           />
-          <TimeLine
-            model={dataModel}
-            setYear={setYear} />
+          <TimeLine model={dataModel} setYear={setYear} />
           <WorldMap
+            countryId={countryID}
             model={dataModel}
             year={year}
             view={view}
             isPopulationView={isPopulationView}
-            setCountryID = {setCountryID}
-            detailView = {detailView}
-            setDetailView = {setDetailView}
+            setCountryID={setCountryID}
+            detailView={detailView}
+            setDetailView={setDetailView}
           />
         </div>
       )}
