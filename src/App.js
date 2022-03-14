@@ -26,8 +26,6 @@ function App() {
   });
 
   //dataModel.getUNData().then( () => console.log("Un data") )
-
-
   return (
     <>
       {loading || !pressed ? (
@@ -38,9 +36,10 @@ function App() {
             model={dataModel}
             year={year}
             setCountryID={setCountryID}
+            view ={view}
             setView = {setView}
             detailView = {detailView}
-            setDetailView = {setdetailView}
+            setDetailView = {setDetailView}
           />
           <TimeLine
             model={dataModel}

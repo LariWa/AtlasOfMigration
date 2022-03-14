@@ -11,17 +11,29 @@ const information = [
 ];
 const headLine = ["Immigration", "Emigration", "Net Migration"];
 
-function SideBar({ model, year, setCountryID, setView, view }) {
+function SideBar({
+  model,
+  year,
+  setCountryID,
+  setView,
+  view,
+  detailView,
+  setDetailView,
+}) {
   const [input, setInput] = useState("");
   const [nbrChoices, setNbrChoices] = useState(0);
   const [selCountries, setSelCountries] = useState([]);
-  const [detailView, setDetailView] =
-    useState(false); /* false world , true detail*/
+  let countryID = model.countryID;
+  //let name = model.countryName;
+  //const [detailView, setDetailView] = use
+  //useState(false); /* false world , true detail*/
 
   useEffect(() => {
-    // console.log("effect", year)
-    // console.log("effect", country)
-  }, [view, year]);
+    //  countryID = model.countryID;
+    //countryName = model.countryName
+    //console.log(model.countryName);
+    //console.log(model.countryName);
+  }, [view, year, model.countryID]);
 
   const searchCountry = (e) => {
     if (e.key === "Enter") {
@@ -29,9 +41,9 @@ function SideBar({ model, year, setCountryID, setView, view }) {
       if (nbrChoices === 1) {
         setInput(selCountries[0].name);
         setDetailView(true);
-        console.log("country matched");
+        //console.log("country matched");
         //console.log(selCountry);
-        console.log(selCountries[0].id);
+        //  console.log(selCountries[0].id);
         setCountryID(selCountries[0].id);
         model.setCountryID(selCountries[0].id);
       }

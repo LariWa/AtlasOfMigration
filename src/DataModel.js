@@ -26,21 +26,24 @@ class DataModel {
     //  console.log(x);
   }
 
-  setCountryID(x) {
-    console.log(x);
-    this.countryID = x;
-    console.log("id: " ,this.countryID);
-    this.countryName = this.codeToName(x)
-    console.log("name: ",this.countryName);
+  getCountryId() {
+    return this.countryID;
+  }
 
+  setCountryID(x) {
+    //console.log(x);
+    this.countryID = x;
+    console.log("id: ", this.countryID);
+    this.countryName = this.codeToName(x);
+    console.log("name: ", this.countryName);
   }
 
   /* get name of a country by code */
   codeToName(x = WORLD) {
-    let obj = CountryNameID.filter((item) => item.id === x);
+    //console.log(x);
+    let obj = CountryNameID.filter((item) => item.id == x); // catch both ints and strings
     return obj[0] == null ? null : obj[0].name;
   }
-
 
   /* TODO: return an array with unique objects {name: ID, id: countryname}
     with ID and countrynames as listed in the UN dataset */
@@ -232,26 +235,23 @@ class DataModel {
 
   /* fetch data as csv for year x, return file. TODO error handling */
 
+  /*  http://data.un.org/ws/rest/{artifact}/{artifactId}/{parameters}  */
 
-
-
-/*  http://data.un.org/ws/rest/{artifact}/{artifactId}/{parameters}  */
-
-// async getUNData() {
-//   try {
-//     this.res = await fetch("http://data.un.org/ws/rest/", {
-//       headers: {
-//          mode: "no-cors",
-//         "Content-Type": "text/json",
-//         Accept: "text/json",
-//       },
-//     });
-//   } catch (e) {
-//     console.log(e);
-//     this.UN_data = await this.res.json();
-//     console.log(this.UN_data);
-//   }
-// }
+  // async getUNData() {
+  //   try {
+  //     this.res = await fetch("http://data.un.org/ws/rest/", {
+  //       headers: {
+  //          mode: "no-cors",
+  //         "Content-Type": "text/json",
+  //         Accept: "text/json",
+  //       },
+  //     });
+  //   } catch (e) {
+  //     console.log(e);
+  //     this.UN_data = await this.res.json();
+  //     console.log(this.UN_data);
+  //   }
+  // }
 
   /*
     not used possibly rewrite as async function
