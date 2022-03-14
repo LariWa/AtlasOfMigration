@@ -19,6 +19,8 @@ class DataModel {
     this.countryID = countryID;
     this.countryName = this.codeToName(this.countryID);
     this.timeData = this.getTotalEmigration();
+    this.view = 3; //immigration = 0, emmigration 1, net migration=2, start=3
+    this.scale = [0, 100];
     //console.log(this.timeData);
 
     // this.getCountryNameAndId().then((res) => {
@@ -33,6 +35,10 @@ class DataModel {
   }
   setCountry(x) {
     this.countryID = x;
+  }
+
+  setView(x) {
+    this.view = x;
   }
 
   /* get name of a country by code */
