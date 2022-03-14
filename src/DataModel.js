@@ -27,11 +27,11 @@ class DataModel {
   }
 
   setCountryID(x) {
-    //console.log(x);
+    console.log(x);
     this.countryID = x;
-    //console.log("id: " ,this.countryID);
+    console.log("id: " ,this.countryID);
     this.countryName = this.codeToName(x)
-    //console.log("name: ",this.countryName);
+    console.log("name: ",this.countryName);
 
   }
 

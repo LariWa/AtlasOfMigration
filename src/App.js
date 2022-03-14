@@ -48,6 +48,7 @@ function App() {
             year={year}
             view={view}
             isPopulationView={isPopulationView}
+            setCountryID = {setCountryID}
           />
         </div>
       )}
