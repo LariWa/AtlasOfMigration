@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import SideBar from "./SideBar";
 import TimeLine from "./TimeLine";
 import "./App.css";
+import "./styles/base.min.css";
 import WorldMap from "./WorldMap";
 import DataModel from "./DataModel";
 import Start from "./Start";
@@ -13,8 +14,7 @@ function App() {
   const [isPopulationView, setPopulationView] = useState(true);
   const [view, setView] = useState(0); //immigration = 0, emmigration 1, net migration=2
   const [loading, setLoading] = useState(true);
-  const [pressed, setPressed] =
-    useState(true); /* change this to false to make startpage stay open */
+  const [pressed, setPressed] = useState(true); /* change this to false to make startpage stay open */
   const [year, setYear] = useState(dataModel.year); //just a hack to make components rerender on year change
   const [countryID, setCountryID] = useState(dataModel.countryID);
   const [detailView, setDetailView] = useState(false);

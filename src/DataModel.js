@@ -38,6 +38,10 @@ class DataModel {
     //console.log("name: ", this.countryName);
   }
 
+  setView(x) {
+    this.view = x;
+  }
+
   /* get name of a country by code */
   codeToName(x = WORLD) {
     //console.log(x);
@@ -174,7 +178,7 @@ class DataModel {
   getNetRatioMigrationValue(country, year) {
     //TODO decide on ratio or substract
     if (!year) year = this.year;
-    var immi = this.getimmigrationValue(country, year);
+    var immi = this.getImmigrationValue(country, year);
     var emmi = this.getEmigrationValue(country, year);
     if (immi && emmi) return immi / emmi;
     return 0;

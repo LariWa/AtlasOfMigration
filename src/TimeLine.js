@@ -1,8 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import useWindowDimensions from "./useWindowDimensions.js";
 import * as d3 from "d3";
-import "./App.css";
-import "./TimeLine.css";
+import "./styles/timeline.min.css";
+import styled from "styled-components"
 
 /* time runs 1990-2020, in 5 year interval + 2017 and 2019 */
 const yearRange = [
@@ -49,16 +49,11 @@ function TimeLine({ model, setYear }) {
 
   /* set to size of container ? */
   const dimensions = {
-    //width = document.getElementById('container').offsetWidth;//includes margin,border,padding
-    //height = document.getElementById('container').offsetHeight;//includes margin,border,padding
-    // width: svgContainerRef.current.clientWidth,
-    // height: svgContainerRef.current.clientHeight,
-    //  margin: { top: 600, left:`10vh`, bottom: `10vh`, right: `30vw` }, //set to responsive
     width: useWindowDimensions().width * 0.7,
     height: useWindowDimensions().height * 0.2,
   };
 
-  const margin = { top: 20, left: 40, bottom: 20, right: 50 };
+  const margin = { top: 30, left:40, bottom: 20, right: 50 }
 
   //  useLayoutEffect(() => {
   useEffect(() => {
@@ -91,9 +86,7 @@ function TimeLine({ model, setYear }) {
       svgEl
         .append("g")
         .attr("transform", `translate(30,${shiftXAxis})`)
-        .attr("id", "bottom")
-        .style("font-size", "16px")
-        .attr("color", "red");
+        .attr("id","bottom")
 
       const xAxis = d3
         .axisBottom(xScale)
@@ -109,10 +102,11 @@ function TimeLine({ model, setYear }) {
       svgEl
         .append("g")
         .attr("transform", `translate(${shiftYAxis} , -15)`)
-        .attr("id", "left")
-        .style("font-size", "16px")
-        .attr("color", "red");
-      svgEl.select("#left").call(yAxis);
+        .attr("id","left")
+      svgEl.select('#left')
+        .call(yAxis)
+
+
 
       //  data.forEach(x => console.log("total: " ,x.total," --> y: " ,yScale(x.total)))
       //data.forEach(x => console.log("date: " ,x.date," --> x: " ,xScale(x.date)))
@@ -120,25 +114,21 @@ function TimeLine({ model, setYear }) {
       //TODO check for NAN show some warning when value does not exist!
 
       d3.select("#bottom")
-        .selectAll("rect")
-        .data(data)
-        .join("rect")
-        .attr("x", (d) => xScale(d.date) - dx)
-        .attr("y", (d) => yScale(d.total) - shiftXAxis - 15) //This value is strange!!
-        .attr(
-          "height",
-          (d) =>
-            dimensions.height - margin.top - margin.bottom - yScale(d.total)
-        )
-        //.attr("height", d => yScale(d.total)/2) //base on data
-        .attr("width", dx)
-        .style("fill", isNaN(d => d.total) ? "blue" : "pink");
+          .selectAll("rect")
+          .data(data)
+          .join('rect')
+          .attr("x", d => xScale((d.date)) - dx)
+          .attr('y', d => yScale(d.total)-shiftXAxis-15) //This value is strange!!
+          .attr('height', (d) => (dimensions.height-margin.top-margin.bottom) - yScale(d.total))
+          //.attr("height", d => yScale(d.total)/2) //base on data
+          .style("fill", "#F29F05")
 
-      d3.selectAll("rect")
-        .on("click", (d, i) => {
-          //console.log("click bar " )
-          //  console.log(timeFormat(i.date));
-          updateYear(timeFormat(i.date));
+    d3.selectAll("rect")
+        .on("click", (d,i) => {
+          updateYear(timeFormat(i.date))
+        })
+
+        .on("mouseover", (d,i) => {
         })
         .on("mouseover", (d, i) => {
           //  console.log("mouse over bar ",  )
@@ -150,10 +140,9 @@ function TimeLine({ model, setYear }) {
   return (
     <svg
       id="timeLine"
-      width={dimensions.width}
-      height={dimensions.height}
-      transform="translate(250, 600)"
-      style={{ backgroundColor: "#121242" }}
+      width = {dimensions.width}
+      height = {dimensions.height}
+      transform = "translate(250, 600)"
       ref={svgContainerRef}
     ></svg>
   );
