@@ -145,6 +145,16 @@ function WorldMap(props) {
 
       //arrows
       if (arrows && selectedCountry) {
+        svg
+          .append("defs")
+          .append("marker")
+          .attr("id", "arrow")
+          .attr("refX", 89)
+          .attr("refY", 89)
+          .attr("markerWidth", 30)
+          .attr("markerHeight", 30)
+          .attr("orient", "auto-start-reverse");
+
         svg.selectAll(".arrow").remove();
         svg
           .selectAll("arrows")
@@ -160,10 +170,8 @@ function WorldMap(props) {
           .style("fill", "none")
           .style("stroke", getArrowColor())
           .style("stroke-width", 3)
-          .attr("markerWidth", 50)
-          .attr("markerHeight", 50)
-          .attr("marker-end", "url(#arrow)")
-          .attr("marker-start", "url(#arrow)")
+          .attr("marker-start", "url(#marker)")
+          // .attr("marker-start", "url(#marker)")
 
           .on("mouseover", function (d) {
             arrowTip.show(d, this);
@@ -219,7 +227,22 @@ function WorldMap(props) {
   }
   return (
     <div ref={mapContainerRef}>
-      <svg ref={svgRef} width={width} height={height} id="map"></svg>
+      <svg ref={svgRef} width={width} height={height} id="map">
+        <defs>
+          <marker
+            id="marker"
+            markerUnits="strokeWidth"
+            markerWidth="12"
+            markerHeight="12"
+            viewBox="0 0 12 12"
+            refX="6"
+            refY="6"
+            orient="auto"
+          >
+            <path d="M2,2 L10,6 L2,10 L6,6 L2,2"></path>
+          </marker>
+        </defs>
+      </svg>
     </div>
   );
   function mouseOverACB(event) {
