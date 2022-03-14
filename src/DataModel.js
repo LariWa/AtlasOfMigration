@@ -35,6 +35,10 @@ class DataModel {
 
   }
 
+  setView(x) {
+    this.view = x;
+  }
+
   /* get name of a country by code */
   codeToName(x = WORLD) {
     let obj = CountryNameID.filter((item) => item.id === x);

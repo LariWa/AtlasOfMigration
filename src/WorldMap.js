@@ -11,8 +11,7 @@ var migrationCountries;
 var selectedCountry;
 
 function WorldMap(props) {
-  const [view, setView] = useState(0); //immigration = 0, emmigration 1, net migration=2
-
+  const [view, setView] = useState(props.view); //immigration = 0, emmigration 1, net migration=2
   const { height, width } = useWindowDimensions();
   const mapContainerRef = useRef();
   const svgRef = useRef();
