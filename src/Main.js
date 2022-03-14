@@ -3,13 +3,13 @@ import * as d3 from "d3";
 
 
 /* just some test to see that d3 works*/
-function NavBar(props) {
+function Main() {
 
  let stat = 1;
 
  /*  use LayoutEffect() for updating d3 components? */
   useLayoutEffect(() => {
-  //  d3.select(".nav").style("background-color", "#ff000030");
+    d3.select(".nav").style("background-color", "red");
   }, []);
 
   const onMouseClick = () => {
@@ -19,14 +19,10 @@ function NavBar(props) {
 
   return (
     /* use svg element */
-      <div className = "nav" style = {{backgroundColor:'#aa220020'}}>
-        <h1>Atlas of Migration</h1>
-        <p>Year: {props.model.year} </p>
-        <p>Search </p>
-        <input type="text"/>
-        <p>About </p>
+      <div className = "nav">
+        <h1>About</h1>
       </div>
   );
 }
 
-export default NavBar;
+export default Main;
