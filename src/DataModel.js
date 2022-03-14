@@ -19,22 +19,20 @@ class DataModel {
     this.countryID = countryID;
     this.countryName = this.codeToName(this.countryID);
     this.timeData = this.getTotalEmigration();
-    this.view = 3; //immigration = 0, emmigration 1, net migration=2, start=3
-    this.scale = [0, 100];
-    //console.log(this.timeData);
-
-    // this.getCountryNameAndId().then((res) => {
-    //   this.countryNameAndId = res;
-    //
-    // });
   }
 
   setYear(x) {
     this.year = x;
     //  console.log(x);
   }
-  setCountry(x) {
+
+  setCountryID(x) {
+    console.log(x);
     this.countryID = x;
+    console.log("id: " ,this.countryID);
+    this.countryName = this.codeToName(x)
+    console.log("name: ",this.countryName);
+
   }
 
   setView(x) {
@@ -42,23 +40,11 @@ class DataModel {
   }
 
   /* get name of a country by code */
-  codeToName(x = 300) {
+  codeToName(x = WORLD) {
     let obj = CountryNameID.filter((item) => item.id === x);
     return obj[0] == null ? null : obj[0].name;
   }
 
-  // xport const CountryNameID = [
-  //   {
-  //     "name": "WORLD",
-  //     "id": 900,
-  //     region: true
-  //   },
-  //
-  //
-  //   for (const [book, price] of Object.entries(books)) {
-  //     if (price === 0) {
-  //       console.log(book);
-  //
 
   /* TODO: return an array with unique objects {name: ID, id: countryname}
     with ID and countrynames as listed in the UN dataset */
@@ -120,8 +106,9 @@ class DataModel {
   getMigrationValue(origin, destination, year) {
     return this.getMigrationValueAll(origin, destination)[year];
   }
+
   //gets immigration value for specified destination (use 900 as destination to get total immigration)
-  getImigrationValue(destination, year) {
+  getImmigrationValue(destination, year) {
     if (!year) year = this.year;
     if (this.immigrationData) {
       var value = this.immigrationData.filter(function findValue(data) {
@@ -216,7 +203,7 @@ class DataModel {
     // Emigration value / popualtion value
     if (!year) year = this.year;
     var pop = this.getPopulationValue(country, year);
-    var immi = this.getImigrationValue(country, year);
+    var immi = this.getImmigrationValue(country, year);
     if (pop && immi) {
       return (immi / (pop * 1000)) * 100;
     } // I multiplied the population value by 1000
@@ -248,32 +235,27 @@ class DataModel {
   }
 
   /* fetch data as csv for year x, return file. TODO error handling */
-  // getCsvData(x = ""){
-  //   return fetch(path
-  //     ,{headers : {
-  //     'Content-Type': 'text/csv;charset=UTF-8',
-  //    }
-  //  })
-  //  .then(res => res.blob())
-  //  .then(blob => {
-  //    this.data = blob;
-  //    return blob.text()
-  //  })
-  //  .then(resData => {
-  //     console.log("fetch csv: "+ resData);
-  //     //console.log(resData instanceof Blob);
-  //     //console.log(this.data instanceof Blob);
-  //     return resData;
-  //   })
-  //   .catch(_ => console.log(_))
-  // }
 
-  // papa.parse(getCsvData(), {
-  //   complete: results => {
-  //     this.data = results.data
-  //     console.log("Finished:", this.data);
-  //   }
-  // });
+
+
+
+/*  http://data.un.org/ws/rest/{artifact}/{artifactId}/{parameters}  */
+
+// async getUNData() {
+//   try {
+//     this.res = await fetch("http://data.un.org/ws/rest/", {
+//       headers: {
+//          mode: "no-cors",
+//         "Content-Type": "text/json",
+//         Accept: "text/json",
+//       },
+//     });
+//   } catch (e) {
+//     console.log(e);
+//     this.UN_data = await this.res.json();
+//     console.log(this.UN_data);
+//   }
+// }
 
   /*
     not used possibly rewrite as async function

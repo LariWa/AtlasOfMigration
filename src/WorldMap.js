@@ -172,9 +172,20 @@ function WorldMap(props) {
           });
       }
     }
-    function clickedACB(event) {
+    function clickedACB(target) {
       //TODO topography, if time
-      showDetailView(event);
+      console.log(target.originalTarget.id);
+      //console.log(target);
+
+    // props.setCountryName(props.model.codeToName(target.id));
+    console.log(Number(target.originalTarget.id));
+     props.setCountryID(Number(Number(target.originalTarget.id)));
+     props.model.setCountryID(Number(target.originalTarget.id));
+       //props.setCountryName(props.model.codeToName(target.id));
+    showDetailView(target);
+
+
+
     }
     function showDetailView(event) {
       var countryId = event.target.id;
