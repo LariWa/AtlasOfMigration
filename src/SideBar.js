@@ -48,7 +48,7 @@ function SideBar({
   useEffect(() => {
     setName(model.countryName);
     setDetailView(model.countryID != 900);
-  }, [view, year, countryID]);
+  }, [view, year, countryID, calculation]);
 
   const searchCountry = (e) => {
     if (e.key === "Enter") {

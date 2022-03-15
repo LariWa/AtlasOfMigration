@@ -49,7 +49,7 @@ function TimeLine({ model, setYear, view }) {
   //     d => d.OriginID)
   //     .get(900)
   //     .get(900)
-  //   //console.log(groupYear);
+  //   ////console.log(groupYear);
 
   /*
 view: immigration: 0  --> origin = WORLD
@@ -58,35 +58,28 @@ net migration: 2 --> ? destination = origin immi - emi ??
 */
 
   const getMigration = () => {
+    console.log(view);
     let obj = {};
     let origin = WORLD,
       destination = WORLD;
-    console.log(model.countryID);
-    console.log(view); //quick fix to take care of rerender and undefined view
-    if (view != null) {
-      if (view == 0 || view == 1) {
-        if (view == 0) destination = model.countryID;
-        if (view == 1) origin = model.countryID;
-        obj = model.getMigrationValueAll(origin, destination);
-      }
-      if (view == 2)
-        for (let i = 1990; i <= 2020; i += 5) {
-          let key = i.toString();
-          obj[key] = model.getNetMigrationValue(model.getCountryId, i);
-        }
+    // //console.log(model.countryID);
+    // //console.log(view); //quick fix to take care of rerender and undefined view
+    if (view) {
+      if (view && view == 0) destination = model.countryID;
+      if (view && view == 1) origin = model.countryID;
+      if (view && view == 2)
+        origin = destination = model.countryID; /* NO!!! TODO is this right? */
       console.log(origin);
       console.log(destination);
-      //console.log(obj);
-      //console.log(obj != "undefined");
+      ////console.log(model.countryID);
 
-      if (obj != "undefined" && Object.keys(obj).length > 0) {
-        console.log(obj);
+      obj = model.getMigrationValueAll(origin, destination);
+      // //console.log(obj);
+      if (obj) {
         delete obj.DestinationID;
         delete obj.DestinationName;
         delete obj.OriginName;
         delete obj.OriginID;
-        console.log(obj[1990]); // 152 986 157   //0  --> true
-        console.log(!obj[1990].isNaN); //true
         getValue(obj[1990]);
         let res = Object.entries(obj).map(([key, value]) => ({
           date: new Date(key, 6), // 6 equals 1 July
@@ -109,7 +102,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
     //format input to right year?
     setYear(x);
     model.setYear(x);
-    //console.log("new year", model.year);
+    ////console.log("new year", model.year);
   };
 
   /* set to size of container ? */
@@ -124,12 +117,10 @@ net migration: 2 --> ? destination = origin immi - emi ??
 
   //  useLayoutEffect(() => {
   useEffect(() => {
-    console.log(view, ": 0: imi, 1:emi, 2: net");
-    if (view) setColor(colors[view]);
-
+    // //console.log(view, ": 0: imi, 1:emi");
     data = getMigration();
     if (data) {
-      //console.log(data);
+      ////console.log(data);
       const xScale = d3
         .scaleTime()
         .domain(d3.extent(yearRange))
@@ -149,7 +140,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
       const svgEl = d3.select(svgContainerRef.current);
       svgEl.selectAll("*").remove();
 
-      //console.log(data)
+      ////console.log(data)
 
       svgEl
         .append("g")
@@ -173,8 +164,8 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .attr("id", "left");
       svgEl.select("#left").call(yAxis);
 
-      //  data.forEach(x => console.log("total: " ,x.total," --> y: " ,yScale(x.total)))
-      //data.forEach(x => console.log("date: " ,x.date," --> x: " ,xScale(x.date)))
+      //  data.forEach(x => //console.log("total: " ,x.total," --> y: " ,yScale(x.total)))
+      //data.forEach(x => //console.log("date: " ,x.date," --> x: " ,xScale(x.date)))
 
       //TODO check for NAN show some warning when value does not exist!
 
@@ -192,14 +183,28 @@ net migration: 2 --> ? destination = origin immi - emi ??
         //.attr("height", d => yScale(d.total)/2) //base on data
         .style("fill", color);
 
+      var arrowTip = d3
+        .tip()
+        .attr("class", "d3-tip")
+        .html(function (event) {
+          let nbr = event.explicitOriginalTarget;
+          console.log(nbr);
+          console.log(nbr.y);
+
+          console.log(xScale(parseFloat(event.explicitOriginalTarget.x)));
+          //TODO nice text
+          return " ";
+        });
+
+      d3.select("#timeLine").call(arrowTip);
+
       d3.selectAll("rect")
         .on("click", (d, i) => {
-          console.log("clicked ", d, i);
-          console.log(timeFormat(i.date));
           updateYear(timeFormat(i.date));
         })
-        .on("mouseover", (d, i) => {
-          console.log(i.total);
+        .on("mouseover", function (d) {
+          console.log(d);
+          arrowTip.show(d, this);
         });
     }
   }, [data, view]);
