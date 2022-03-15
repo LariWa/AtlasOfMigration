@@ -48,19 +48,19 @@ net migration: 2 --> ? destination = origin immi - emi ??
     let obj = [];
     let origin = WORLD,
       destination = WORLD;
-    console.log(model.countryID);
-    console.log(view); //quick fix to take care of rerender and undefined view
+    // console.log(model.countryID);
+    // console.log(view); //quick fix to take care of rerender and undefined view
     if (view) {
       if (view && view == 0) destination = model.countryID;
       if (view && view == 1) origin = model.countryID;
       if (view && view == 2)
         origin = destination = model.countryID; /* NO!!! TODO is this right? */
-      console.log(origin);
-      console.log(destination);
+      // console.log(origin);
+      // console.log(destination);
       //console.log(model.countryID);
 
       obj = model.getMigrationValueAll(origin, destination);
-      console.log(obj);
+      // console.log(obj);
       if (obj) {
         delete obj.DestinationID;
         delete obj.DestinationName;
@@ -70,7 +70,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
           date: new Date(key, 6), // 6 equals 1 July
           total: Number(value.replaceAll(" ", "")),
         }));
-        console.log(res);
+        // console.log(res);
         return res;
       }
     }
@@ -94,7 +94,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
 
   //  useLayoutEffect(() => {
   useEffect(() => {
-    console.log(view, ": 0: imi, 1:emi");
+    // console.log(view, ": 0: imi, 1:emi");
     data = getMigration();
     if (data) {
       //console.log(data);

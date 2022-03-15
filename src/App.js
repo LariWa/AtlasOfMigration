@@ -11,7 +11,9 @@ import Start from "./Start";
 const dataModel = new DataModel();
 
 function App() {
-  const [isPopulationView, setPopulationView] = useState(true);
+  const [isTotalNumberView, setTotalNumberViewState] = useState("true");
+  const [isPopulationView, setPopulationView] = useState(false);
+
   const [view, setViewState] = useState(3); //immigration = 0, emmigration 1, net migration=2, start=3
   const [loading, setLoading] = useState(true);
   const [pressed, setPressed] =
@@ -42,12 +44,20 @@ function App() {
     //console.log(dataModel.getMigrationValueAll(900, 300));
     setLoading(false);
   });
+  function setTotalNumberView(val) {
+    if (val) {
+      console.log(val);
+      setTotalNumberViewState(val);
+      val = val === "true";
+      setPopulationView(!val);
+    }
+  }
   function setView(val) {
     if (view && val) {
       console.log("change" + val);
       setViewState(val);
       if (val >= 0 && val <= 2) {
-        if (!isPopulationView) {
+        if (isTotalNumberView) {
           setScale(scaleValues[0][val]);
           setSliderValue(scaleValues[0][val]);
         } else {
@@ -70,8 +80,8 @@ function App() {
         setScale={setScale}
         scale={scale}
         countryID={countryID}
-        setCalculation={setCalculation}
-        calculation={calculation}
+        setCalculation={setTotalNumberView}
+        calculation={isTotalNumberView}
         sliderValue={sliderValue}
         setSliderValue={setSliderValue}
       />
