@@ -18,7 +18,6 @@ function App() {
     useState(true); /* change this to false to make startpage stay open */
   const [year, setYear] = useState(dataModel.year); //just a hack to make components rerender on year change
   const [countryID, setCountryID] = useState(dataModel.countryID);
-  const [detailView, setDetailView] = useState(false);
 
   dataModel.loadData().then(() => {
     //console.log(dataModel.getTotalEmigration(300, 0))
@@ -48,8 +47,6 @@ function App() {
             view={view}
             isPopulationView={isPopulationView}
             setCountryID={setCountryID}
-            detailView={detailView}
-            setDetailView={setDetailView}
           />
         </div>
       )}

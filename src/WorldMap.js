@@ -174,7 +174,6 @@ function WorldMap(props) {
     function clickedACB(target) {
       //TODO topography, if time
       showDetailView(target);
-      props.setDetailView(true);
       props.setCountryID(target.id);
       props.model.setCountryID(target.id);
     }
@@ -224,9 +223,10 @@ function WorldMap(props) {
       let coords = projection.invert(path.centroid(feature));
       return coords;
     }
+    //go to detail view
     if (
       data &&
-      props.detailView &&
+      props.countryId != 900 &&
       (!selectedCountryFeature ||
         (selectedCountryFeature &&
           props.countryId != selectedCountryFeature.id))
@@ -236,6 +236,12 @@ function WorldMap(props) {
       })[0];
 
       changeCountry(selectedCountryFeature);
+    }
+    //go back to main view
+    if (data && props.countryId == 900 && selectedCountryFeature) {
+      selectedCountryFeature = undefined;
+      setZoomCountries(undefined);
+      svg.selectAll(".arrow").remove();
     }
   }, [
     data,
