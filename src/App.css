@@ -6,6 +6,7 @@
 }
 .mapContainer {
   float: right;
+  margin-top: 7vh;
 }
 
 /*  START old react stuff ----------------------------------------------------- */
