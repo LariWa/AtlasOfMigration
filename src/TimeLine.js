@@ -65,18 +65,26 @@ net migration: 2 --> ? destination = origin immi - emi ??
       destination = WORLD;
     // //console.log(model.countryID);
     // //console.log(view); //quick fix to take care of rerender and undefined view
-    if (view) {
-      if (view && view == 0) destination = model.countryID;
-      if (view && view == 1) origin = model.countryID;
-      if (view && view == 2)
-        origin = destination = model.countryID; /* NO!!! TODO is this right? */
+    console.log(model.countryID);
+    console.log(view); //quick fix to take care of rerender and undefined view
+    if (true) {
+      if (view == 0 || view == 1) {
+        if (view == 0) destination = model.countryID;
+        if (view == 1) origin = model.countryID;
+        obj = model.getMigrationValueAll(origin, destination);
+      }
+      if (view == 2)
+        for (let i = 1990; i <= 2020; i += 5) {
+          let key = i.toString();
+          obj[key] = model.getNetMigrationValue(model.getCountryId(), i);
+        }
+      console.log(model.getCountryId());
       console.log(origin);
       console.log(destination);
-      ////console.log(model.countryID);
-
-      obj = model.getMigrationValueAll(origin, destination);
+      if (view === 3) obj = model.getMigrationValueAll(origin, destination);
       // //console.log(obj);
-      if (obj) {
+      if (obj && obj != "undefined" && Object.keys(obj).length > 0) {
+        console.log(obj);
         delete obj.DestinationID;
         delete obj.DestinationName;
         delete obj.OriginName;
@@ -93,6 +101,8 @@ net migration: 2 --> ? destination = origin immi - emi ??
   };
 
   const getValue = (x) => {
+    console.log("value ", x);
+    if (typeof x == "number") return x;
     if (x === 0) return 0;
     if (x === "..") return -1;
     else return Number(x.split(" ").join(""));
@@ -118,9 +128,10 @@ net migration: 2 --> ? destination = origin immi - emi ??
 
   //  useLayoutEffect(() => {
   useEffect(() => {
-    // //console.log(view, ": 0: imi, 1:emi");
+    console.log(view, ": 0: imi, 1:emi");
     data = getMigration();
     if (data) {
+      if (view) setColor(colors[view]);
       ////console.log(data);
       const xScale = d3
         .scaleTime()
@@ -185,7 +196,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
             dimensions.height - margin.top - margin.bottom - yScale(d.total)
         )
         //.attr("height", d => yScale(d.total)/2) //base on data
-        .style("fill", color);
+        .style("fill", colors[view]);
 
       var arrowTip = d3
         .tip()
@@ -211,7 +222,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
           arrowTip.hide(d);
         });
     }
-  }, [data, view]);
+  }, [data, view, color]);
 
   // position is set with css
   return (
