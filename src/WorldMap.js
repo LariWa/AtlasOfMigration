@@ -9,13 +9,17 @@ const d3 = {
 };
 var migrationCountries;
 var selectedCountryFeature;
+const immiColor = "cyan";
+const emiColor = "#F29F05";
+let view;
 
 function WorldMap(props) {
-  const { height, width } = useWindowDimensions();
+  const height = useWindowDimensions().height * 0.8;
+  const width = useWindowDimensions().width * 0.75;
+
   const mapContainerRef = useRef();
   const svgRef = useRef();
   const data = useMapData();
-
   const colorScales = [
     [
       //immigration
@@ -65,18 +69,14 @@ function WorldMap(props) {
       .tip()
       .attr("class", "d3-tip")
       .html(function (event) {
-        return (
-          event.target.getAttribute("name") +
-          "<br>" +
-          displayMigrationValue(event.target.id)
-        );
+        return displayMigrationValue(event.target.id);
       });
     var arrowTip = d3
       .tip()
       .attr("class", "d3-tip")
       .html(function (event) {
         //TODO nice text
-        return migrationCountries.find((el) => el.id == event.target.id).value;
+        return displayMigrationValue(event.target.id);
       });
     const mapContainer = d3.select(mapContainerRef.current);
     svg.call(countryTip);
@@ -164,7 +164,7 @@ function WorldMap(props) {
           })
           .style("fill", "none")
           .style("stroke", getArrowColor())
-          .style("stroke-width", 3)
+          .style("stroke-width", 6)
           .attr("markerWidth", 50)
           .attr("markerHeight", 50)
           .attr("marker-end", "url(#arrow)")
@@ -180,19 +180,19 @@ function WorldMap(props) {
     }
     function clickedACB(target) {
       //TODO topography, if time
-      showDetailView(target);
+      showDetailView(target.id);
       props.setCountryID(target.id);
       props.model.setCountryID(target.id);
     }
 
     function changeCountry(target) {
       //TODO topography, if time
-      showDetailView(target);
+      showDetailView(target.id);
     }
-    function showDetailView(target) {
-      if (target) {
+    function showDetailView(id) {
+      if (id) {
         // just to avoid crash
-        var countryId = target.id;
+        var countryId = id;
         if (props.view == 0)
           migrationCountries = props.model.getImmigrantionCountries(countryId);
         else if (props.view == 1)
@@ -207,7 +207,7 @@ function WorldMap(props) {
             type: "FeatureCollection",
             features: zoomFeatures,
           });
-        }
+        } else setZoomCountries(undefined);
       }
     }
 
@@ -276,7 +276,7 @@ function WorldMap(props) {
     return <pre>Loading...</pre>;
   }
   return (
-    <div ref={mapContainerRef}>
+    <div ref={mapContainerRef} className="mapContainer">
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
@@ -293,7 +293,7 @@ function WorldMap(props) {
     if (selectedCountryFeature) return getDetailViewColor(country);
     var val = getMigrationDataByCountry(country);
 
-    if (!val) return "black"; //no data available
+    if (!val) return "darkgray"; //no data available
     if (val < props.scale[1] && val > props.scale[0])
       return colorScales[+props.isPopulationView][props.view](val);
     else return "grey";
@@ -303,38 +303,37 @@ function WorldMap(props) {
       migrationCountries &&
       migrationCountries.find((item) => item.id == country)
     ) {
-      if (props.view == 0) return "red";
-      if (props.view == 1) return "blue";
+      if (props.view == 0) return emiColor;
+      if (props.view == 1) return immiColor;
       if (props.view == 2) return "LightGrey";
     }
     if (selectedCountryFeature.id == country) {
-      if (props.view == 0) return "blue";
-      if (props.view == 1) return "red";
+      if (props.view == 0) return immiColor;
+      if (props.view == 1) return emiColor;
       if (props.view == 2) {
         var val = getMigrationDataByCountry(country);
-        if (!val) return "black";
+        if (!val) return "darkgrey";
         return colorScales[+props.isPopulationView][props.view](val);
       }
     }
     return "lightgrey";
   }
   function getArrowColor() {
-    if (props.view == 0) return "darkred";
-    if (props.view == 1) return "darkblue";
+    if (props.view == 0) return "#a88905";
+    if (props.view == 1) return "darkcyan";
   }
   function getMigrationDataByCountry(countryId) {
     if (!props.isPopulationView) {
       if (props.view == 0) return props.model.getImmigrationValue(countryId);
       if (props.view == 1) return props.model.getEmigrationValue(countryId);
-      if (props.view == 2)
-        return props.model.getNetRatioMigrationValue(countryId);
+      if (props.view == 2) return props.model.getNetMigrationValue(countryId);
     } else {
       if (props.view == 0)
         return props.model.getImigrationOverPopulation(countryId);
       if (props.view == 1)
         return props.model.getEmigrationOverPopulation(countryId);
       if (props.view == 2)
-        return props.model.getNetRatioMigrationValue(countryId);
+        return props.model.getNetMigrationValuePopulation(countryId);
     }
   }
   function displayMigrationValue(countryId) {
