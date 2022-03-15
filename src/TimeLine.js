@@ -1,8 +1,13 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import useWindowDimensions from "./useWindowDimensions.js";
-import * as d3 from "d3";
+import * as d3module from "d3";
 import "./styles/timeline.min.css";
 import styled from "styled-components";
+import d3tip from "d3-tip";
+const d3 = {
+  ...d3module,
+  tip: d3tip,
+};
 
 /* time runs 1990-2020, in 5 year interval + 2017 and 2019 */
 const yearRange = [
@@ -101,7 +106,6 @@ net migration: 2 --> ? destination = origin immi - emi ??
 
   /* update this local or update model? */
   const updateYear = (x) => {
-    spli;
     //format input to right year?
     setYear(x);
     model.setYear(x);
@@ -190,6 +194,8 @@ net migration: 2 --> ? destination = origin immi - emi ??
 
       d3.selectAll("rect")
         .on("click", (d, i) => {
+          console.log("clicked ", d, i);
+          console.log(timeFormat(i.date));
           updateYear(timeFormat(i.date));
         })
         .on("mouseover", (d, i) => {

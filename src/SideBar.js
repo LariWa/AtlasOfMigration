@@ -116,6 +116,7 @@ function SideBar({
         </div>
       )}
       {detailView ? <h1> {name} </h1> : <h1> {headLine[view]} </h1>}
+      {view != 3 && <h2> Year: {year} </h2>}
       {detailView ? "" : <p>{information[view]}</p>}
 
       <div id="searchBox">
