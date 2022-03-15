@@ -92,6 +92,13 @@ function SideBar({ model, year, setCountryID, countryID, setView, view, setScale
           </button>
           <h3> Year: {year} </h3>
           <h3> Country: {name} </h3>
+
+          <div className="filter">
+          <h2>What do you want to know more about?</h2>
+            <ImmigrationButton name={view} value="0" onClick={changeView}><img src={immigrationIcon}/><br/>Show Immigration</ImmigrationButton>
+            <MigrationButton name={view} value="2" onClick={changeView}><img src={migrationIcon}/><br/>Show Net Migration</MigrationButton>
+            <EmigrationButton name={view} value="1" onClick={changeView}><img src={emigrationIcon}/><br/>Show Emigration</EmigrationButton>
+          </div>
         </div>
       ) : (
       <>
