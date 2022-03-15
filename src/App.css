@@ -4,7 +4,9 @@
   top: 0;
   background-color: #060918;
 }
-
+.mapContainer {
+  float: right;
+}
 /*  START old react stuff ----------------------------------------------------- */
 .App-logo {
   height: 40vmin;

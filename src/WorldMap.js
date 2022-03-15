@@ -14,7 +14,9 @@ const emiColor = "#F29F05";
 let view;
 
 function WorldMap(props) {
-  const { height, width } = useWindowDimensions();
+  const height = useWindowDimensions().height * 0.8;
+  const width = useWindowDimensions().width * 0.75;
+
   const mapContainerRef = useRef();
   const svgRef = useRef();
   const data = useMapData();
@@ -273,7 +275,7 @@ function WorldMap(props) {
     return <pre>Loading...</pre>;
   }
   return (
-    <div ref={mapContainerRef}>
+    <div ref={mapContainerRef} class="mapContainer">
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
