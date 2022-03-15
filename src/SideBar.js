@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useLayoutEffect } from "react";
-import Slider from '@mui/material/Slider';
+import Slider from "@mui/material/Slider";
 import "./styles/sideBar.min.css";
-import { ImmigrationButton, EmigrationButton, MigrationButton } from './styles/components/Button.js'
+import {
+  ImmigrationButton,
+  EmigrationButton,
+  MigrationButton,
+} from "./styles/components/Button.js";
 import { CountryNameID } from "./const/CountryNameID";
 import immigrationIcon from "./styles/icons/ImmigrationIcon.svg"
 import emigrationIcon from "./styles/icons/EmigrationIcon.svg"
@@ -17,37 +21,45 @@ const information = [
 
 const headLine = ["Immigration", "Emigration", "Net Migration", "Welcome"];
 
-function SideBar({ model, year, setCountryID, setView, view, setScale, scale }) {
+function SideBar({ model, year, setCountryID, countryID, setView, view, setScale, scale }) {
   const [input, setInput] = useState("");
   const [nbrChoices, setNbrChoices] = useState(0);
   const [selCountries, setSelCountries] = useState([]);
   const [detailView, setDetailView] = useState(false); /* false world , true detail*/
   const [value, setValue] = React.useState([0, 100]);
+  const [name, setName] = useState(model.countryName);
 
-  useEffect(() => {}, [view, year]);
+  useEffect(() => {
+    setName(model.countryName);
+    setDetailView(model.countryID != 900);
+  }, [view, year, countryID]);
 
   const searchCountry = (e) => {
-     if (e.key === "Enter") {
-       if (nbrChoices === 1) {
-         setInput(selCountries[0].name);
-         setDetailView(true);
-         console.log("country matched");
-         console.log(selCountries[0].id);
-         setCountryID(selCountries[0].id);
-         model.setCountryID(selCountries[0].id);
-       }
-     }
-   };
+    if (e.key === "Enter") {
+      //console.log(input);
+      if (nbrChoices === 1) {
+        setInput(selCountries[0].name);
+        setDetailView(true);
+        //console.log("country matched");
+        //console.log(selCountry);
+        //  console.log(selCountries[0].id);
+        setCountryID(selCountries[0].id);
+        //setCountryName(model.codeToName(selCountries[0].id));
 
-   const onInput = (e) => {
-     setInput(e.target.value);
+        model.setCountryID(selCountries[0].id);
+      }
+    }
+  };
 
-     const filteredInput = CountryNameID.filter(
-       (x) => x.name.toLowerCase().indexOf(input.toLowerCase()) > -1
-     );
+  const onInput = (e) => {
+    setInput(e.target.value);
 
-     setNbrChoices(filteredInput.length);
-     setSelCountries(filteredInput);
+    const filteredInput = CountryNameID.filter(
+      (x) => x.name.toLowerCase().indexOf(input.toLowerCase()) > -1
+    );
+
+    setNbrChoices(filteredInput.length);
+    setSelCountries(filteredInput);
   };
 
   const changeView = (e) => {
@@ -61,13 +73,25 @@ function SideBar({ model, year, setCountryID, setView, view, setScale, scale }) 
   const handleChange = (event, newValue) => {
     setScale(newValue);
   };
-
+  //  console.log(model.countryID);
+  //  console.log(model.countryName);
   return (
     <div className="sideBar">
-      { detailView ? (
+      {detailView ? (
         <div>
-          <button id="world" onClick={() => setDetailView(false)}>{" "}Back</button>
-          <h3> Country: {model.countryName} </h3>
+          <button
+            id="world"
+            onClick={() => {
+              setDetailView(false);
+              model.setCountryID(900);
+              setCountryID(900);
+            }}
+          >
+            {" "}
+            Back
+          </button>
+          <h3> Year: {year} </h3>
+          <h3> Country: {name} </h3>
         </div>
       ) : (
       <>
@@ -93,21 +117,28 @@ function SideBar({ model, year, setCountryID, setView, view, setScale, scale }) 
       <label id="lower" className={`${view != 3 ? "" : "hide"}`}>{scale[0]}</label>
       <label id="upper" className={`${view != 3 ? "" : "hide"}`}>{scale[1]}</label>
 
-    <div id="searchBox">
-      <h2>What country are you looking for?</h2>
-      <input type="text" id="inputField" onChange={onInput} onKeyDown={searchCountry} value={input} placeholder="Search..." / >
-      <select name="countries" style={{ minWidth: 180 }}>
-        {selCountries.map((x) => (
-          <option key={x.id} value={x.name}>
-            {" "}
-            {x.name}{" "}
-          </option>
-        ))}
-      </select>
-    </div>
+      <div id="searchBox">
+        <h2>What country are you looking for?</h2>
+        <input
+          type="text"
+          id="inputField"
+          onChange={onInput}
+          onKeyDown={searchCountry}
+          value={input}
+          placeholder="Search..."
+        />
+        <select name="countries" style={{ minWidth: 180 }}>
+          {selCountries.map((x) => (
+            <option key={x.id} value={x.name}>
+              {" "}
+              {x.name}{" "}
+            </option>
+          ))}
+        </select>
+      </div>
     </>
       )}
-  </div>
+    </div>
   );
 }
 
