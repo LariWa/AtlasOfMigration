@@ -41,6 +41,7 @@ function WorldMap(props) {
   const [arrows, setArrows] = useState(null);
 
   useEffect(() => {
+    console.log("map: ", props.view);
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
     var projection;
