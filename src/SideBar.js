@@ -31,13 +31,14 @@ function SideBar({
   view,
   setScale,
   scale,
+  sliderValue,
+  setSliderValue,
 }) {
   const [input, setInput] = useState("");
   const [nbrChoices, setNbrChoices] = useState(0);
   const [selCountries, setSelCountries] = useState([]);
   const [detailView, setDetailView] =
     useState(false); /* false world , true detail*/
-  const [value, setValue] = React.useState([0, 100]);
   const [name, setName] = useState(model.countryName);
 
   useEffect(() => {
@@ -80,7 +81,7 @@ function SideBar({
   }
 
   const handleChange = (event, newValue) => {
-    setScale(newValue);
+    setSliderValue(newValue);
   };
 
   const formatResult = (item) => {
@@ -111,9 +112,9 @@ function SideBar({
 
       <h3> Year: {year} </h3>
 
-      <div id="searchBox">
-        <h2>What country are you looking for?</h2>
-        {/*
+      {/* <div id="searchBox">
+        <h2>What country are you looking for?</h2> */}
+      {/*
         <input
           type="text"
           id="inputField"
@@ -132,7 +133,7 @@ function SideBar({
         </select>
 */}
 
-        <div className="App">
+      {/* <div className="App">
           <header className="App-header">
             <div style={{ width: 300 }}>
               <ReactSearchAutocomplete
@@ -155,7 +156,7 @@ function SideBar({
             </div>
           </header>
         </div>
-      </div>
+      </div> */}
 
       <div className="filter">
         {/*<h2>What do you want to know more about?</h2> */}
@@ -182,9 +183,12 @@ function SideBar({
             id={`slider-${view != 3 ? view : "3"}`}
             className="slider"
             getAriaLabel={() => ""}
-            value={scale}
+            value={sliderValue}
+            min={scale[0]}
+            max={scale[1]}
             onChange={handleChange}
             getAriaValueText={valuetext}
+            valueLabelDisplay="auto"
           />
           <br />
           <label id="lower" className={`${view != 3 ? "" : "hide"}`}>
