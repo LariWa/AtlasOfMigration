@@ -1,5 +1,9 @@
 @import base
 
+$ImmigrationGradient: linear-gradient(90.89deg, #EEEEEE 1.36%, #F29F05 99.82%)
+$EmigrationGradient: linear-gradient(90.89deg, #EEEEEE 1.36%, #00DFF0 99.82%)
+$MigrationGradient: linear-gradient(90.89deg, #F29F05 1.36%, #EEEEEE 51.74%, #00DFF0 99.81%, #082031 99.82%)
+
 .sideBar
   position: absolute
   left: 0
@@ -21,11 +25,17 @@
   user-select: none
   p
     width: 90%
+    height: 18vh
   .filter
     margin-top: 5vh
     button
       margin-top: 10px
-      height: 80px
+      padding-bottom: 15px
+    img
+      filter: invert(90%)
+      width: 65%
+      padding-top: 10px
+      padding-bottom: 3px
 
 #searchBox
   background: linear-gradient(180deg, #0F354A 0%, rgba(8, 22, 39, 0.61) 100%)
@@ -35,7 +45,7 @@
   min-width: 265px
   height: 10vh
   margin-top: 10vw
-  padding-bottom: 10vh
+  padding-bottom: 19vh
   position: absolute
   bottom: 9vh
   h2, input
@@ -52,3 +62,47 @@
     border-bottom: solid 1px $text-color
     padding-bottom: 5px
     margin-top: 20px
+
+.slider
+  background: $dark
+  color: transparent
+  padding: 6px !important
+  width: 92% !important
+  margin-top: 2vh
+  border-radius: 6px !important
+  margin-bottom: 4px
+  height: 0 !important
+  color: $text-color !important
+
+#slider-0
+  background: $ImmigrationGradient
+
+#slider-1
+  background: $EmigrationGradient
+
+#slider-2
+  background: $MigrationGradient
+
+#slider-3
+  background: $dark
+  color: transparent !important
+  pointer-events: none
+  .MuiSlider-thumb
+    display: none
+
+.MuiSlider-thumb
+  height: 17px
+  width: 17px
+  background: #fff
+  border: 3px solid $dark
+
+#lower
+  font-size: 12px
+
+#upper
+  font-size: 12px
+  float: right
+  margin-right: 5%
+
+.hide
+  display: none
