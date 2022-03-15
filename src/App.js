@@ -42,6 +42,7 @@ function App() {
             view={view}
             setScale={setScale}
             scale={scale}
+            countryID={countryID}
           />
           <WorldMap
             scale={scale}
