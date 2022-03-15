@@ -159,14 +159,14 @@ function SideBar({
 
       <div>
         <CalculationButton
-          name={calculation}
+          name={calculation.toString()}
           onClick={changeCalculation}
           value="true"
         >
           100
         </CalculationButton>
         <CalculationButton
-          name={calculation}
+          name={calculation.toString()}
           onClick={changeCalculation}
           value="false"
         >
