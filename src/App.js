@@ -29,22 +29,21 @@ function App() {
   //dataModel.getUNData().then( () => console.log("Un data") )
 
   return (
-    <>
+    <div className="container">
+      <SideBar
+        model={dataModel}
+        year={year}
+        setCountryID={setCountryID}
+        setView={setView}
+        view={view}
+        setScale={setScale}
+        scale={scale}
+        countryID={countryID}
+      />
       {loading || !pressed ? (
         <Start enter={setPressed} loading={loading} />
       ) : (
-        <div className="container">
-          <SideBar
-            model={dataModel}
-            year={year}
-            setCountryID={setCountryID}
-            setView={setView}
-            view={view}
-            setScale={setScale}
-            scale={scale}
-            countryID={countryID}
-          />
-          <TimeLine model={dataModel} setYear={setYear} view={view} />
+        <>
           <WorldMap
             scale={scale}
             countryId={countryID}
@@ -55,10 +54,15 @@ function App() {
             isPopulationView={isPopulationView}
             setCountryID={setCountryID}
           />
-          <TimeLine model={dataModel} setYear={setYear} />
-        </div>
+          <TimeLine
+            model={dataModel}
+            setYear={setYear}
+            view={view}
+            style={{ zIndex: 99 }}
+          />
+        </>
       )}
-    </>
+    </div>
   );
 }
 
