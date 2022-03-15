@@ -179,6 +179,7 @@ function SideBar({
           maxResults={3}
           styling={{
             backgroundColor: "transparent",
+            color: "white",
             iconColor: "#EEEEEE",
             borderRadius: "0px",
             border: "0px solid transparent",
@@ -210,7 +211,7 @@ function SideBar({
       <div className="calculationMode">
       <h2>Choose calculation mode:</h2>
         <CalculationButton
-          name={calculation}
+          name={calculation.toString()}
           onClick={changeCalculation}
           value="true"
           className={view}
@@ -218,7 +219,7 @@ function SideBar({
           Total Numbers
         </CalculationButton>
         <CalculationButton
-          name={calculation}
+          name={calculation.toString()}
           onClick={changeCalculation}
           value="false"
           className={view}

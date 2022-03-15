@@ -67,11 +67,17 @@ class DataModel {
       delete data[0].Area; //quick fix
       let res = Object.entries(data[0]).map(([key, value]) => ({
         date: new Date(key, 6), // 6 equals 1 July
-        total: Number(value.replaceAll(" ", "")),
+        total: this.getValue(value),
       }));
       //console.log(res);
       return res;
     }
+  }
+
+  getValue(x) {
+    if (x === 0) return 0;
+    if (x === "..") return -1;
+    else return Number(x.split(" ").join(""));
   }
 
   /*  Net immigration to destination for all years
@@ -178,6 +184,7 @@ class DataModel {
     if (immi && emmi) return immi / emmi;
     return 0;
   }
+
   getNetMigrationValue(country, year) {
     //TODO decide on ratio or substract
     if (!year) year = this.year;
@@ -186,6 +193,7 @@ class DataModel {
     if (immi && emmi) return immi - emmi;
     return 0;
   }
+
   getNetMigrationValuePopulation(country, year) {
     //TODO decide on ratio or substract
     if (!year) year = this.year;
@@ -234,6 +242,7 @@ class DataModel {
     return 0;
   }
   //get emigration value for specified country
+
   getEmigrationValue(origin, year) {
     if (!year) year = this.year;
     if (this.emigrationData)
@@ -244,6 +253,7 @@ class DataModel {
       return parseInt(value[0][year].split(" ").join(""));
     }
   }
+
   getPopulationValue(country, year) {
     if (!year) year = this.year;
     if (this.populationData)

@@ -51,7 +51,6 @@ function WorldMap(props) {
   const [arrows, setArrows] = useState(null);
 
   useEffect(() => {
-    console.log(props.isPopulationView);
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
     var projection;
@@ -72,6 +71,7 @@ function WorldMap(props) {
       .html(function (event) {
         return displayMigrationValue(event.target.id);
       });
+
     var arrowTip = d3
       .tip()
       .attr("class", "d3-tip")
@@ -79,6 +79,7 @@ function WorldMap(props) {
         //TODO nice text
         return displayMigrationValue(event.target.id);
       });
+
     const mapContainer = d3.select(mapContainerRef.current);
     svg.call(countryTip);
     svg.call(arrowTip);
@@ -146,6 +147,8 @@ function WorldMap(props) {
           countryTip.hide(event);
           mouseLeaveACB(event);
         });
+      ////console.log(props.model.max);
+      ////console.log(props.model.maxCountry);
 
       //arrows
       if (arrows && selectedCountryFeature) {
@@ -206,7 +209,7 @@ function WorldMap(props) {
             type: "FeatureCollection",
             features: zoomFeatures,
           });
-        } else setZoomCountries(undefined);
+        } else setZoomCountries(selectedCountryFeature);
       }
     }
 
@@ -256,7 +259,7 @@ function WorldMap(props) {
       props.countryId &&
       props.countryId != 900
     ) {
-      console.log("view changed");
+      ////console.log("view changed");
       view = props.view;
       showDetailView(props.countryId);
     }
@@ -268,11 +271,10 @@ function WorldMap(props) {
     props.countryId,
     props.view,
     props.scale,
-    props.isPopulationView,
   ]);
 
   if (!data) {
-    //console.log("loading");
+    //////console.log("loading");
     return <pre>Loading...</pre>;
   }
   return (
@@ -294,12 +296,9 @@ function WorldMap(props) {
     var val = getMigrationDataByCountry(country);
 
     if (!val) return "darkgray"; //no data available
-    if (val < props.scale[1] && val > props.scale[0]) {
-      console.log(props.isPopulationView);
-      console.log(+props.isPopulationView);
-      console.log(props.view);
+    if (val < props.scale[1] && val > props.scale[0])
       return colorScales[+props.isPopulationView][props.view](val);
-    } else return "grey";
+    else return "grey";
   }
   function getDetailViewColor(country) {
     if (
@@ -358,9 +357,10 @@ function WorldMap(props) {
           displayValue += "Gained " + number;
         }
         if (props.isPopulationView) displayValue += "%";
-        else {
-          displayValue += " people";
-        }
+        else displayValue += " people";
+        return (
+          header + "<span style=color:" + color + ">" + displayValue + "</span>"
+        );
       }
       if (
         props.countryId &&
@@ -368,6 +368,7 @@ function WorldMap(props) {
         countryId != props.countryId
       ) {
         //detail view
+
         var data = migrationCountries.find((el) => el.id == countryId);
         if (data) {
           if (props.isPopulationView) {
@@ -412,7 +413,7 @@ function WorldMap(props) {
       return props.model.codeToName(countryId) + "<br/>" + " no data available";
   }
   function getArrowTipText(id) {
-    console.log(migrationCountries.find((el) => el.id == id));
+    ////console.log(migrationCountries.find((el) => el.id == id));
     if (props.view == 0) {
     }
     return migrationCountries.find((el) => el.id == id).value;

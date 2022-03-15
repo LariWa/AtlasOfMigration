@@ -9,7 +9,7 @@ Change whatever you want in here it is just a dummy
 function Start({ enter, loading }) {
   /*  use LayoutEffect() for updating d3 components? */
   useEffect(() => {
-    console.log(loading);
+    //  console.log(loading);
     //d3.select(".nav").style("background-color", "red");
   }, []);
 
