@@ -14,7 +14,8 @@ function App() {
   const [isPopulationView, setPopulationView] = useState(true);
   const [view, setView] = useState(0); //immigration = 0, emmigration 1, net migration=2
   const [loading, setLoading] = useState(true);
-  const [pressed, setPressed] = useState(true); /* change this to false to make startpage stay open */
+  const [pressed, setPressed] =
+    useState(true); /* change this to false to make startpage stay open */
   const [year, setYear] = useState(dataModel.year); //just a hack to make components rerender on year change
   const [countryID, setCountryID] = useState(dataModel.countryID);
 
@@ -25,8 +26,6 @@ function App() {
   });
 
   //dataModel.getUNData().then( () => console.log("Un data") )
-
-
   return (
     <>
       {loading || !pressed ? (
@@ -37,18 +36,17 @@ function App() {
             model={dataModel}
             year={year}
             setCountryID={setCountryID}
-            setView = {setView}
-            view = {view}
+            countryID={countryID}
+            setView={setView}
           />
-          <TimeLine
-            model={dataModel}
-            setYear={setYear} />
+          <TimeLine model={dataModel} setYear={setYear} />
           <WorldMap
+            countryId={countryID}
             model={dataModel}
             year={year}
             view={view}
             isPopulationView={isPopulationView}
-            setCountryID = {setCountryID}
+            setCountryID={setCountryID}
           />
         </div>
       )}

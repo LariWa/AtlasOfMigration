@@ -8,7 +8,7 @@ const d3 = {
   tip: d3tip,
 };
 var migrationCountries;
-var selectedCountry;
+var selectedCountryFeature;
 
 function WorldMap(props) {
   const { height, width } = useWindowDimensions();
@@ -35,7 +35,7 @@ function WorldMap(props) {
       d3.scaleLinear().domain([0.0, 1.0, 2.0]).range(["red", "white", "blue"]),
     ],
   ];
-  // const [selectedCountry, setSelectedCountry] = useState(null);
+  // const [selectedCountryFeature, setSelectedCountry] = useState(null);
   const [zoomCountries, setZoomCountries] = useState(null);
 
   const [arrows, setArrows] = useState(null);
@@ -50,7 +50,7 @@ function WorldMap(props) {
         .fitSize([width, height], zoomCountries || data);
     else projection = d3.geoEquirectangular().fitSize([width, height], data);
 
-    // .fitSize([width, height], selectedCountry || data);
+    // .fitSize([width, height], selectedCountryFeature || data);
     //   .precision(50); //might be good to avoid glitching
     const svg = d3.select(svgRef.current);
 
@@ -94,7 +94,7 @@ function WorldMap(props) {
         zoomed(event);
       });
     function zoomed(event) {
-      if (!selectedCountry) {
+      if (!selectedCountryFeature) {
         var scale = rootProjection.scale();
         var translate = rootProjection.translate();
         var t = event.transform;
@@ -124,10 +124,11 @@ function WorldMap(props) {
         .attr("class", "country")
         .attr("d", (feature) => path(feature))
         .on("click", (event, feature) => {
-          selectedCountry = selectedCountry === feature ? null : feature;
+          selectedCountryFeature =
+            selectedCountryFeature === feature ? null : feature;
 
           countryTip.hide(event);
-          clickedACB(event);
+          clickedACB(event.target);
         })
 
         .on("mouseover", function (d) {
@@ -141,7 +142,7 @@ function WorldMap(props) {
         });
 
       //arrows
-      if (arrows && selectedCountry) {
+      if (arrows && selectedCountryFeature) {
         svg.selectAll(".arrow").remove();
         svg
           .selectAll("arrows")
@@ -172,41 +173,47 @@ function WorldMap(props) {
     }
     function clickedACB(target) {
       //TODO topography, if time
-      console.log(target.originalTarget.id);
-      //console.log(target);
+      showDetailView(target);
+      props.setCountryID(target.id);
+      props.model.setCountryID(target.id);
+    }
 
-      // props.setCountryName(props.model.codeToName(target.id));
-      console.log(Number(target.originalTarget.id));
-      props.setCountryID(Number(Number(target.originalTarget.id)));
-      props.model.setCountryID(Number(target.originalTarget.id));
-      //props.setCountryName(props.model.codeToName(target.id));
+    function changeCountry(target) {
+      //TODO topography, if time
       showDetailView(target);
     }
-    function showDetailView(event) {
-      var countryId = event.target.id;
-      if (props.view == 0)
-        migrationCountries = props.model.getImmigrantionCountries(countryId);
-      else if (props.view == 1)
-        migrationCountries = props.model.getEmigrantionCountries(countryId);
-      if (migrationCountries) {
-        var zoomFeatures = data.features.filter((country) => {
-          return migrationCountries.some((e) => e.id == country.id);
-        });
-        createArrows(zoomFeatures);
-        zoomFeatures.push(selectedCountry);
-        setZoomCountries({
-          type: "FeatureCollection",
-          features: zoomFeatures,
-        });
+    function showDetailView(target) {
+      if (target) {
+        // just to avoid crash
+        var countryId = target.id;
+        if (props.view == 0)
+          migrationCountries = props.model.getImmigrantionCountries(countryId);
+        else if (props.view == 1)
+          migrationCountries = props.model.getEmigrantionCountries(countryId);
+        if (migrationCountries) {
+          var zoomFeatures = data.features.filter((country) => {
+            return migrationCountries.some((e) => e.id == country.id);
+          });
+          createArrows(zoomFeatures);
+          zoomFeatures.push(selectedCountryFeature);
+          setZoomCountries({
+            type: "FeatureCollection",
+            features: zoomFeatures,
+          });
+        }
       }
     }
+
     function createArrows(targetCountries) {
       setArrows(
         targetCountries.map((targetCountry) => {
           return {
             type: "LineString",
             data: targetCountry.id,
-            coordinates: [getCenter(selectedCountry), getCenter(targetCountry)],
+            coordinates: [
+              getCenter(selectedCountryFeature),
+              getCenter(targetCountry),
+            ],
           };
         })
       );
@@ -216,7 +223,33 @@ function WorldMap(props) {
       let coords = projection.invert(path.centroid(feature));
       return coords;
     }
-  }, [data, selectedCountry, zoomCountries, props.year, props.view]);
+    //go to detail view
+    if (
+      data &&
+      props.countryId != 900 &&
+      (!selectedCountryFeature ||
+        (selectedCountryFeature &&
+          props.countryId != selectedCountryFeature.id))
+    ) {
+      selectedCountryFeature = data.features.filter((country) => {
+        return props.countryId == country.id;
+      })[0];
+
+      changeCountry(selectedCountryFeature);
+    }
+    //go back to main view
+    if (data && props.countryId == 900 && selectedCountryFeature) {
+      selectedCountryFeature = undefined;
+      setZoomCountries(undefined);
+      svg.selectAll(".arrow").remove();
+    }
+  }, [
+    data,
+    selectedCountryFeature,
+    zoomCountries,
+    props.year,
+    props.countryId,
+  ]);
 
   if (!data) {
     //console.log("loading");
@@ -237,7 +270,7 @@ function WorldMap(props) {
   }
   /*    */
   function getColor(country) {
-    if (selectedCountry) return getDetailViewColor(country);
+    if (selectedCountryFeature) return getDetailViewColor(country);
     var val = getMigrationDataByCountry(country);
     if (!val) return "black"; //no data available
     return colorScales[+props.isPopulationView][props.view](val);
@@ -251,7 +284,7 @@ function WorldMap(props) {
       if (props.view == 1) return "blue";
       if (props.view == 2) return "LightGrey";
     }
-    if (selectedCountry.id == country) {
+    if (selectedCountryFeature.id == country) {
       if (props.view == 0) return "blue";
       if (props.view == 1) return "red";
       if (props.view == 2) {
