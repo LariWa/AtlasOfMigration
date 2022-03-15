@@ -23,9 +23,9 @@ function WorldMap(props) {
   const colorScales = [
     [
       //immigration
-      d3.scaleLinear().domain([0, 20000000]).range(["white", immiColor]),
+      d3.scaleLinear().domain([0, 10000000]).range(["white", immiColor]),
       //emigration
-      d3.scaleLinear().domain([0, 20000000]).range(["white", emiColor]),
+      d3.scaleLinear().domain([0, 10000000]).range(["white", emiColor]),
       //netmigration
       d3
         .scaleLinear()
@@ -35,13 +35,13 @@ function WorldMap(props) {
     [
       //population color Scale
       //immigration
-      d3.scaleLinear().domain([0, 90]).range(["white", immiColor]),
+      d3.scaleLinear().domain([0, 30]).range(["white", immiColor]),
       //emigration
-      d3.scaleLinear().domain([0, 100]).range(["white", emiColor]),
+      d3.scaleLinear().domain([0, 30]).range(["white", emiColor]),
       //netmigration
       d3
         .scaleLinear()
-        .domain([-50, 0, 50])
+        .domain([-20, 0, 20])
         .range([emiColor, "white", immiColor]),
     ],
   ];

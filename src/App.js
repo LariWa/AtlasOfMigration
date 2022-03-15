@@ -11,7 +11,7 @@ import Start from "./Start";
 const dataModel = new DataModel();
 
 function App() {
-  const [isPopulationView, setPopulationView] = useState(false);
+  const [isPopulationView, setPopulationView] = useState(true);
   const [view, setViewState] = useState(3); //immigration = 0, emmigration 1, net migration=2, start=3
   const [loading, setLoading] = useState(true);
   const [pressed, setPressed] =
@@ -22,9 +22,9 @@ function App() {
   const scaleValues = [
     //0 total number //1 population
     [
-      [0, 20000000], //immigration
-      [0, 20000000], //emigration
-      [-4000000, 4000000], //net migration
+      [0, 50000000], //immigration
+      [0, 50000000], //emigration
+      [-11000000, 110000000], //net migration
     ],
 
     [
