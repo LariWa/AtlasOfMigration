@@ -21,20 +21,20 @@ function WorldMap(props) {
   const colorScales = [
     [
       //immigration
-      d3.scaleLinear().domain([0, 50000000]).range(["white", "blue"]),
+      d3.scaleLinear().domain([0, 50000000]).range(["white", "yellow"]),
       //emigration
-      d3.scaleLinear().domain([0, 50000000]).range(["white", "red"]),
+      d3.scaleLinear().domain([0, 50000000]).range(["white", "blue"]),
       //netmigration
-      d3.scaleLinear().domain([0.0, 1.0, 2.0]).range(["red", "white", "blue"]),
+      d3.scaleLinear().domain([0.0, 1.0, 2.0]).range(["yellow", "white", "blue"]),
     ],
     [
       //population color Scale
       //immigration
-      d3.scaleLinear().domain([0, 50]).range(["white", "blue"]),
+      d3.scaleLinear().domain([0, 50]).range(["white", "cyan"]),
       //emigration
-      d3.scaleLinear().domain([0, 50]).range(["white", "red"]),
+      d3.scaleLinear().domain([0, 50]).range(["white", "mustard"]),
       //netmigration
-      d3.scaleLinear().domain([0.0, 1.0, 2.0]).range(["red", "white", "blue"]),
+      d3.scaleLinear().domain([0.0, 1.0, 2.0]).range(["mustard", "white", "cyan"]),
     ],
   ];
   // const [selectedCountry, setSelectedCountry] = useState(null);
@@ -242,13 +242,13 @@ function WorldMap(props) {
       migrationCountries &&
       migrationCountries.find((item) => item.id == country)
     ) {
-      if (view == 0) return "red";
-      if (view == 1) return "blue";
+      if (view == 0) return "mustard";
+      if (view == 1) return "cyan";
       if (view == 2) return "LightGrey";
     }
     if (selectedCountry.id == country) {
-      if (view == 0) return "blue";
-      if (view == 1) return "red";
+      if (view == 0) return "cyan";
+      if (view == 1) return "mustard";
       if (view == 2) {
         var val = getMigrationDataByCountry(country);
         if (!val) return "black";
@@ -258,8 +258,8 @@ function WorldMap(props) {
     return "lightgrey";
   }
   function getArrowColor() {
-    if (view == 0) return "darkred";
-    if (view == 1) return "darkblue";
+    if (view == 0) return "mustard";
+    if (view == 1) return "cyan";
   }
   function getMigrationDataByCountry(countryId) {
     if (!props.isPopulationView) {

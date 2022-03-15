@@ -2,6 +2,7 @@
   position: relative;
   left: 0;
   top: 0;
+  background-color: #060918;
 }
 
 
@@ -51,9 +52,9 @@
   line-height: 1;
   font-weight: bold;
   padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
+  background: linear-gradient(#0C2C3D,#0A2132, #081627);
+  color: #F29F05;
+  border-radius: 10px;
   pointer-events: none;
 }
 
