@@ -5,6 +5,7 @@ import {
   ImmigrationButton,
   EmigrationButton,
   MigrationButton,
+  CalculationButton
 } from "./styles/components/Button.js";
 import { CountryNameID } from "./const/CountryNameID";
 import immigrationIcon from "./styles/icons/ImmigrationIcon.svg";
@@ -14,10 +15,10 @@ import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 /* immigration = 0, emigration = 1, net migration = 2 */
 const information = [
-  "Immigration is the international movement of people to a destination country of which they are not natives or where they do not possess citizenship in order to settle as permanent residents or naturalized citizens.",
+  "Immigration is the international movement of people to a destination country of which they are not natives or where they do not possess citizenship in order to settle as permanent residents.",
   "Emigration is the act of leaving a resident country or place of residence with the intent to settle elsewhere (to permanently leave a country).",
   "Net migration is the difference between immigration into and emigration from the area during the year. Net migration is therefore negative when the number of emigrants exceeds the number of immigrants.",
-  "Have you ever thought about why people migrate? Has time influenced our perception of migration? The Atlas of Migration is a visual tool that allows you to navigate through the increasingly complex landscape of international migration patterns.",
+  "The Atlas of Migration is a visual tool that allows you to navigate through the increasingly complex landscape of international migration patterns.",
 ];
 
 const headLine = ["Immigration", "Emigration", "Net Migration", "Welcome"];
@@ -31,12 +32,13 @@ function SideBar({
   view,
   setScale,
   scale,
+  calculation,
+  setCalculation
 }) {
   const [input, setInput] = useState("");
   const [nbrChoices, setNbrChoices] = useState(0);
   const [selCountries, setSelCountries] = useState([]);
-  const [detailView, setDetailView] =
-    useState(false); /* false world , true detail*/
+  const [detailView, setDetailView] = useState(false); /* false world , true detail*/
   const [value, setValue] = React.useState([0, 100]);
   const [name, setName] = useState(model.countryName);
 
@@ -70,7 +72,6 @@ function SideBar({
   /*  I need to check so this is not clicking outside   */
   const changeView = (e) => {
     if (e.target.value) {
-      //console.log(e.target.value);
       setView(e.target.value);
     }
   };
@@ -81,6 +82,10 @@ function SideBar({
 
   const handleChange = (event, newValue) => {
     setScale(newValue);
+  };
+
+  const changeCalculation = (e) => {
+    setCalculation(e.target.value);
   };
 
   const formatResult = (item) => {
@@ -107,75 +112,42 @@ function SideBar({
           </button>
         </div>
       )}
-      {detailView ? <h1> Country: {name} </h1> : <h1> {headLine[view]} </h1>}
+      {detailView ? <h1> {name} </h1> : <h1> {headLine[view]} </h1>}
+      {detailView ? "" : <p>{information[view]}</p>}
 
-      <h3> Year: {year} </h3>
 
       <div id="searchBox">
         <h2>What country are you looking for?</h2>
-        {/*
-        <input
-          type="text"
-          id="inputField"
-          onChange={onInput}
-          onKeyDown={searchCountry}
-          value={input}
-          placeholder="Search..."
-        />
-        <select name="countries" style={{ minWidth: 180 }}>
-          {selCountries.map((x) => (
-            <option key={x.id} value={x.name}>
-              {" "}
-              {x.name}{" "}
-            </option>
-          ))}
-        </select>
-*/}
-
-        <div className="App">
-          <header className="App-header">
-            <div style={{ width: 300 }}>
-              <ReactSearchAutocomplete
-                items={CountryNameID}
-                onSelect={(item) => {
-                  setDetailView(true);
-                  setCountryID(item.id);
-                  model.setCountryID(item.id);
-                }}
-                formatResult={formatResult}
-                maxResults={10}
-                styling={{
-                  backgroundColor: "#063140",
-                  iconColor: "white",
-                  color: "white",
-                  borderRadius: "0px",
-                  border: "0px solid #dfe1e5",
-                }}
-              />
-            </div>
-          </header>
-        </div>
+          <ReactSearchAutocomplete
+              items={CountryNameID}
+              onSelect={(item) => {
+              setDetailView(true);
+              setCountryID(item.id);
+              model.setCountryID(item.id);
+              }}
+              formatResult={formatResult}
+              maxResults={10}
+              styling={{
+                backgroundColor: "transparent",
+                iconColor: "#EEEEEE",
+                borderRadius: "0px",
+                border: "0px solid transparent",
+              }}
+            />
       </div>
 
       <div className="filter">
-        {/*<h2>What do you want to know more about?</h2> */}
-        <ImmigrationButton name={view} value="0" onClick={changeView}>
-          <img src={immigrationIcon} />
-          <br />
-          Show Immigration
-        </ImmigrationButton>
-        <MigrationButton name={view} value="2" onClick={changeView}>
-          <img src={migrationIcon} />
-          <br />
-          Show Net Migration
-        </MigrationButton>
-        <EmigrationButton name={view} value="1" onClick={changeView}>
-          <img src={emigrationIcon} />
-          <br />
-          Show Emigration
-        </EmigrationButton>
+        {<h2>What do you want to know more about?</h2>}
+        <ImmigrationButton name={view} value="0" onClick={changeView}><img src={immigrationIcon} /><br />Show Immigration</ImmigrationButton>
+        <MigrationButton name={view} value="2" onClick={changeView}><img src={migrationIcon} /><br />Show Net Migration</MigrationButton>
+        <EmigrationButton name={view} value="1" onClick={changeView}><img src={emigrationIcon} /><br />Show Emigration</EmigrationButton>
       </div>
-      <p>{information[view]}</p>
+
+      <div>
+        <CalculationButton name={calculation} onClick={changeCalculation} value="true">100</CalculationButton>
+        <CalculationButton name={calculation} onClick={changeCalculation} value="false">%</CalculationButton>
+      </div>
+
       {!detailView && (
         <>
           <Slider
@@ -185,14 +157,11 @@ function SideBar({
             value={scale}
             onChange={handleChange}
             getAriaValueText={valuetext}
+            valueLabelDisplay = "auto"
           />
           <br />
-          <label id="lower" className={`${view != 3 ? "" : "hide"}`}>
-            {scale[0]}
-          </label>
-          <label id="upper" className={`${view != 3 ? "" : "hide"}`}>
-            {scale[1]}
-          </label>
+          <label id="lower" className={`${view != 3 ? "" : "hide"}`}>{scale[0]}</label>
+          <label id="upper" className={`${view != 3 ? "" : "hide"}`}>{scale[1]}</label>
         </>
       )}
     </div>
