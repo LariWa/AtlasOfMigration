@@ -209,7 +209,7 @@ function WorldMap(props) {
             type: "FeatureCollection",
             features: zoomFeatures,
           });
-        } else setZoomCountries(undefined);
+        } else setZoomCountries(selectedCountryFeature);
       }
     }
 
@@ -357,6 +357,9 @@ function WorldMap(props) {
         }
         if (props.isPopulationView) displayValue += "%";
         else displayValue += " people";
+        return (
+          header + "<span style=color:" + color + ">" + displayValue + "</span>"
+        );
       }
       if (
         props.countryId &&
@@ -364,6 +367,7 @@ function WorldMap(props) {
         countryId != props.countryId
       ) {
         //detail view
+
         var data = migrationCountries.find((el) => el.id == countryId);
         if (data) {
           if (props.isPopulationView) {

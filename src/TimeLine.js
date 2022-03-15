@@ -4,6 +4,7 @@ import * as d3module from "d3";
 import "./styles/timeline.min.css";
 import styled from "styled-components";
 import d3tip from "d3-tip";
+import { timeParse } from "d3";
 const d3 = {
   ...d3module,
   tip: d3tip,
@@ -172,7 +173,10 @@ net migration: 2 --> ? destination = origin immi - emi ??
       d3.select("#bottom")
         .selectAll("rect")
         .data(data)
+
         .join("rect")
+        .attr("id", (d) => timeFormat(d.date))
+        .attr("value", (d) => d.total)
         .attr("x", (d) => xScale(d.date) - dx)
         .attr("y", (d) => yScale(d.total) - shiftXAxis - 15) //This value is strange!!
         .attr(
@@ -187,13 +191,10 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .tip()
         .attr("class", "d3-tip")
         .html(function (event) {
-          let nbr = event.explicitOriginalTarget;
-          console.log(nbr);
-          console.log(nbr.y);
+          // console.log(event.target.getAttribute("x"));
 
-          console.log(xScale(parseFloat(event.explicitOriginalTarget.x)));
-          //TODO nice text
-          return " ";
+          // console.log(xScale(Number(event.target.getAttribute("x"))));
+          return "Total: " + event.target.getAttribute("value");
         });
 
       d3.select("#timeLine").call(arrowTip);
@@ -201,10 +202,13 @@ net migration: 2 --> ? destination = origin immi - emi ??
       d3.selectAll("rect")
         .on("click", (d, i) => {
           updateYear(timeFormat(i.date));
+          arrowTip.hide(d);
         })
         .on("mouseover", function (d) {
-          console.log(d);
           arrowTip.show(d, this);
+        })
+        .on("mouseleave", function (d) {
+          arrowTip.hide(d);
         });
     }
   }, [data, view]);
