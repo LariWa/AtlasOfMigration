@@ -55,7 +55,6 @@ function App() {
             isPopulationView={isPopulationView}
             setCountryID={setCountryID}
           />
-          <TimeLine model={dataModel} setYear={setYear} />
         </div>
       )}
     </>
