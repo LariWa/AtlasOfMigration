@@ -51,6 +51,7 @@ function WorldMap(props) {
   const [arrows, setArrows] = useState(null);
 
   useEffect(() => {
+    console.log(props.isPopulationView);
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
     var projection;
@@ -145,8 +146,6 @@ function WorldMap(props) {
           countryTip.hide(event);
           mouseLeaveACB(event);
         });
-      console.log(props.model.max);
-      console.log(props.model.maxCountry);
 
       //arrows
       if (arrows && selectedCountryFeature) {
@@ -164,7 +163,7 @@ function WorldMap(props) {
           })
           .style("fill", "none")
           .style("stroke", getArrowColor())
-          .style("stroke-width", 6)
+          .style("stroke-width", 4)
           .attr("markerWidth", 50)
           .attr("markerHeight", 50)
           .attr("marker-end", "url(#arrow)")
@@ -269,6 +268,7 @@ function WorldMap(props) {
     props.countryId,
     props.view,
     props.scale,
+    props.isPopulationView,
   ]);
 
   if (!data) {
@@ -294,9 +294,12 @@ function WorldMap(props) {
     var val = getMigrationDataByCountry(country);
 
     if (!val) return "darkgray"; //no data available
-    if (val < props.scale[1] && val > props.scale[0])
+    if (val < props.scale[1] && val > props.scale[0]) {
+      console.log(props.isPopulationView);
+      console.log(+props.isPopulationView);
+      console.log(props.view);
       return colorScales[+props.isPopulationView][props.view](val);
-    else return "grey";
+    } else return "grey";
   }
   function getDetailViewColor(country) {
     if (
