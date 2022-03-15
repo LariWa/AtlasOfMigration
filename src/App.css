@@ -2,6 +2,10 @@
   position: relative;
   left: 0;
   top: 0;
+  background-color: #060918;
+}
+.mapContainer {
+  float: right;
 }
 
 /*  START old react stuff ----------------------------------------------------- */
@@ -49,9 +53,9 @@
   line-height: 1;
   font-weight: bold;
   padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
+  background: linear-gradient(#0c2c3d, #0a2132, #081627);
+  color: white;
+  border-radius: 10px;
   pointer-events: none;
 }
 
