@@ -21,23 +21,26 @@ function WorldMap(props) {
   const colorScales = [
     [
       //immigration
-      d3.scaleLinear().domain([0, 50000000]).range(["white", "blue"]),
+      d3.scaleLinear().domain([0, 50000000]).range(["white", immiColor]),
       //emigration
-      d3.scaleLinear().domain([0, 50000000]).range(["white", "red"]),
+      d3.scaleLinear().domain([0, 50000000]).range(["white", emiColor]),
       //netmigration
       d3
         .scaleLinear()
         .domain([-100000, 0, 100000])
-        .range(["red", "white", "blue"]),
+        .range([emiColor, "white", immiColor]),
     ],
     [
       //population color Scale
       //immigration
-      d3.scaleLinear().domain([0, 50]).range(["white", "blue"]),
+      d3.scaleLinear().domain([0, 50]).range(["white", immiColor]),
       //emigration
-      d3.scaleLinear().domain([0, 50]).range(["white", "red"]),
+      d3.scaleLinear().domain([0, 50]).range(["white", emiColor]),
       //netmigration
-      d3.scaleLinear().domain([-10, 0, 30]).range(["red", "white", "blue"]),
+      d3
+        .scaleLinear()
+        .domain([-10, 0, 30])
+        .range([emiColor, "white", immiColor]),
     ],
   ];
   // const [selectedCountryFeature, setSelectedCountry] = useState(null);
