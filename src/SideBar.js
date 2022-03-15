@@ -17,7 +17,16 @@ const information = [
 ];
 const headLine = ["Immigration", "Emigration", "Net Migration", "Welcome"];
 
-function SideBar({ model, year, setCountryID, countryID, view, setView }) {
+function SideBar({
+  model,
+  year,
+  setCountryID,
+  countryID,
+  view,
+  setView,
+  setScale,
+  scale,
+}) {
   const [input, setInput] = useState("");
   const [nbrChoices, setNbrChoices] = useState(0);
   const [selCountries, setSelCountries] = useState([]);
@@ -74,7 +83,7 @@ function SideBar({ model, year, setCountryID, countryID, view, setView }) {
   }
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setScale(newValue);
   };
   //  console.log(model.countryID);
   //  console.log(model.countryName);
@@ -116,7 +125,7 @@ function SideBar({ model, year, setCountryID, countryID, view, setView }) {
 
           <Slider
             getAriaLabel={() => ""}
-            value={value}
+            value={scale}
             onChange={handleChange}
             valueLabelDisplay="auto"
             getAriaValueText={valuetext}
