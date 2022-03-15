@@ -343,7 +343,7 @@ function WorldMap(props) {
     var val = getMigrationDataByCountry(countryId);
 
     if (val) {
-      var number = Math.abs(val.toFixed(2).toLocaleString());
+      var number = Math.abs(val).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       var header = props.model.codeToName(countryId) + "<br/>";
       var displayValue = "";
       var color;
@@ -352,12 +352,15 @@ function WorldMap(props) {
         if (val < 0) {
           color = emiColor;
           displayValue += "Lost " + number;
+          //
         } else {
           color = immiColor;
           displayValue += "Gained " + number;
         }
         if (props.isPopulationView) displayValue += "%";
-        else displayValue += " people";
+        else {
+          displayValue += " people";
+        }
       }
       if (
         props.countryId &&
@@ -373,7 +376,8 @@ function WorldMap(props) {
                 .toFixed(2)
                 .toLocaleString() + " %";
           } else {
-            displayValue += data.value.toFixed(2).toLocaleString() + " people";
+            let value = data.value.toFixed(0).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            displayValue += value + " people";
           }
           if (props.view == 0) displayValue += " emigrated to ";
           if (props.view == 1) displayValue += " immigrated from ";
@@ -391,10 +395,12 @@ function WorldMap(props) {
         else number += " people";
         if (props.view == 0) {
           color = immiColor;
-          displayValue += number + " are Immigrants ";
+          let value = number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          displayValue += value + " are Immigrants ";
         }
         if (props.view == 1) {
-          displayValue += number + " are Emigrants ";
+          let value = number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          displayValue += value + " are Emigrants ";
           color = emiColor;
         }
       }

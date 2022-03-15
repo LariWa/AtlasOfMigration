@@ -17,7 +17,7 @@ import { ReactSearchAutocomplete } from "react-search-autocomplete";
 const information = [
   "Immigration is the international movement of people to a destination country of which they are not natives or where they do not possess citizenship in order to settle as permanent residents.",
   "Emigration is the act of leaving a resident country or place of residence with the intent to settle elsewhere (to permanently leave a country).",
-  "Net migration is the difference between immigration into and emigration from the area during the year. Net migration is therefore negative when the number of emigrants exceeds the number of immigrants.",
+  "Net migration is the difference between immigration into and emigration from the area. Net migration is therefore negative when the number of emigrants exceeds the number of immigrants.",
   "The Atlas of Migration is a visual tool that allows you to navigate through the increasingly complex landscape of international migration patterns.",
 ];
 
@@ -76,6 +76,8 @@ function SideBar({
   const changeView = (e) => {
     if (e.target.value) {
       setView(e.target.value);
+    } else if (e.target.closest("button").value) {
+      setView(e.target.closest("button").value);
     }
   };
 
@@ -93,10 +95,34 @@ function SideBar({
 
   const formatResult = (item) => {
     return (
-      <div>
+      <div className="result">
         <span style={{ display: "block", textAlign: "left" }}>{item.name}</span>
       </div>
     );
+  };
+
+  const showImmigrationCountries = () => {
+    let country = countryID;
+    let countries = model.getImmigrantionCountries(country);
+    const html = []
+      countries.forEach((value) => (
+        html.push(<li>{value.name}</li>)
+      ))
+    return html;
+  };
+
+  const showEmigrationCountries = () => {
+    let country = countryID;
+    let countries = model.getEmigrantionCountries(country);
+    const html = []
+      countries.forEach((value) => (
+        html.push(<li>{value.name}</li>)
+      ))
+    return html;
+  };
+
+  const numberWithComma = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   return (
@@ -105,19 +131,41 @@ function SideBar({
         <div>
           <button
             id="world"
+            className={`backButton-${view != 3 ? view : "3"}`}
             onClick={() => {
               setDetailView(false);
               model.setCountryID(900);
               setCountryID(900);
             }}
           >
-            Back
+            Back to World View
           </button>
         </div>
       )}
-      {detailView ? <h1> {name} </h1> : <h1> {headLine[view]} </h1>}
+      {detailView ? <h1 className="country"> {name} </h1>: <h1> {headLine[view]} </h1>}
+
+      {detailView && view == 0 && (
+        <div>
+          <h2>Top 5 Immigration Destinations</h2>
+          <ul>
+          {showImmigrationCountries()}
+          </ul>
+        </div>
+      )}
+
+      {detailView && view == 1 && (
+        <div>
+          <h2>Top 5 Emigration Destinations</h2>
+          <ul>
+          {showEmigrationCountries()}
+          </ul>
+        </div>
+      )}
+
+
       {detailView ? "" : <p>{information[view]}</p>}
 
+      {!detailView && (
       <div id="searchBox">
         <h2>What country are you looking for?</h2>
         <ReactSearchAutocomplete
@@ -128,7 +176,7 @@ function SideBar({
             model.setCountryID(item.id);
           }}
           formatResult={formatResult}
-          maxResults={10}
+          maxResults={3}
           styling={{
             backgroundColor: "transparent",
             iconColor: "#EEEEEE",
@@ -137,9 +185,10 @@ function SideBar({
           }}
         />
       </div>
+      )}
 
       <div className="filter">
-        {<h2>What do you want to know more about?</h2>}
+      {view == 3 || detailView ? <h2>What do you want to know more about?</h2> : ""}
         <ImmigrationButton name={view} value="0" onClick={changeView}>
           <img src={immigrationIcon} />
           <br />
@@ -157,28 +206,33 @@ function SideBar({
         </EmigrationButton>
       </div>
 
-      <div>
+      {view != 3 && (
+      <div className="calculationMode">
+      <h2>Choose calculation mode:</h2>
         <CalculationButton
           name={calculation}
           onClick={changeCalculation}
           value="true"
+          className={view}
         >
-          100
+          Total Numbers
         </CalculationButton>
         <CalculationButton
           name={calculation}
           onClick={changeCalculation}
           value="false"
+          className={view}
         >
-          %
+          % of Population
         </CalculationButton>
       </div>
+      )}
 
-      {!detailView && (
+      {!detailView && view != 3 && (
         <>
           <Slider
             id={`slider-${view != 3 ? view : "3"}`}
-            className="slider"
+            className={calculation}
             getAriaLabel={() => ""}
             value={sliderValue}
             min={scale[0]}
@@ -186,13 +240,14 @@ function SideBar({
             onChange={handleChange}
             getAriaValueText={valuetext}
             valueLabelDisplay="auto"
+            valueLabelFormat={value => numberWithComma(value)}
           />
           <br />
           <label id="lower" className={`${view != 3 ? "" : "hide"}`}>
-            {scale[0]}
+            {numberWithComma(scale[0])}
           </label>
           <label id="upper" className={`${view != 3 ? "" : "hide"}`}>
-            {scale[1]}
+            {numberWithComma(scale[1])}
           </label>
         </>
       )}
