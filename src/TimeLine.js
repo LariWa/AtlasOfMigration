@@ -219,7 +219,6 @@ net migration: 2 --> ? destination = origin immi - emi ??
       id="timeLine"
       width={dimensions.width}
       height={dimensions.height}
-      transform="translate(250, 600)"
       ref={svgContainerRef}
     ></svg>
   );

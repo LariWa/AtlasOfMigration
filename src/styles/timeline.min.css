@@ -1,1 +1,58 @@
-@import url("https://fonts.googleapis.com/css2?family=Krona+One&family=Roboto:wght@400&display=swap");body{background:#060918;overflow:hidden}h1,h2{font-family:"Krona One",sans-serif}h1{font-size:25px}h2{font-size:12px}p{font-family:"Roboto",sans-serif;font-size:13px;line-height:19.7px}button{background:linear-gradient(180deg, #0F354A 0%, #0B2235 100%);box-shadow:0px 0px 22px rgba(8,12,29,0.39);border-radius:14px;width:30%;border:none;margin-right:3%;color:#eee;cursor:pointer}#elipse{position:absolute;width:42vw;height:125vh;left:12vw;background:linear-gradient(146.91deg, rgba(0,223,240,0.28) 19.73%, rgba(0,223,240,0) 96.77%);filter:blur(400px);transform:rotate(-131.57deg)}#timeLine{position:absolute;margin-left:10vw;box-shadow:0px 0px 22px rgba(8,12,29,0.08);background:rgba(8,35,53,0.5);backdrop-filter:blur(26px);border-radius:14px;color:#EEEEEE}#timeLine rect{width:3vw;cursor:pointer}
+@import url("https://fonts.googleapis.com/css2?family=Krona+One&family=Roboto:wght@400&display=swap");
+body {
+  background: #060918;
+  overflow: hidden;
+}
+h1,
+h2 {
+  font-family: "Krona One", sans-serif;
+}
+h1 {
+  font-size: 25px;
+}
+h2 {
+  font-size: 12px;
+}
+p {
+  font-family: "Roboto", sans-serif;
+  font-size: 13px;
+  line-height: 19.7px;
+}
+button {
+  background: linear-gradient(180deg, #0f354a 0%, #0b2235 100%);
+  box-shadow: 0px 0px 22px rgba(8, 12, 29, 0.39);
+  border-radius: 14px;
+  width: 30%;
+  border: none;
+  margin-right: 3%;
+  color: #eee;
+  cursor: pointer;
+}
+#elipse {
+  position: absolute;
+  width: 42vw;
+  height: 125vh;
+  left: 12vw;
+  background: linear-gradient(
+    146.91deg,
+    rgba(0, 223, 240, 0.28) 19.73%,
+    rgba(0, 223, 240, 0) 96.77%
+  );
+  filter: blur(400px);
+  transform: rotate(-131.57deg);
+}
+#timeLine {
+  position: absolute;
+  margin-left: 10vw;
+  box-shadow: 0px 0px 22px rgba(8, 12, 29, 0.08);
+  background: rgba(8, 35, 53, 0.5);
+  backdrop-filter: blur(26px);
+  border-radius: 14px;
+  color: #eeeeee;
+  top: 80vh;
+  right: 0;
+}
+#timeLine rect {
+  width: 3vw;
+  cursor: pointer;
+}
