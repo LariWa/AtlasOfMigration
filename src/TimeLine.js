@@ -50,7 +50,7 @@ function TimeLine({ model, setYear, view }) {
   //     d => d.OriginID)
   //     .get(900)
   //     .get(900)
-  //   ////console.log(groupYear);
+  //   ////////console.log(groupYear);
 
   /*
 view: immigration: 0  --> origin = WORLD
@@ -59,14 +59,14 @@ net migration: 2 --> ? destination = origin immi - emi ??
 */
 
   const getMigration = () => {
-    console.log(view);
+    ////console.log(view);
     let obj = {};
     let origin = WORLD,
       destination = WORLD;
-    // //console.log(model.countryID);
-    // //console.log(view); //quick fix to take care of rerender and undefined view
-    console.log(model.countryID);
-    console.log(view); //quick fix to take care of rerender and undefined view
+    // //////console.log(model.countryID);
+    // //////console.log(view); //quick fix to take care of rerender and undefined view
+    ////console.log(model.countryID);
+    ////console.log(view); //quick fix to take care of rerender and undefined view
     if (true) {
       if (view == 0 || view == 1) {
         if (view == 0) destination = model.countryID;
@@ -78,13 +78,13 @@ net migration: 2 --> ? destination = origin immi - emi ??
           let key = i.toString();
           obj[key] = model.getNetMigrationValue(model.getCountryId(), i);
         }
-      console.log(model.getCountryId());
-      console.log(origin);
-      console.log(destination);
+      ////console.log(model.getCountryId());
+      ////console.log(origin);
+      ////console.log(destination);
       if (view === 3) obj = model.getMigrationValueAll(origin, destination);
-      // //console.log(obj);
+      // //////console.log(obj);
       if (obj && obj != "undefined" && Object.keys(obj).length > 0) {
-        console.log(obj);
+        ////console.log(obj);
         delete obj.DestinationID;
         delete obj.DestinationName;
         delete obj.OriginName;
@@ -94,14 +94,14 @@ net migration: 2 --> ? destination = origin immi - emi ??
           date: new Date(key, 6), // 6 equals 1 July
           total: getValue(value),
         }));
-        console.log(res);
+        ////console.log(res);
         return res;
       }
     }
   };
 
   const getValue = (x) => {
-    console.log("value ", x);
+    ////console.log("value ", x);
     if (typeof x == "number") return x;
     if (x === 0) return 0;
     if (x === "..") return -1;
@@ -113,7 +113,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
     //format input to right year?
     setYear(x);
     model.setYear(x);
-    ////console.log("new year", model.year);
+    ////////console.log("new year", model.year);
   };
 
   /* set to size of container ? */
@@ -128,11 +128,11 @@ net migration: 2 --> ? destination = origin immi - emi ??
 
   //  useLayoutEffect(() => {
   useEffect(() => {
-    console.log(view, ": 0: imi, 1:emi");
+    ////console.log(view, ": 0: imi, 1:emi");
     data = getMigration();
     if (data) {
       if (view) setColor(colors[view]);
-      ////console.log(data);
+      ////////console.log(data);
       const xScale = d3
         .scaleTime()
         .domain(d3.extent(yearRange))
@@ -152,7 +152,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
       const svgEl = d3.select(svgContainerRef.current);
       svgEl.selectAll("*").remove();
 
-      ////console.log(data)
+      ////////console.log(data)
 
       svgEl
         .append("g")
@@ -176,8 +176,8 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .attr("id", "left");
       svgEl.select("#left").call(yAxis);
 
-      //  data.forEach(x => //console.log("total: " ,x.total," --> y: " ,yScale(x.total)))
-      //data.forEach(x => //console.log("date: " ,x.date," --> x: " ,xScale(x.date)))
+      //  data.forEach(x => //////console.log("total: " ,x.total," --> y: " ,yScale(x.total)))
+      //data.forEach(x => //////console.log("date: " ,x.date," --> x: " ,xScale(x.date)))
 
       //TODO check for NAN show some warning when value does not exist!
 
@@ -202,9 +202,9 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .tip()
         .attr("class", "d3-tip")
         .html(function (event) {
-          // console.log(event.target.getAttribute("x"));
+          // ////console.log(event.target.getAttribute("x"));
 
-          // console.log(xScale(Number(event.target.getAttribute("x"))));
+          // ////console.log(xScale(Number(event.target.getAttribute("x"))));
           return "Total: " + event.target.getAttribute("value");
         });
 

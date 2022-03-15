@@ -40,13 +40,13 @@ function App() {
   const [sliderValue, setSliderValue] = useState([0, 100]);
 
   dataModel.loadData().then(() => {
-    //console.log(dataModel.getTotalEmigration(300, 0))
-    //console.log(dataModel.getMigrationValueAll(900, 300));
+    ////console.log(dataModel.getTotalEmigration(300, 0))
+    ////console.log(dataModel.getMigrationValueAll(900, 300));
     setLoading(false);
   });
   function setTotalNumberView(val) {
     if (val) {
-      console.log(val);
+      //console.log(val);
       setTotalNumberViewState(val);
       val = val === "true";
       setPopulationView(!val);
@@ -63,7 +63,7 @@ function App() {
   }
   function setView(val) {
     if (view && val) {
-      console.log("change" + val);
+      //console.log("change" + val);
       setViewState(val);
       if (val >= 0 && val <= 2) {
         if (!isPopulationView) {
@@ -76,7 +76,7 @@ function App() {
       }
     }
   }
-  //dataModel.getUNData().then( () => console.log("Un data") )
+  //dataModel.getUNData().then( () => //console.log("Un data") )
 
   return (
     <div className="container">

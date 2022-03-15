@@ -147,8 +147,8 @@ function WorldMap(props) {
           countryTip.hide(event);
           mouseLeaveACB(event);
         });
-      //console.log(props.model.max);
-      //console.log(props.model.maxCountry);
+      ////console.log(props.model.max);
+      ////console.log(props.model.maxCountry);
 
       //arrows
       if (arrows && selectedCountryFeature) {
@@ -166,7 +166,7 @@ function WorldMap(props) {
           })
           .style("fill", "none")
           .style("stroke", getArrowColor())
-          .style("stroke-width", 6)
+          .style("stroke-width", 4)
           .attr("markerWidth", 50)
           .attr("markerHeight", 50)
           .attr("marker-end", "url(#arrow)")
@@ -259,7 +259,7 @@ function WorldMap(props) {
       props.countryId &&
       props.countryId != 900
     ) {
-      //console.log("view changed");
+      ////console.log("view changed");
       view = props.view;
       showDetailView(props.countryId);
     }
@@ -274,7 +274,7 @@ function WorldMap(props) {
   ]);
 
   if (!data) {
-    ////console.log("loading");
+    //////console.log("loading");
     return <pre>Loading...</pre>;
   }
   return (
@@ -409,7 +409,7 @@ function WorldMap(props) {
       return props.model.codeToName(countryId) + "<br/>" + " no data available";
   }
   function getArrowTipText(id) {
-    //console.log(migrationCountries.find((el) => el.id == id));
+    ////console.log(migrationCountries.find((el) => el.id == id));
     if (props.view == 0) {
     }
     return migrationCountries.find((el) => el.id == id).value;
