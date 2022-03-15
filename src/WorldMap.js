@@ -163,7 +163,7 @@ function WorldMap(props) {
           })
           .style("fill", "none")
           .style("stroke", getArrowColor())
-          .style("stroke-width", 6)
+          .style("stroke-width", 4)
           .attr("markerWidth", 50)
           .attr("markerHeight", 50)
           .attr("marker-end", "url(#arrow)")
