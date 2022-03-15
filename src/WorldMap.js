@@ -11,12 +11,13 @@ var migrationCountries;
 var selectedCountryFeature;
 const immiColor = "cyan";
 const emiColor = "#F29F05";
+let view;
+
 function WorldMap(props) {
   const { height, width } = useWindowDimensions();
   const mapContainerRef = useRef();
   const svgRef = useRef();
   const data = useMapData();
-
   const colorScales = [
     [
       //immigration
@@ -172,19 +173,19 @@ function WorldMap(props) {
     }
     function clickedACB(target) {
       //TODO topography, if time
-      showDetailView(target);
+      showDetailView(target.id);
       props.setCountryID(target.id);
       props.model.setCountryID(target.id);
     }
 
     function changeCountry(target) {
       //TODO topography, if time
-      showDetailView(target);
+      showDetailView(target.id);
     }
-    function showDetailView(target) {
-      if (target) {
+    function showDetailView(id) {
+      if (id) {
         // just to avoid crash
-        var countryId = target.id;
+        var countryId = id;
         if (props.view == 0)
           migrationCountries = props.model.getImmigrantionCountries(countryId);
         else if (props.view == 1)
@@ -199,7 +200,7 @@ function WorldMap(props) {
             type: "FeatureCollection",
             features: zoomFeatures,
           });
-        }
+        } else setZoomCountries(undefined);
       }
     }
 
@@ -241,6 +242,18 @@ function WorldMap(props) {
       selectedCountryFeature = undefined;
       setZoomCountries(undefined);
       svg.selectAll(".arrow").remove();
+    }
+    console.log(view);
+    console.log(props.view);
+    if (
+      props.view &&
+      view != props.view &&
+      props.countryId &&
+      props.countryId != 900
+    ) {
+      console.log("view changed");
+      view = props.view;
+      showDetailView(props.countryId);
     }
   }, [
     data,
@@ -322,7 +335,6 @@ function WorldMap(props) {
 
     if (val) {
       var number = Math.abs(val.toFixed(2).toLocaleString());
-
       var header = props.model.codeToName(countryId) + "<br/>";
       var displayValue = "";
       var color;
