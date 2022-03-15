@@ -5,7 +5,7 @@ import {
   ImmigrationButton,
   EmigrationButton,
   MigrationButton,
-  CalculationButton
+  CalculationButton,
 } from "./styles/components/Button.js";
 import { CountryNameID } from "./const/CountryNameID";
 import immigrationIcon from "./styles/icons/ImmigrationIcon.svg";
@@ -33,12 +33,15 @@ function SideBar({
   setScale,
   scale,
   calculation,
-  setCalculation
+  setCalculation,
+  sliderValue,
+  setSliderValue,
 }) {
   const [input, setInput] = useState("");
   const [nbrChoices, setNbrChoices] = useState(0);
   const [selCountries, setSelCountries] = useState([]);
-  const [detailView, setDetailView] = useState(false); /* false world , true detail*/
+  const [detailView, setDetailView] =
+    useState(false); /* false world , true detail*/
   const [value, setValue] = React.useState([0, 100]);
   const [name, setName] = useState(model.countryName);
 
@@ -81,7 +84,7 @@ function SideBar({
   }
 
   const handleChange = (event, newValue) => {
-    setScale(newValue);
+    setSliderValue(newValue);
   };
 
   const changeCalculation = (e) => {
@@ -115,37 +118,60 @@ function SideBar({
       {detailView ? <h1> {name} </h1> : <h1> {headLine[view]} </h1>}
       {detailView ? "" : <p>{information[view]}</p>}
 
-
       <div id="searchBox">
         <h2>What country are you looking for?</h2>
-          <ReactSearchAutocomplete
-              items={CountryNameID}
-              onSelect={(item) => {
-              setDetailView(true);
-              setCountryID(item.id);
-              model.setCountryID(item.id);
-              }}
-              formatResult={formatResult}
-              maxResults={10}
-              styling={{
-                backgroundColor: "transparent",
-                iconColor: "#EEEEEE",
-                borderRadius: "0px",
-                border: "0px solid transparent",
-              }}
-            />
+        <ReactSearchAutocomplete
+          items={CountryNameID}
+          onSelect={(item) => {
+            setDetailView(true);
+            setCountryID(item.id);
+            model.setCountryID(item.id);
+          }}
+          formatResult={formatResult}
+          maxResults={10}
+          styling={{
+            backgroundColor: "transparent",
+            iconColor: "#EEEEEE",
+            borderRadius: "0px",
+            border: "0px solid transparent",
+          }}
+        />
       </div>
 
       <div className="filter">
         {<h2>What do you want to know more about?</h2>}
-        <ImmigrationButton name={view} value="0" onClick={changeView}><img src={immigrationIcon} /><br />Show Immigration</ImmigrationButton>
-        <MigrationButton name={view} value="2" onClick={changeView}><img src={migrationIcon} /><br />Show Net Migration</MigrationButton>
-        <EmigrationButton name={view} value="1" onClick={changeView}><img src={emigrationIcon} /><br />Show Emigration</EmigrationButton>
+        <ImmigrationButton name={view} value="0" onClick={changeView}>
+          <img src={immigrationIcon} />
+          <br />
+          Show Immigration
+        </ImmigrationButton>
+        <MigrationButton name={view} value="2" onClick={changeView}>
+          <img src={migrationIcon} />
+          <br />
+          Show Net Migration
+        </MigrationButton>
+        <EmigrationButton name={view} value="1" onClick={changeView}>
+          <img src={emigrationIcon} />
+          <br />
+          Show Emigration
+        </EmigrationButton>
       </div>
 
       <div>
-        <CalculationButton name={calculation} onClick={changeCalculation} value="true">100</CalculationButton>
-        <CalculationButton name={calculation} onClick={changeCalculation} value="false">%</CalculationButton>
+        <CalculationButton
+          name={calculation}
+          onClick={changeCalculation}
+          value="true"
+        >
+          100
+        </CalculationButton>
+        <CalculationButton
+          name={calculation}
+          onClick={changeCalculation}
+          value="false"
+        >
+          %
+        </CalculationButton>
       </div>
 
       {!detailView && (
@@ -154,14 +180,20 @@ function SideBar({
             id={`slider-${view != 3 ? view : "3"}`}
             className="slider"
             getAriaLabel={() => ""}
-            value={scale}
+            value={sliderValue}
+            min={scale[0]}
+            max={scale[1]}
             onChange={handleChange}
             getAriaValueText={valuetext}
-            valueLabelDisplay = "auto"
+            valueLabelDisplay="auto"
           />
           <br />
-          <label id="lower" className={`${view != 3 ? "" : "hide"}`}>{scale[0]}</label>
-          <label id="upper" className={`${view != 3 ? "" : "hide"}`}>{scale[1]}</label>
+          <label id="lower" className={`${view != 3 ? "" : "hide"}`}>
+            {scale[0]}
+          </label>
+          <label id="upper" className={`${view != 3 ? "" : "hide"}`}>
+            {scale[1]}
+          </label>
         </>
       )}
     </div>

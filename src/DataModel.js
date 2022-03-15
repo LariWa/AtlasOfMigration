@@ -13,7 +13,8 @@ handles state (year, country) of the app and fetches data from database
 
  */
 class DataModel {
-  constructor(year = 2020, countryID = WORLD) {
+  constructor(year = 2015, countryID = WORLD) {
+    this.max = 0;
     this.numberOfArrows = 5;
     this.year = year;
     this.countryID = countryID;
@@ -104,6 +105,14 @@ class DataModel {
         return data.DestinationID == destination;
       });
       if (value && value[0]) {
+        if (
+          this.max < parseInt(value[0][year].split(" ").join("")) &&
+          destination &&
+          destination != 900
+        ) {
+          this.max = parseInt(value[0][year].split(" ").join(""));
+          this.maxCountry = value[0];
+        }
         return parseInt(value[0][year].split(" ").join(""));
       }
     }
@@ -202,7 +211,14 @@ class DataModel {
     if (!year) year = this.year;
     var pop = this.getPopulationValue(country, year);
     var emmi = this.getEmigrationValue(country, year);
-    if (pop && emmi) return (emmi / (pop * 1000)) * 100; // I multiplied the population value by 1000
+    if (pop && emmi) {
+      var value = (emmi / (pop * 1000)) * 100;
+      // if (this.max < value) {
+      //   this.max = value;
+      //   this.maxCountry = this.codeToName(country);
+      // }
+      return (emmi / (pop * 1000)) * 100;
+    } // I multiplied the population value by 1000
     // as the value is presented in thousands;
     return 0;
   }
@@ -225,8 +241,6 @@ class DataModel {
         return data.OriginID == origin;
       });
     if (value && value[0]) {
-      if (this.max < parseInt(value[0][year].split(" ").join("")))
-        this.max = parseInt(value[0][year].split(" ").join(""));
       return parseInt(value[0][year].split(" ").join(""));
     }
   }

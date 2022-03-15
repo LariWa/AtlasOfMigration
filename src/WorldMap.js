@@ -23,25 +23,25 @@ function WorldMap(props) {
   const colorScales = [
     [
       //immigration
-      d3.scaleLinear().domain([0, 50000000]).range(["white", immiColor]),
+      d3.scaleLinear().domain([0, 10000000]).range(["white", immiColor]),
       //emigration
-      d3.scaleLinear().domain([0, 50000000]).range(["white", emiColor]),
+      d3.scaleLinear().domain([0, 10000000]).range(["white", emiColor]),
       //netmigration
       d3
         .scaleLinear()
-        .domain([-100000, 0, 100000])
+        .domain([-10000000, 0, 10000000])
         .range([emiColor, "white", immiColor]),
     ],
     [
       //population color Scale
       //immigration
-      d3.scaleLinear().domain([0, 50]).range(["white", immiColor]),
+      d3.scaleLinear().domain([0, 30]).range(["white", immiColor]),
       //emigration
-      d3.scaleLinear().domain([0, 50]).range(["white", emiColor]),
+      d3.scaleLinear().domain([0, 30]).range(["white", emiColor]),
       //netmigration
       d3
         .scaleLinear()
-        .domain([-10, 0, 30])
+        .domain([-20, 0, 20])
         .range([emiColor, "white", immiColor]),
     ],
   ];
@@ -51,7 +51,6 @@ function WorldMap(props) {
   const [arrows, setArrows] = useState(null);
 
   useEffect(() => {
-    console.log("map: ", props.view);
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
     var projection;
@@ -146,6 +145,8 @@ function WorldMap(props) {
           countryTip.hide(event);
           mouseLeaveACB(event);
         });
+      console.log(props.model.max);
+      console.log(props.model.maxCountry);
 
       //arrows
       if (arrows && selectedCountryFeature) {
@@ -249,8 +250,7 @@ function WorldMap(props) {
       setZoomCountries(undefined);
       svg.selectAll(".arrow").remove();
     }
-    console.log(view);
-    console.log(props.view);
+
     if (
       props.view &&
       view != props.view &&
@@ -348,11 +348,13 @@ function WorldMap(props) {
       if (props.view == 2) {
         if (val < 0) {
           color = emiColor;
-          displayValue += "Lost " + number + " people";
+          displayValue += "Lost " + number;
         } else {
           color = immiColor;
-          displayValue += "Gained " + number + " people";
+          displayValue += "Gained " + number;
         }
+        if (props.isPopulationView) displayValue += "%";
+        else displayValue += " people";
       }
       if (
         props.countryId &&
@@ -386,10 +388,10 @@ function WorldMap(props) {
         else number += " people";
         if (props.view == 0) {
           color = immiColor;
-          displayValue += number + " immigrated ";
+          displayValue += number + " are Immigrants ";
         }
         if (props.view == 1) {
-          displayValue += number + " emigrated ";
+          displayValue += number + " are Emigrants ";
           color = emiColor;
         }
       }
