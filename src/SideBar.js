@@ -131,6 +131,7 @@ function SideBar({
           maxResults={10}
           styling={{
             backgroundColor: "transparent",
+            color: "white",
             iconColor: "#EEEEEE",
             borderRadius: "0px",
             border: "0px solid transparent",
