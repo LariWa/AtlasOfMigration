@@ -19,6 +19,7 @@ function App() {
   const [year, setYear] = useState(dataModel.year); //just a hack to make components rerender on year change
   const [countryID, setCountryID] = useState(dataModel.countryID);
   const [detailView, setDetailView] = useState(false);
+  //const [migData, setMigData] = useState([])
 
   dataModel.loadData().then(() => {
     //console.log(dataModel.getTotalEmigration(300, 0))
@@ -26,7 +27,6 @@ function App() {
     setLoading(false);
   });
 
-  //dataModel.getUNData().then( () => console.log("Un data") )
   return (
     <>
       {loading || !pressed ? (
@@ -40,7 +40,7 @@ function App() {
             countryID={countryID}
             setView={setView}
           />
-          <TimeLine model={dataModel} setYear={setYear} />
+          <TimeLine model={dataModel} setYear={setYear} view={view} />
           <WorldMap
             countryId={countryID}
             model={dataModel}

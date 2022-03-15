@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import useWindowDimensions from "./useWindowDimensions.js";
 import * as d3 from "d3";
 import "./styles/timeline.min.css";
-import styled from "styled-components"
+import styled from "styled-components";
 
 /* time runs 1990-2020, in 5 year interval + 2017 and 2019 */
 const yearRange = [
@@ -18,18 +18,18 @@ const yearRange = [
 ];
 
 const yData = ["Pandemics", "Nature disaster"];
+const WORLD = 900;
 
-function TimeLine({ model, setYear }) {
+function TimeLine({ model, setYear, view }) {
   const svgContainerRef = useRef(null);
   //const [year, setYear] = useState(model.year);
   const [countryID, setCountryID] = useState(model.countryID);
   const [sex, setSex] = useState(0);
   const dx = 20; //for now, set to responsive
-  //const [data, setData] = useState(model.getTotalEmigration());
-  let data = model.getTotalEmigration()
   const timeFormat = d3.timeFormat("%Y");
   const timeDomain = yearRange.map((x) => timeFormat(x));
   const axisMargin = 50; //for now
+  let data = model.migrationData;
 
   /* get data for one year */
   // let groupYear = d3.group(worldData,
@@ -38,6 +38,38 @@ function TimeLine({ model, setYear }) {
   //     .get(900)
   //     .get(900)
   //   //console.log(groupYear);
+
+  /*
+view: immigration: 0  --> origin = WORLD
+emigration 1 --> destination = WORLD
+net migration: 2 --> ? destination = origin immi - emi ??
+*/
+  const getMigration = () => {
+    let obj = [];
+    let origin = WORLD,
+      destination = WORLD;
+    console.log(origin);
+    console.log(destination);
+    console.log(model.countryID);
+    if (view == 0) destination = model.countryID;
+    if (view == 1) origin = model.countryID;
+    if (view == 2) origin = destination = model.countryID; /* is this right? */
+
+    obj = model.getMigrationValueAll(origin, destination);
+    console.log(obj);
+    if (obj) {
+      delete obj.DestinationID;
+      delete obj.DestinationName;
+      delete obj.OriginName;
+      delete obj.OriginID;
+      let res = Object.entries(obj).map(([key, value]) => ({
+        date: new Date(key, 6), // 6 equals 1 July
+        total: Number(value.replaceAll(" ", "")),
+      }));
+      console.log(res);
+      return res;
+    }
+  };
 
   /* update this local or update model? */
   const updateYear = (x) => {
@@ -53,13 +85,12 @@ function TimeLine({ model, setYear }) {
     height: useWindowDimensions().height * 0.2,
   };
 
-  const margin = { top: 30, left:40, bottom: 20, right: 50 }
+  const margin = { top: 30, left: 40, bottom: 20, right: 50 };
 
   //  useLayoutEffect(() => {
   useEffect(() => {
-    console.log(model.countryID);
-    console.log(model.countryName);
-    data = model.getTotalEmigration(model.countryID);
+    //console.log(view, ": 0: imi, 1:emi");
+    data = getMigration();
     if (data) {
       //console.log(data);
       const xScale = d3
@@ -86,7 +117,7 @@ function TimeLine({ model, setYear }) {
       svgEl
         .append("g")
         .attr("transform", `translate(30,${shiftXAxis})`)
-        .attr("id","bottom")
+        .attr("id", "bottom");
 
       const xAxis = d3
         .axisBottom(xScale)
@@ -102,11 +133,8 @@ function TimeLine({ model, setYear }) {
       svgEl
         .append("g")
         .attr("transform", `translate(${shiftYAxis} , -15)`)
-        .attr("id","left")
-      svgEl.select('#left')
-        .call(yAxis)
-
-
+        .attr("id", "left");
+      svgEl.select("#left").call(yAxis);
 
       //  data.forEach(x => console.log("total: " ,x.total," --> y: " ,yScale(x.total)))
       //data.forEach(x => console.log("date: " ,x.date," --> x: " ,xScale(x.date)))
@@ -114,21 +142,22 @@ function TimeLine({ model, setYear }) {
       //TODO check for NAN show some warning when value does not exist!
 
       d3.select("#bottom")
-          .selectAll("rect")
-          .data(data)
-          .join('rect')
-          .attr("x", d => xScale((d.date)) - dx)
-          .attr('y', d => yScale(d.total)-shiftXAxis-15) //This value is strange!!
-          .attr('height', (d) => (dimensions.height-margin.top-margin.bottom) - yScale(d.total))
-          //.attr("height", d => yScale(d.total)/2) //base on data
-          .style("fill", "#F29F05")
+        .selectAll("rect")
+        .data(data)
+        .join("rect")
+        .attr("x", (d) => xScale(d.date) - dx)
+        .attr("y", (d) => yScale(d.total) - shiftXAxis - 15) //This value is strange!!
+        .attr(
+          "height",
+          (d) =>
+            dimensions.height - margin.top - margin.bottom - yScale(d.total)
+        )
+        //.attr("height", d => yScale(d.total)/2) //base on data
+        .style("fill", "#F29F05");
 
-    d3.selectAll("rect")
-        .on("click", (d,i) => {
-          updateYear(timeFormat(i.date))
-        })
-
-        .on("mouseover", (d,i) => {
+      d3.selectAll("rect")
+        .on("click", (d, i) => {
+          updateYear(timeFormat(i.date));
         })
         .on("mouseover", (d, i) => {
           //  console.log("mouse over bar ",  )
@@ -140,9 +169,9 @@ function TimeLine({ model, setYear }) {
   return (
     <svg
       id="timeLine"
-      width = {dimensions.width}
-      height = {dimensions.height}
-      transform = "translate(250, 600)"
+      width={dimensions.width}
+      height={dimensions.height}
+      transform="translate(250, 600)"
       ref={svgContainerRef}
     ></svg>
   );

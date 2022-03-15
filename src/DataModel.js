@@ -1,6 +1,6 @@
-import { TotalEmBothSex } from "./const/TotalEmBothSex";
-import { TotalEmMale } from "./const/TotalEmMale";
-import { TotalEmFemale } from "./const/TotalEmFemale";
+import { TotalImBothSex } from "./const/TotalImBothSex";
+import { TotalImMale } from "./const/TotalImMale";
+import { TotalImFemale } from "./const/TotalImFemale";
 import { CountryNameID } from "./const/CountryNameID";
 /* These objects also includes the world */
 
@@ -18,7 +18,7 @@ class DataModel {
     this.year = year;
     this.countryID = countryID;
     this.countryName = this.codeToName(this.countryID);
-    this.timeData = this.getTotalEmigration();
+    this.timeData = this.getImmigration_Sex();
   }
 
   setYear(x) {
@@ -44,32 +44,18 @@ class DataModel {
 
   /* get name of a country by code */
   codeToName(x = WORLD) {
-    //console.log(x);
     let obj = CountryNameID.filter((item) => item.id == x); // catch both ints and strings
     return obj[0] == null ? null : obj[0].name;
   }
 
-  /* TODO: return an array with unique objects {name: ID, id: countryname}
-    with ID and countrynames as listed in the UN dataset */
-  getCountryNameID(res) {
-    let cnid = res.map((x) => ({
-      name: x.DestinationName,
-      id: x.DestinationID,
-    }));
-    console.log(cnid);
-
-    //TODO: remove duplicates
-  }
-
   /*
-    Net emigration from destination for all years and sex
+    Net immigration to destination for all years and sex
         destination: countrycode, sex (optional): m = -1 / f = 1 / both = 0
         Return: An array of objects with {date: year (Date), total: total emigration (int)}  */
-  getTotalEmigration(destination = WORLD, sex = 0) {
-    let path = TotalEmBothSex;
-    if (sex != 0) path = sex === 1 ? TotalEmFemale : TotalEmMale;
+  getImmigration_Sex(destination = WORLD, sex = 0) {
+    let path = TotalImBothSex;
+    if (sex != 0) path = sex === 1 ? TotalImFemale : TotalImMale;
     let data = path[destination];
-    //console.log(data &&data[0]);
 
     //filter everything that is not year data
     // Object.key(data[0])
@@ -274,6 +260,7 @@ class DataModel {
       console.log(this.c_data);
     }
   }
+
   loadData() {
     const component = this;
     return Promise.all([getMigrationData(), getPopulationData()]).then();
