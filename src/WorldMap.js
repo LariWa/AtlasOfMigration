@@ -276,7 +276,7 @@ function WorldMap(props) {
     return <pre>Loading...</pre>;
   }
   return (
-    <div ref={mapContainerRef} class="mapContainer">
+    <div ref={mapContainerRef} className="mapContainer">
       <svg ref={svgRef} width={width} height={height} id="map"></svg>
     </div>
   );
