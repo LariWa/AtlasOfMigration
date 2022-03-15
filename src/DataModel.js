@@ -183,6 +183,24 @@ class DataModel {
     if (immi && emmi) return immi / emmi;
     return 0;
   }
+  getNetMigrationValue(country, year) {
+    //TODO decide on ratio or substract
+    if (!year) year = this.year;
+    var immi = this.getImmigrationValue(country, year);
+    var emmi = this.getEmigrationValue(country, year);
+    if (immi && emmi) return immi - emmi;
+    return 0;
+  }
+  getNetMigrationValuePopulation(country, year) {
+    //TODO decide on ratio or substract
+    if (!year) year = this.year;
+    var immi = this.getImmigrationValue(country, year);
+    var emmi = this.getEmigrationValue(country, year);
+    var pop = this.getPopulationValue(country, year);
+
+    if (immi && emmi && pop) return ((immi - emmi) / (pop * 1000)) * 100;
+    return 0;
+  }
   //this calculation does not make sense for a ratio?
   getNetRatioOverPopulationValue(country, year) {
     //(The Net migration value / the population value) * 1000
