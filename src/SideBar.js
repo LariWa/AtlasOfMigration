@@ -10,6 +10,7 @@ import { CountryNameID } from "./const/CountryNameID";
 import immigrationIcon from "./styles/icons/ImmigrationIcon.svg";
 import emigrationIcon from "./styles/icons/EmigrationIcon.svg";
 import migrationIcon from "./styles/icons/NetMigrationIcon.svg";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 /* immigration = 0, emigration = 1, net migration = 2 */
 const information = [
@@ -46,16 +47,11 @@ function SideBar({
 
   const searchCountry = (e) => {
     if (e.key === "Enter") {
-      //console.log(input);
       if (nbrChoices === 1) {
         setInput(selCountries[0].name);
         setDetailView(true);
-        //console.log("country matched");
-        //console.log(selCountry);
-        //  console.log(selCountries[0].id);
         setCountryID(selCountries[0].id);
-        //setCountryName(model.codeToName(selCountries[0].id));
-
+        console.log("detail", detailView);
         model.setCountryID(selCountries[0].id);
       }
     }
@@ -67,13 +63,16 @@ function SideBar({
     const filteredInput = CountryNameID.filter(
       (x) => x.name.toLowerCase().indexOf(input.toLowerCase()) > -1
     );
-
     setNbrChoices(filteredInput.length);
     setSelCountries(filteredInput);
   };
 
+  /*  I need to check so this is not clicking outside   */
   const changeView = (e) => {
-    setView(e.target.value);
+    if (e.target.value) {
+      //console.log(e.target.value);
+      setView(e.target.value);
+    }
   };
 
   function valuetext(value) {
@@ -83,11 +82,18 @@ function SideBar({
   const handleChange = (event, newValue) => {
     setScale(newValue);
   };
-  //  console.log(model.countryID);
-  //  console.log(model.countryName);
+
+  const formatResult = (item) => {
+    return (
+      <div>
+        <span style={{ display: "block", textAlign: "left" }}>{item.name}</span>
+      </div>
+    );
+  };
+
   return (
     <div className="sideBar">
-      {detailView ? (
+      {detailView && (
         <div>
           <button
             id="world"
@@ -97,55 +103,81 @@ function SideBar({
               setCountryID(900);
             }}
           >
-            {" "}
             Back
           </button>
-          <h3> Year: {year} </h3>
-          <h3> Country: {name} </h3>
-
-          <div className="filter">
-            <h2>What do you want to know more about?</h2>
-            <ImmigrationButton name={view} value="0" onClick={changeView}>
-              <img src={immigrationIcon} />
-              <br />
-              Show Immigration
-            </ImmigrationButton>
-            <MigrationButton name={view} value="2" onClick={changeView}>
-              <img src={migrationIcon} />
-              <br />
-              Show Net Migration
-            </MigrationButton>
-            <EmigrationButton name={view} value="1" onClick={changeView}>
-              <img src={emigrationIcon} />
-              <br />
-              Show Emigration
-            </EmigrationButton>
-          </div>
         </div>
-      ) : (
+      )}
+      {detailView ? <h1> Country: {name} </h1> : <h1> {headLine[view]} </h1>}
+
+      <h3> Year: {year} </h3>
+
+      <div id="searchBox">
+        <h2>What country are you looking for?</h2>
+        {/*
+        <input
+          type="text"
+          id="inputField"
+          onChange={onInput}
+          onKeyDown={searchCountry}
+          value={input}
+          placeholder="Search..."
+        />
+        <select name="countries" style={{ minWidth: 180 }}>
+          {selCountries.map((x) => (
+            <option key={x.id} value={x.name}>
+              {" "}
+              {x.name}{" "}
+            </option>
+          ))}
+        </select>
+*/}
+
+        <div className="App">
+          <header className="App-header">
+            <div style={{ width: 300 }}>
+              <ReactSearchAutocomplete
+                items={CountryNameID}
+                onSelect={(item) => {
+                  setDetailView(true);
+                  setCountryID(item.id);
+                  model.setCountryID(item.id);
+                }}
+                formatResult={formatResult}
+                maxResults={10}
+                styling={{
+                  backgroundColor: "#063140",
+                  iconColor: "white",
+                  color: "white",
+                  borderRadius: "0px",
+                  border: "0px solid #dfe1e5",
+                }}
+              />
+            </div>
+          </header>
+        </div>
+      </div>
+
+      <div className="filter">
+        {/*<h2>What do you want to know more about?</h2> */}
+        <ImmigrationButton name={view} value="0" onClick={changeView}>
+          <img src={immigrationIcon} />
+          <br />
+          Show Immigration
+        </ImmigrationButton>
+        <MigrationButton name={view} value="2" onClick={changeView}>
+          <img src={migrationIcon} />
+          <br />
+          Show Net Migration
+        </MigrationButton>
+        <EmigrationButton name={view} value="1" onClick={changeView}>
+          <img src={emigrationIcon} />
+          <br />
+          Show Emigration
+        </EmigrationButton>
+      </div>
+      <p>{information[view]}</p>
+      {!detailView && (
         <>
-          <h1>{headLine[view]}</h1>
-          <p>{information[view]}</p>
-
-          <div className="filter">
-            <h2>What do you want to know more about?</h2>
-            <ImmigrationButton name={view} value="0" onClick={changeView}>
-              <img src={immigrationIcon} />
-              <br />
-              Show Immigration
-            </ImmigrationButton>
-            <MigrationButton name={view} value="2" onClick={changeView}>
-              <img src={migrationIcon} />
-              <br />
-              Show Net Migration
-            </MigrationButton>
-            <EmigrationButton name={view} value="1" onClick={changeView}>
-              <img src={emigrationIcon} />
-              <br />
-              Show Emigration
-            </EmigrationButton>
-          </div>
-
           <Slider
             id={`slider-${view != 3 ? view : "3"}`}
             className="slider"
@@ -161,26 +193,6 @@ function SideBar({
           <label id="upper" className={`${view != 3 ? "" : "hide"}`}>
             {scale[1]}
           </label>
-
-          <div id="searchBox">
-            <h2>What country are you looking for?</h2>
-            <input
-              type="text"
-              id="inputField"
-              onChange={onInput}
-              onKeyDown={searchCountry}
-              value={input}
-              placeholder="Search..."
-            />
-            <select name="countries" style={{ minWidth: 180 }}>
-              {selCountries.map((x) => (
-                <option key={x.id} value={x.name}>
-                  {" "}
-                  {x.name}{" "}
-                </option>
-              ))}
-            </select>
-          </div>
         </>
       )}
     </div>

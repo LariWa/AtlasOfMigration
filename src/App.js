@@ -44,6 +44,7 @@ function App() {
             scale={scale}
             countryID={countryID}
           />
+          <TimeLine model={dataModel} setYear={setYear} view={view} />
           <WorldMap
             scale={scale}
             countryId={countryID}
