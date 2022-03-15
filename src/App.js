@@ -44,6 +44,12 @@ function App() {
         <Start enter={setPressed} loading={loading} />
       ) : (
         <>
+          <TimeLine
+            model={dataModel}
+            setYear={setYear}
+            view={view}
+            style={{ zIndex: 99 }}
+          />
           <WorldMap
             scale={scale}
             countryId={countryID}
@@ -53,12 +59,6 @@ function App() {
             view={view}
             isPopulationView={isPopulationView}
             setCountryID={setCountryID}
-          />
-          <TimeLine
-            model={dataModel}
-            setYear={setYear}
-            view={view}
-            style={{ zIndex: 99 }}
           />
         </>
       )}

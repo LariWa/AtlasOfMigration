@@ -19,12 +19,19 @@ const yearRange = [
 
 const yData = ["Pandemics", "Nature disaster"];
 const WORLD = 900;
+const immiColor = "cyan";
+const emiColor = "#F29F05";
+const netColor = "purple";
+const unDef = "darkgrey";
+//immigration = 0, emmigration 1, net migration=2, start=3
+const colors = [immiColor, emiColor, netColor, unDef];
 
 function TimeLine({ model, setYear, view }) {
   const svgContainerRef = useRef(null);
   //const [year, setYear] = useState(model.year);
   const [countryID, setCountryID] = useState(model.countryID);
   const [sex, setSex] = useState(0);
+  const [color, setColor] = useState("purple");
   const dx = 20; //for now, set to responsive
   const timeFormat = d3.timeFormat("%Y");
   const timeDomain = yearRange.map((x) => timeFormat(x));
@@ -44,31 +51,41 @@ view: immigration: 0  --> origin = WORLD
 emigration 1 --> destination = WORLD
 net migration: 2 --> ? destination = origin immi - emi ??
 */
+
   const getMigration = () => {
-    let obj = [];
+    let obj = {};
     let origin = WORLD,
       destination = WORLD;
     console.log(model.countryID);
     console.log(view); //quick fix to take care of rerender and undefined view
-    if (view) {
-      if (view && view == 0) destination = model.countryID;
-      if (view && view == 1) origin = model.countryID;
-      if (view && view == 2)
-        origin = destination = model.countryID; /* NO!!! TODO is this right? */
+    if (view != null) {
+      if (view == 0 || view == 1) {
+        if (view == 0) destination = model.countryID;
+        if (view == 1) origin = model.countryID;
+        obj = model.getMigrationValueAll(origin, destination);
+      }
+      if (view == 2)
+        for (let i = 1990; i <= 2020; i += 5) {
+          let key = i.toString();
+          obj[key] = model.getNetMigrationValue(model.getCountryId, i);
+        }
       console.log(origin);
       console.log(destination);
-      //console.log(model.countryID);
+      //console.log(obj);
+      //console.log(obj != "undefined");
 
-      obj = model.getMigrationValueAll(origin, destination);
-      console.log(obj);
-      if (obj) {
+      if (obj != "undefined" && Object.keys(obj).length > 0) {
+        console.log(obj);
         delete obj.DestinationID;
         delete obj.DestinationName;
         delete obj.OriginName;
         delete obj.OriginID;
+        console.log(obj[1990]); // 152 986 157   //0  --> true
+        console.log(!obj[1990].isNaN); //true
+        getValue(obj[1990]);
         let res = Object.entries(obj).map(([key, value]) => ({
           date: new Date(key, 6), // 6 equals 1 July
-          total: Number(value.replaceAll(" ", "")),
+          total: getValue(value),
         }));
         console.log(res);
         return res;
@@ -76,8 +93,15 @@ net migration: 2 --> ? destination = origin immi - emi ??
     }
   };
 
+  const getValue = (x) => {
+    if (x === 0) return 0;
+    if (x === "..") return -1;
+    else return Number(x.split(" ").join(""));
+  };
+
   /* update this local or update model? */
   const updateYear = (x) => {
+    spli;
     //format input to right year?
     setYear(x);
     model.setYear(x);
@@ -92,9 +116,13 @@ net migration: 2 --> ? destination = origin immi - emi ??
 
   const margin = { top: 30, left: 40, bottom: 20, right: 50 };
 
+  /* color of bars */
+
   //  useLayoutEffect(() => {
   useEffect(() => {
-    console.log(view, ": 0: imi, 1:emi");
+    console.log(view, ": 0: imi, 1:emi, 2: net");
+    if (view) setColor(colors[view]);
+
     data = getMigration();
     if (data) {
       //console.log(data);
@@ -158,14 +186,14 @@ net migration: 2 --> ? destination = origin immi - emi ??
             dimensions.height - margin.top - margin.bottom - yScale(d.total)
         )
         //.attr("height", d => yScale(d.total)/2) //base on data
-        .style("fill", "#F29F05");
+        .style("fill", color);
 
       d3.selectAll("rect")
         .on("click", (d, i) => {
           updateYear(timeFormat(i.date));
         })
         .on("mouseover", (d, i) => {
-          //  console.log("mouse over bar ",  )
+          console.log(i.total);
         });
     }
   }, [data, view]);
