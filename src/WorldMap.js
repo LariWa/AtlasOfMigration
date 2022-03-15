@@ -63,18 +63,14 @@ function WorldMap(props) {
       .tip()
       .attr("class", "d3-tip")
       .html(function (event) {
-        return (
-          event.target.getAttribute("name") +
-          "<br/>" +
-          displayMigrationValue(event.target.id)
-        );
+        return displayMigrationValue(event.target.id);
       });
     var arrowTip = d3
       .tip()
       .attr("class", "d3-tip")
       .html(function (event) {
         //TODO nice text
-        return migrationCountries.find((el) => el.id == event.target.id).value;
+        return displayMigrationValue(event.target.id);
       });
     const mapContainer = d3.select(mapContainerRef.current);
     svg.call(countryTip);
@@ -323,20 +319,14 @@ function WorldMap(props) {
   }
   function displayMigrationValue(countryId) {
     var val = getMigrationDataByCountry(countryId);
+
     if (val) {
+      var number = Math.abs(val.toFixed(2).toLocaleString());
+
+      var header = props.model.codeToName(countryId) + "<br/>";
       var displayValue = "";
       var color;
-      var number = Math.abs(val.toFixed(2).toLocaleString());
-      if (props.isPopulationView) number += "%";
-      else number += " people";
-      if (props.view == 0) {
-        color = immiColor;
-        displayValue += number + " immigrated ";
-      }
-      if (props.view == 1) {
-        displayValue += number + " emigrated ";
-        color = emiColor;
-      }
+
       if (props.view == 2) {
         if (val < 0) {
           color = emiColor;
@@ -346,9 +336,57 @@ function WorldMap(props) {
           displayValue += "Gained " + number + " people";
         }
       }
-      displayValue += " in " + props.year;
-      return "<span style=color:" + color + ">" + displayValue + "</span>";
-    } else return " no data available";
+      if (
+        props.countryId &&
+        props.countryId != 900 &&
+        countryId != props.countryId
+      ) {
+        //detail view
+        var data = migrationCountries.find((el) => el.id == countryId);
+        if (data) {
+          if (props.isPopulationView) {
+            displayValue +=
+              (data.value / props.model.getPopulationValue(countryId))
+                .toFixed(2)
+                .toLocaleString() + " %";
+          } else {
+            displayValue += data.value.toFixed(2).toLocaleString() + " people";
+          }
+          if (props.view == 0) displayValue += " emigrated to ";
+          if (props.view == 1) displayValue += " immigrated from ";
+          displayValue += props.model.codeToName(props.countryId);
+          return header + displayValue;
+        }
+      } else if (
+        //main view or selected country
+        (props.countryId &&
+          props.countryId != 900 &&
+          countryId == props.countryId) ||
+        props.countryId == 900
+      ) {
+        if (props.isPopulationView) number += "%";
+        else number += " people";
+        if (props.view == 0) {
+          color = immiColor;
+          displayValue += number + " immigrated ";
+        }
+        if (props.view == 1) {
+          displayValue += number + " emigrated ";
+          color = emiColor;
+        }
+      }
+      // displayValue += " in " + props.year;
+      return (
+        header + "<span style=color:" + color + ">" + displayValue + "</span>"
+      );
+    } else
+      return props.model.codeToName(countryId) + "<br/>" + " no data available";
+  }
+  function getArrowTipText(id) {
+    console.log(migrationCountries.find((el) => el.id == id));
+    if (props.view == 0) {
+    }
+    return migrationCountries.find((el) => el.id == id).value;
   }
 }
 
