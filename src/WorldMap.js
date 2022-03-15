@@ -19,20 +19,26 @@ function WorldMap(props) {
   const colorScales = [
     [
       //immigration
-      d3.scaleLinear().domain([0, 50000000]).range(["white", "blue"]),
+      d3.scaleLinear().domain([0, 10000000]).range(["white", immiColor]),
       //emigration
-      d3.scaleLinear().domain([0, 50000000]).range(["white", "red"]),
+      d3.scaleLinear().domain([0, 10000000]).range(["white", emiColor]),
       //netmigration
-      d3.scaleLinear().domain([0.0, 1.0, 2.0]).range(["red", "white", "blue"]),
+      d3
+        .scaleLinear()
+        .domain([-10000000, 0, 10000000])
+        .range([emiColor, "white", immiColor]),
     ],
     [
       //population color Scale
       //immigration
-      d3.scaleLinear().domain([0, 50]).range(["white", "blue"]),
+      d3.scaleLinear().domain([0, 30]).range(["white", immiColor]),
       //emigration
-      d3.scaleLinear().domain([0, 50]).range(["white", "red"]),
+      d3.scaleLinear().domain([0, 30]).range(["white", emiColor]),
       //netmigration
-      d3.scaleLinear().domain([0.0, 1.0, 2.0]).range(["red", "white", "blue"]),
+      d3
+        .scaleLinear()
+        .domain([-20, 0, 20])
+        .range([emiColor, "white", immiColor]),
     ],
   ];
   // const [selectedCountryFeature, setSelectedCountry] = useState(null);
@@ -41,7 +47,6 @@ function WorldMap(props) {
   const [arrows, setArrows] = useState(null);
 
   useEffect(() => {
-    console.log("map: ", props.view);
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
     var projection;
@@ -140,6 +145,8 @@ function WorldMap(props) {
           countryTip.hide(event);
           mouseLeaveACB(event);
         });
+      console.log(props.model.max);
+      console.log(props.model.maxCountry);
 
       //arrows
       if (arrows && selectedCountryFeature) {
@@ -243,6 +250,17 @@ function WorldMap(props) {
       setZoomCountries(undefined);
       svg.selectAll(".arrow").remove();
     }
+
+    if (
+      props.view &&
+      view != props.view &&
+      props.countryId &&
+      props.countryId != 900
+    ) {
+      console.log("view changed");
+      view = props.view;
+      showDetailView(props.countryId);
+    }
   }, [
     data,
     selectedCountryFeature,
@@ -321,8 +339,75 @@ function WorldMap(props) {
   }
   function displayMigrationValue(countryId) {
     var val = getMigrationDataByCountry(countryId);
-    if (val) return val.toFixed(2).toLocaleString();
-    else return " -";
+
+    if (val) {
+      var number = Math.abs(val.toFixed(2).toLocaleString());
+      var header = props.model.codeToName(countryId) + "<br/>";
+      var displayValue = "";
+      var color;
+
+      if (props.view == 2) {
+        if (val < 0) {
+          color = emiColor;
+          displayValue += "Lost " + number;
+        } else {
+          color = immiColor;
+          displayValue += "Gained " + number;
+        }
+        if (props.isPopulationView) displayValue += "%";
+        else displayValue += " people";
+      }
+      if (
+        props.countryId &&
+        props.countryId != 900 &&
+        countryId != props.countryId
+      ) {
+        //detail view
+        var data = migrationCountries.find((el) => el.id == countryId);
+        if (data) {
+          if (props.isPopulationView) {
+            displayValue +=
+              (data.value / props.model.getPopulationValue(countryId))
+                .toFixed(2)
+                .toLocaleString() + " %";
+          } else {
+            displayValue += data.value.toFixed(2).toLocaleString() + " people";
+          }
+          if (props.view == 0) displayValue += " emigrated to ";
+          if (props.view == 1) displayValue += " immigrated from ";
+          displayValue += props.model.codeToName(props.countryId);
+          return header + displayValue;
+        }
+      } else if (
+        //main view or selected country
+        (props.countryId &&
+          props.countryId != 900 &&
+          countryId == props.countryId) ||
+        props.countryId == 900
+      ) {
+        if (props.isPopulationView) number += "%";
+        else number += " people";
+        if (props.view == 0) {
+          color = immiColor;
+          displayValue += number + " are Immigrants ";
+        }
+        if (props.view == 1) {
+          displayValue += number + " are Emigrants ";
+          color = emiColor;
+        }
+      }
+      // displayValue += " in " + props.year;
+      return (
+        header + "<span style=color:" + color + ">" + displayValue + "</span>"
+      );
+    } else
+      return props.model.codeToName(countryId) + "<br/>" + " no data available";
+  }
+  function getArrowTipText(id) {
+    console.log(migrationCountries.find((el) => el.id == id));
+    if (props.view == 0) {
+    }
+    return migrationCountries.find((el) => el.id == id).value;
   }
 }
 
