@@ -43,15 +43,17 @@ function App() {
             setScale={setScale}
             scale={scale}
           />
-          <TimeLine model={dataModel} setYear={setYear} />
           <WorldMap
             scale={scale}
+            countryId={countryID}
+            setView={setView}
             model={dataModel}
             year={year}
             view={view}
             isPopulationView={isPopulationView}
             setCountryID={setCountryID}
           />
+          <TimeLine model={dataModel} setYear={setYear} />
         </div>
       )}
     </>

@@ -61,7 +61,7 @@ function TimeLine({ model, setYear }) {
     console.log(model.countryName);
     data = model.getTotalEmigration(model.countryID);
     if (data) {
-      console.log(data);
+      //console.log(data);
       const xScale = d3
         .scaleTime()
         .domain(d3.extent(yearRange))

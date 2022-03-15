@@ -26,12 +26,16 @@ class DataModel {
     //  console.log(x);
   }
 
+  getCountryId() {
+    return this.countryID;
+  }
+
   setCountryID(x) {
-    console.log(x);
+    //console.log(x);
     this.countryID = x;
-    console.log("id: ", this.countryID);
+    //console.log("id: ", this.countryID);
     this.countryName = this.codeToName(x);
-    console.log("name: ", this.countryName);
+    //console.log("name: ", this.countryName);
   }
 
   setView(x) {
@@ -40,7 +44,8 @@ class DataModel {
 
   /* get name of a country by code */
   codeToName(x = WORLD) {
-    let obj = CountryNameID.filter((item) => item.id === x);
+    //console.log(x);
+    let obj = CountryNameID.filter((item) => item.id == x); // catch both ints and strings
     return obj[0] == null ? null : obj[0].name;
   }
 
