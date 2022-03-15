@@ -50,6 +50,15 @@ function App() {
       setTotalNumberViewState(val);
       val = val === "true";
       setPopulationView(!val);
+      if (view >= 0 && view <= 2) {
+        if (val) {
+          setScale(scaleValues[0][view]);
+          setSliderValue(scaleValues[0][view]);
+        } else {
+          setScale(scaleValues[1][view]);
+          setSliderValue(scaleValues[1][view]);
+        }
+      }
     }
   }
   function setView(val) {
@@ -57,7 +66,7 @@ function App() {
       console.log("change" + val);
       setViewState(val);
       if (val >= 0 && val <= 2) {
-        if (isTotalNumberView) {
+        if (!isPopulationView) {
           setScale(scaleValues[0][val]);
           setSliderValue(scaleValues[0][val]);
         } else {
