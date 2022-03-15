@@ -73,6 +73,7 @@ function SideBar({
   };
 
   const changeView = (e) => {
+    console.log(e.target.value);
     setView(e.target.value);
   };
 

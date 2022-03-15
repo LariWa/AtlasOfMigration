@@ -38,9 +38,9 @@ class DataModel {
     //console.log("name: ", this.countryName);
   }
 
-  setView(x) {
-    this.view = x;
-  }
+  // setView(x) {
+  //   this.view = x;
+  // }
 
   /* get name of a country by code */
   codeToName(x = WORLD) {
