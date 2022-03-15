@@ -160,7 +160,7 @@ function WorldMap(props) {
           })
           .style("fill", "none")
           .style("stroke", getArrowColor())
-          .style("stroke-width", 3)
+          .style("stroke-width", 6)
           .attr("markerWidth", 50)
           .attr("markerHeight", 50)
           .attr("marker-end", "url(#arrow)")
@@ -300,24 +300,24 @@ function WorldMap(props) {
       migrationCountries &&
       migrationCountries.find((item) => item.id == country)
     ) {
-      if (props.view == 0) return "red";
-      if (props.view == 1) return "blue";
+      if (props.view == 0) return emiColor;
+      if (props.view == 1) return immiColor;
       if (props.view == 2) return "LightGrey";
     }
     if (selectedCountryFeature.id == country) {
-      if (props.view == 0) return "blue";
-      if (props.view == 1) return "red";
+      if (props.view == 0) return immiColor;
+      if (props.view == 1) return emiColor;
       if (props.view == 2) {
         var val = getMigrationDataByCountry(country);
-        if (!val) return "black";
+        if (!val) return "darkgrey";
         return colorScales[+props.isPopulationView][props.view](val);
       }
     }
     return "lightgrey";
   }
   function getArrowColor() {
-    if (props.view == 0) return "darkred";
-    if (props.view == 1) return "darkblue";
+    if (props.view == 0) return "#a88905";
+    if (props.view == 1) return "darkcyan";
   }
   function getMigrationDataByCountry(countryId) {
     if (!props.isPopulationView) {
