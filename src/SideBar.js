@@ -56,7 +56,6 @@ function SideBar({
         setInput(selCountries[0].name);
         setDetailView(true);
         setCountryID(selCountries[0].id);
-        console.log("detail", detailView);
         model.setCountryID(selCountries[0].id);
       }
     }

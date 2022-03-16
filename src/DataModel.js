@@ -13,7 +13,7 @@ handles state (year, country) of the app and fetches data from database
 
  */
 class DataModel {
-  constructor(year = 2015, countryID = WORLD) {
+  constructor(year = 2020, countryID = WORLD) {
     this.max = 0;
     this.numberOfArrows = 5;
     this.year = year;

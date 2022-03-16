@@ -98,7 +98,7 @@ function App() {
         <Start enter={setPressed} loading={loading} />
       ) : (
         <>
-          <TimeLine model={dataModel} setYear={setYear} view={view} />
+          <TimeLine model={dataModel} year={year} setYear={setYear} view={view} />
           <WorldMap
             scale={sliderValue}
             countryId={countryID}

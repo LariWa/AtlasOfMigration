@@ -32,13 +32,13 @@ const unDef = "darkgrey";
 //immigration = 0, emmigration 1, net migration=2, start=3
 const colors = [immiColor, emiColor, netColor, unDef];
 
-function TimeLine({ model, setYear, view }) {
+function TimeLine({ model, year, setYear, view }) {
   const svgContainerRef = useRef(null);
   //const [year, setYear] = useState(model.year);
   const [countryID, setCountryID] = useState(model.countryID);
   const [sex, setSex] = useState(0);
   const [color, setColor] = useState("purple");
-  const dx = 20; //for now, set to responsive
+  const dx = 40; //for now, set to responsive
   const timeFormat = d3.timeFormat("%Y");
   const timeDomain = yearRange.map((x) => timeFormat(x));
   const axisMargin = 50; //for now
@@ -119,11 +119,20 @@ net migration: 2 --> ? destination = origin immi - emi ??
   /* set to size of container ? */
   const dimensions = {
     width: useWindowDimensions().width * 0.7,
-    height: useWindowDimensions().height * 0.2,
+    height: useWindowDimensions().height * 0.17,
   };
 
-  const margin = { top: 30, left: 40, bottom: 20, right: 50 };
+  const margin = { top: 8, left: 60, bottom: 20, right: 10 };
 
+  const showSelect = () => {
+    document.querySelectorAll(".time").forEach(element => {
+      if (element.id != year) {
+        element.style.opacity = 0.4;
+      }
+   })
+  }
+
+  showSelect();
   /* color of bars */
 
   //  useLayoutEffect(() => {
@@ -145,7 +154,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
       const yScale = d3
         .scaleLinear()
         .domain([0, d3.max(data, (d) => d.total)])
-        .range([dimensions.height - margin.top, margin.bottom])
+        .range([dimensions.height - 20, margin.bottom])
         .nice();
 
       // Clear svg content before adding new elements
@@ -186,9 +195,10 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .data(data)
 
         .join("rect")
+        .attr("class", "time")
         .attr("id", (d) => timeFormat(d.date))
         .attr("value", (d) => d.total)
-        .attr("x", (d) => xScale(d.date) - dx)
+        .attr("x", (d) => xScale(d.date) - 35)
         .attr("y", (d) => yScale(d.total) - shiftXAxis - 15) //This value is strange!!
         .attr(
           "height",
@@ -196,6 +206,8 @@ net migration: 2 --> ? destination = origin immi - emi ??
             dimensions.height - margin.top - margin.bottom - yScale(d.total)
         )
         //.attr("height", d => yScale(d.total)/2) //base on data
+        .attr("width", dx )
+        .attr("opacity", (d) => year != timeFormat(d.date) ? "0.3" : "1")
         .style("fill", colors[view]);
 
       var arrowTip = d3
@@ -205,7 +217,8 @@ net migration: 2 --> ? destination = origin immi - emi ??
           // ////console.log(event.target.getAttribute("x"));
 
           // ////console.log(xScale(Number(event.target.getAttribute("x"))));
-          return "Total: " + event.target.getAttribute("value");
+          let number = event.target.getAttribute("value").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          return "Total: " + number;
         });
 
       d3.select("#timeLine").call(arrowTip);
@@ -216,7 +229,9 @@ net migration: 2 --> ? destination = origin immi - emi ??
           arrowTip.hide(d);
         })
         .on("mouseover", function (d) {
-          arrowTip.show(d, this);
+          if (view != 2) {
+            arrowTip.show(d, this);
+          }
         })
         .on("mouseleave", function (d) {
           arrowTip.hide(d);
@@ -230,7 +245,6 @@ net migration: 2 --> ? destination = origin immi - emi ??
       id="timeLine"
       width={dimensions.width}
       height={dimensions.height}
-      transform="translate(250, 600)"
       ref={svgContainerRef}
     ></svg>
   );
