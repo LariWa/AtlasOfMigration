@@ -7,11 +7,12 @@ const d3 = {
   ...d3module,
   tip: d3tip,
 };
-var migrationCountries;
+let migrationCountries;
 var selectedCountryFeature;
 const immiColor = "cyan";
 const emiColor = "#F29F05";
 let view;
+let arrows;
 
 function WorldMap(props) {
   const height = useWindowDimensions().height * 0.8;
@@ -48,9 +49,8 @@ function WorldMap(props) {
   // const [selectedCountryFeature, setSelectedCountry] = useState(null);
   const [zoomCountries, setZoomCountries] = useState(null);
 
-  const [arrows, setArrows] = useState(null);
-
   useEffect(() => {
+    d3.selectAll(".d3-tip-map").remove(); //remove all tooltips --> fixes bug
     var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
     var projection;
@@ -67,14 +67,16 @@ function WorldMap(props) {
     //tooltip-----------------------------------------------------------
     var countryTip = d3
       .tip()
-      .attr("class", "d3-tip")
+      .attr("class", "d3-tip-map")
+
       .html(function (event) {
         return displayMigrationValue(event.target.id);
       });
 
     var arrowTip = d3
       .tip()
-      .attr("class", "d3-tip")
+      .attr("class", "d3-tip-map")
+
       .html(function (event) {
         //TODO nice text
         return displayMigrationValue(event.target.id);
@@ -116,11 +118,24 @@ function WorldMap(props) {
       }
     }
     mapContainer.call(zoom);
-    //------------------------------------------------------------------------------
+    //keep track of view changes
+    // if (
+    //   props.view &&
+    //   view != props.view &&
+    //   props.countryId &&
+    //   props.countryId != 900
+    // ) {
+    //   view = props.view;
 
+    // }
+    //------------------------------------------------------------------------------
     var path = d3.geoPath(projection);
+
     /* check so both data and yearData are not null */
     if (data) {
+      //updateDetailView
+      showDetailView(props.countryId);
+
       svg
         .selectAll(".country")
         .data(data.features)
@@ -128,16 +143,12 @@ function WorldMap(props) {
         .attr("id", (feature) => feature.id)
         .attr("name", (feature) => feature.properties.name)
         .style("stroke", "darkgrey")
-        .attr("fill", (feature) => getColor(feature.id))
-        .attr("class", "country")
-        .attr("d", (feature) => path(feature))
         .on("click", (event, feature) => {
           selectedCountryFeature = feature;
 
           countryTip.hide(event);
           clickedACB(event.target);
         })
-
         .on("mouseover", function (d) {
           countryTip.show(d, this);
           mouseOverACB(d);
@@ -146,9 +157,11 @@ function WorldMap(props) {
         .on("mouseleave", (event) => {
           countryTip.hide(event);
           mouseLeaveACB(event);
-        });
-      ////console.log(props.model.max);
-      ////console.log(props.model.maxCountry);
+        })
+
+        .attr("fill", (feature) => getColor(feature.id))
+        .attr("class", "country")
+        .attr("d", (feature) => path(feature));
 
       //arrows
       if (arrows && selectedCountryFeature) {
@@ -157,9 +170,7 @@ function WorldMap(props) {
           .selectAll("arrows")
           .data(arrows)
           .join("path")
-
           .attr("id", (feature) => feature.data)
-
           .attr("class", "arrow")
           .attr("d", function (d) {
             return path(d);
@@ -171,7 +182,6 @@ function WorldMap(props) {
           .attr("markerHeight", 50)
           .attr("marker-end", "url(#arrow)")
           .attr("marker-start", "url(#arrow)")
-
           .on("mouseover", function (d) {
             arrowTip.show(d, this);
           })
@@ -182,6 +192,7 @@ function WorldMap(props) {
     }
     function clickedACB(target) {
       //TODO topography, if time
+      getMigrationCountries(target.id);
       showDetailView(target.id);
       props.setCountryID(target.id);
       props.model.setCountryID(target.id);
@@ -191,41 +202,55 @@ function WorldMap(props) {
       //TODO topography, if time
       showDetailView(target.id);
     }
-    function showDetailView(id) {
-      if (id) {
-        // just to avoid crash
-        var countryId = id;
+    function getMigrationCountries(countryId) {
+      if (countryId != 900) {
         if (props.view == 0)
           migrationCountries = props.model.getImmigrantionCountries(countryId);
         else if (props.view == 1)
           migrationCountries = props.model.getEmigrantionCountries(countryId);
-        if (migrationCountries) {
+      }
+    }
+    function showDetailView(id) {
+      if (
+        //check if immi/emi detail view
+        id &&
+        (props.view == 0 || props.view == 1) &&
+        props.countryId != 900
+      ) {
+        getMigrationCountries(props.countryId);
+
+        if (props.view != 2 && migrationCountries) {
           var zoomFeatures = data.features.filter((country) => {
             return migrationCountries.some((e) => e.id == country.id);
           });
           createArrows(zoomFeatures);
           zoomFeatures.push(selectedCountryFeature);
-          setZoomCountries({
-            type: "FeatureCollection",
-            features: zoomFeatures,
-          });
+
+          if (
+            !zoomCountries ||
+            JSON.stringify(zoomFeatures) !=
+              JSON.stringify(zoomCountries.features)
+          ) {
+            setZoomCountries({
+              type: "FeatureCollection",
+              features: zoomFeatures,
+            });
+          }
         } else setZoomCountries(selectedCountryFeature);
       }
     }
 
     function createArrows(targetCountries) {
-      setArrows(
-        targetCountries.map((targetCountry) => {
-          return {
-            type: "LineString",
-            data: targetCountry.id,
-            coordinates: [
-              getCenter(selectedCountryFeature),
-              getCenter(targetCountry),
-            ],
-          };
-        })
-      );
+      arrows = targetCountries.map((targetCountry) => {
+        return {
+          type: "LineString",
+          data: targetCountry.id,
+          coordinates: [
+            getCenter(selectedCountryFeature),
+            getCenter(targetCountry),
+          ],
+        };
+      });
     }
 
     function getCenter(feature) {
@@ -249,19 +274,8 @@ function WorldMap(props) {
     //go back to main view
     if (data && props.countryId == 900 && selectedCountryFeature) {
       selectedCountryFeature = undefined;
-      setZoomCountries(undefined);
+      if (zoomCountries) setZoomCountries(undefined);
       svg.selectAll(".arrow").remove();
-    }
-
-    if (
-      props.view &&
-      view != props.view &&
-      props.countryId &&
-      props.countryId != 900
-    ) {
-      ////console.log("view changed");
-      view = props.view;
-      showDetailView(props.countryId);
     }
   }, [
     data,
@@ -274,7 +288,6 @@ function WorldMap(props) {
   ]);
 
   if (!data) {
-    //////console.log("loading");
     return <pre>Loading...</pre>;
   }
   return (
@@ -342,7 +355,10 @@ function WorldMap(props) {
     var val = getMigrationDataByCountry(countryId);
 
     if (val) {
-      var number = Math.abs(val).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      var number = Math.abs(val)
+        .toFixed(2)
+        .toLocaleString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       var header = props.model.codeToName(countryId) + "<br/>";
       var displayValue = "";
       var color;
@@ -377,7 +393,10 @@ function WorldMap(props) {
                 .toFixed(2)
                 .toLocaleString() + " %";
           } else {
-            let value = data.value.toFixed(0).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            let value = data.value
+              .toFixed(0)
+              .toLocaleString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             displayValue += value + " people";
           }
           if (props.view == 0) displayValue += " emigrated to ";
