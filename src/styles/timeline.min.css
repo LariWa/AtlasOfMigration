@@ -2,6 +2,7 @@
 body {
   background: #060918;
   overflow: hidden;
+  background-image: url("icons/background.png");
 }
 h1,
 h2 {
@@ -43,16 +44,16 @@ button {
 }
 #timeLine {
   position: absolute;
-  margin-left: 10vw;
   box-shadow: 0px 0px 22px rgba(8, 12, 29, 0.08);
   background: rgba(8, 35, 53, 0.5);
-  backdrop-filter: blur(26px);
+  backdrop-filter: blur(10px);
   border-radius: 14px;
   color: #eeeeee;
-  top: 80vh;
-  right: 0;
+  bottom: -98vh;
+  left: 28.5vw;
+  padding-top: 15px;
 }
 #timeLine rect {
-  width: 3vw;
+  width: 40px;
   cursor: pointer;
 }
