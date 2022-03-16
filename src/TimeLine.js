@@ -32,7 +32,7 @@ const unDef = "darkgrey";
 //immigration = 0, emmigration 1, net migration=2, start=3
 const colors = [immiColor, emiColor, netColor, unDef];
 
-function TimeLine({ model, year, setYear, view }) {
+function TimeLine({ model, setYear, view, year }) {
   const svgContainerRef = useRef(null);
   //const [year, setYear] = useState(model.year);
   const [countryID, setCountryID] = useState(model.countryID);
@@ -123,18 +123,16 @@ net migration: 2 --> ? destination = origin immi - emi ??
   };
 
   const margin = { top: 8, left: 60, bottom: 20, right: 10 };
-
+  /* color of bars */
   const showSelect = () => {
-    document.querySelectorAll(".time").forEach(element => {
+    document.querySelectorAll(".time").forEach((element) => {
       if (element.id != year) {
         element.style.opacity = 0.4;
       }
-   })
-  }
+    });
+  };
 
   showSelect();
-  /* color of bars */
-
   //  useLayoutEffect(() => {
   useEffect(() => {
     ////console.log(view, ": 0: imi, 1:emi");
@@ -195,19 +193,19 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .data(data)
 
         .join("rect")
-        .attr("class", "time")
         .attr("id", (d) => timeFormat(d.date))
         .attr("value", (d) => d.total)
+        .attr("class", "time")
         .attr("x", (d) => xScale(d.date) - 35)
         .attr("y", (d) => yScale(d.total) - shiftXAxis - 15) //This value is strange!!
+        .attr("width", dx)
+        .attr("opacity", (d) => (year != timeFormat(d.date) ? "0.3" : "1"))
         .attr(
           "height",
           (d) =>
             dimensions.height - margin.top - margin.bottom - yScale(d.total)
         )
         //.attr("height", d => yScale(d.total)/2) //base on data
-        .attr("width", dx )
-        .attr("opacity", (d) => year != timeFormat(d.date) ? "0.3" : "1")
         .style("fill", colors[view]);
 
       var arrowTip = d3
@@ -217,7 +215,10 @@ net migration: 2 --> ? destination = origin immi - emi ??
           // ////console.log(event.target.getAttribute("x"));
 
           // ////console.log(xScale(Number(event.target.getAttribute("x"))));
-          let number = event.target.getAttribute("value").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          // return "Total: " + event.target.getAttribute("value");
+          let number = event.target
+            .getAttribute("value")
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
           return "Total: " + number;
         });
 
@@ -229,9 +230,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
           arrowTip.hide(d);
         })
         .on("mouseover", function (d) {
-          if (view != 2) {
-            arrowTip.show(d, this);
-          }
+          arrowTip.show(d, this);
         })
         .on("mouseleave", function (d) {
           arrowTip.hide(d);
