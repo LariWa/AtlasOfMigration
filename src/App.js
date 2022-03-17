@@ -25,15 +25,15 @@ function App() {
   const scaleValues = [
     //0 total number //1 population
     [
-      [0, 50000000], //immigration
-      [0, 50000000], //emigration
-      [-11000000, 110000000], //net migration
+      [0, 10000000], //immigration
+      [0, 10000000], //emigration
+      [-10000000, 10000000], //net migration
     ],
 
     [
-      [0, 90], //immigration
-      [0, 100], //emigration
-      [-50, 50], //net migration
+      [0, 30], //immigration
+      [0, 30], //emigration
+      [-20, 20], //net migration
       ,
     ],
   ];
@@ -98,9 +98,15 @@ function App() {
         <Start enter={setPressed} loading={loading} />
       ) : (
         <>
-          <TimeLine model={dataModel} year={year} setYear={setYear} view={view} />
+          <TimeLine
+            model={dataModel}
+            year={year}
+            setYear={setYear}
+            view={view}
+          />
           <WorldMap
-            scale={sliderValue}
+            filterValues={sliderValue}
+            sliderValues={scale}
             countryId={countryID}
             setView={setView}
             model={dataModel}

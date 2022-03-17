@@ -295,7 +295,7 @@ function WorldMap(props) {
     props.year,
     props.countryId,
     props.view,
-    props.scale,
+    props.filterValues,
   ]);
 
   if (!data) {
@@ -320,9 +320,28 @@ function WorldMap(props) {
     var val = getMigrationDataByCountry(country);
 
     if (!val) return "darkgray"; //no data available
-    if (val < props.scale[1] && val > props.scale[0])
+    if (checkFilter(val))
       return colorScales[+props.isPopulationView][props.view](val);
     else return "grey";
+  }
+  function checkFilter(val) {
+    if (val < props.filterValues[1] && val > props.filterValues[0]) return true;
+
+    if (
+      props.sliderValues[1] == props.filterValues[1] &&
+      val > props.filterValues[0]
+    )
+      return true;
+    if (
+      props.sliderValues[0] == props.filterValues[0] &&
+      val < props.filterValues[1]
+    )
+      return true;
+    if (
+      props.sliderValues[0] == props.filterValues[0] &&
+      props.sliderValues[1] == props.filterValues[1]
+    )
+      return true;
   }
   function getDetailViewColor(country) {
     if (
