@@ -10,7 +10,10 @@ export const useMapData = () => {
   useEffect(() => {
     json(worldJSONUrl).then((topojsonData) => {
       const { countries } = topojsonData.objects;
-      setMapData(feature(topojsonData, countries)); //convert to geojson is easier to work with (topojson better to save data)
+      //console.log(feature(topojsonData, countries));
+      var data = feature(topojsonData, countries);
+      data.features = data.features.filter((item) => item.id != "010"); //remove antarctica
+      setMapData(data); //convert to geojson is easier to work with (topojson better to save data)
     });
   }, []);
 

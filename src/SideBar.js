@@ -5,49 +5,57 @@ import {
   ImmigrationButton,
   EmigrationButton,
   MigrationButton,
+  CalculationButton,
 } from "./styles/components/Button.js";
 import { CountryNameID } from "./const/CountryNameID";
+import immigrationIcon from "./styles/icons/ImmigrationIcon.svg";
+import emigrationIcon from "./styles/icons/EmigrationIcon.svg";
+import migrationIcon from "./styles/icons/NetMigrationIcon.svg";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 /* immigration = 0, emigration = 1, net migration = 2 */
 const information = [
-  "Immigration is the international movement of people to a destination country of which they are not natives or where they do not possess citizenship in order to settle as permanent residents or naturalized citizens.",
+  "Immigration is the international movement of people to a destination country of which they are not natives or where they do not possess citizenship in order to settle as permanent residents.",
   "Emigration is the act of leaving a resident country or place of residence with the intent to settle elsewhere (to permanently leave a country).",
-  "Net migration is the difference between immigration into and emigration from the area during the year. Net migration is therefore negative when the number of emigrants exceeds the number of immigrants.",
-  "Have you ever thought about why people migrate? Has time influenced our perception of migration? <br/> <br/>With the Atlas of Migration we created a visual tool that allows you to navigate through the increasingly complex landscape of international migration patterns.",
+  "Net migration is the difference between immigration into and emigration from the area. Net migration is therefore negative when the number of emigrants exceeds the number of immigrants.",
+  "The Atlas of Migration is a visual tool that allows you to navigate through the increasingly complex landscape of international migration patterns.",
 ];
+
 const headLine = ["Immigration", "Emigration", "Net Migration", "Welcome"];
 
-function SideBar({ model, year, setCountryID, countryID, view, setView }) {
+function SideBar({
+  model,
+  year,
+  setCountryID,
+  countryID,
+  setView,
+  view,
+  setScale,
+  scale,
+  calculation,
+  setCalculation,
+  sliderValue,
+  setSliderValue,
+}) {
   const [input, setInput] = useState("");
   const [nbrChoices, setNbrChoices] = useState(0);
   const [selCountries, setSelCountries] = useState([]);
-  const [value, setValue] = useState([0, 100]);
-  //let countryID = model.countryID;
-  const [name, setName] = useState(model.countryName);
   const [detailView, setDetailView] =
     useState(false); /* false world , true detail*/
+  const [value, setValue] = React.useState([0, 100]);
+  const [name, setName] = useState(model.countryName);
 
   useEffect(() => {
-    console.log(countryID);
-    console.log(model.countryName);
     setName(model.countryName);
-    //console.log(name);
-    //console.log(countryID);
     setDetailView(model.countryID != 900);
-  }, [view, year, countryID]);
+  }, [view, year, countryID, calculation]);
 
   const searchCountry = (e) => {
     if (e.key === "Enter") {
-      //console.log(input);
       if (nbrChoices === 1) {
         setInput(selCountries[0].name);
         setDetailView(true);
-        //console.log("country matched");
-        //console.log(selCountry);
-        //  console.log(selCountries[0].id);
         setCountryID(selCountries[0].id);
-        //setCountryName(model.codeToName(selCountries[0].id));
-
         model.setCountryID(selCountries[0].id);
       }
     }
@@ -59,14 +67,17 @@ function SideBar({ model, year, setCountryID, countryID, view, setView }) {
     const filteredInput = CountryNameID.filter(
       (x) => x.name.toLowerCase().indexOf(input.toLowerCase()) > -1
     );
-
     setNbrChoices(filteredInput.length);
     setSelCountries(filteredInput);
   };
 
+  /*  I need to check so this is not clicking outside   */
   const changeView = (e) => {
-    //console.log(e.target.id);
-    setView(e.target.value);
+    if (e.target.value) {
+      setView(e.target.value);
+    } else if (e.target.closest("button").value) {
+      setView(e.target.closest("button").value);
+    }
   };
 
   function valuetext(value) {
@@ -74,73 +85,170 @@ function SideBar({ model, year, setCountryID, countryID, view, setView }) {
   }
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setSliderValue(newValue);
   };
-  //  console.log(model.countryID);
-  //  console.log(model.countryName);
+
+  const changeCalculation = (e) => {
+    setCalculation(e.target.value);
+  };
+
+  const formatResult = (item) => {
+    return (
+      <div className="result">
+        <span style={{ display: "block", textAlign: "left" }}>{item.name}</span>
+      </div>
+    );
+  };
+
+  const showImmigrationCountries = () => {
+    let country = countryID;
+    let countries = model.getImmigrantionCountries(country);
+    const html = []
+      countries.forEach((value) => (
+        html.push(<li>{value.name}</li>)
+      ))
+    return html;
+  };
+
+  const showEmigrationCountries = () => {
+    let country = countryID;
+    let countries = model.getEmigrantionCountries(country);
+    const html = []
+      countries.forEach((value) => (
+        html.push(<li>{value.name}</li>)
+      ))
+    return html;
+  };
+
+  const numberWithComma = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   return (
     <div className="sideBar">
-      {detailView ? (
+      {detailView && (
         <div>
           <button
             id="world"
+            className={`backButton-${view != 3 ? view : "3"}`}
             onClick={() => {
               setDetailView(false);
               model.setCountryID(900);
               setCountryID(900);
             }}
           >
-            {" "}
-            Back
+            Back to World View
           </button>
-          <h3> Year: {year} </h3>
-          <h3> Country: {name} </h3>
         </div>
-      ) : (
+      )}
+      {detailView ? <h1 className="country"> {name} </h1>: <h1> {headLine[view]} </h1>}
+
+      {detailView && view == 0 && (
+        <div>
+          <h2>Top 5 Immigration Destinations</h2>
+          <ul>
+          {showImmigrationCountries()}
+          </ul>
+        </div>
+      )}
+
+      {detailView && view == 1 && (
+        <div>
+          <h2>Top 5 Emigration Destinations</h2>
+          <ul>
+          {showEmigrationCountries()}
+          </ul>
+        </div>
+      )}
+
+
+      {detailView ? "" : <p>{information[view]}</p>}
+
+      {!detailView && (
+      <div id="searchBox">
+        <h2>What country are you looking for?</h2>
+        <ReactSearchAutocomplete
+          items={CountryNameID}
+          onSelect={(item) => {
+            setDetailView(true);
+            setCountryID(item.id);
+            model.setCountryID(item.id);
+          }}
+          formatResult={formatResult}
+          maxResults={3}
+          styling={{
+            backgroundColor: "transparent",
+            color: "white",
+            iconColor: "#EEEEEE",
+            borderRadius: "0px",
+            border: "0px solid transparent",
+          }}
+        />
+      </div>
+      )}
+
+      <div className="filter">
+      {view == 3 || detailView ? <h2>What do you want to know more about?</h2> : ""}
+        <ImmigrationButton name={view} value="0" onClick={changeView}>
+          <img src={immigrationIcon} />
+          <br />
+          Show Immigration
+        </ImmigrationButton>
+        <MigrationButton name={view} value="2" onClick={changeView}>
+          <img src={migrationIcon} />
+          <br />
+          Show Net Migration
+        </MigrationButton>
+        <EmigrationButton name={view} value="1" onClick={changeView}>
+          <img src={emigrationIcon} />
+          <br />
+          Show Emigration
+        </EmigrationButton>
+      </div>
+
+      {view != 3 && (
+      <div className="calculationMode">
+      <h2>Choose calculation mode:</h2>
+        <CalculationButton
+          name={calculation.toString()}
+          onClick={changeCalculation}
+          value="true"
+          className={view}
+        >
+          Total Numbers
+        </CalculationButton>
+        <CalculationButton
+          name={calculation.toString()}
+          onClick={changeCalculation}
+          value="false"
+          className={view}
+        >
+          % of Population
+        </CalculationButton>
+      </div>
+      )}
+
+      {!detailView && view != 3 && (
         <>
-          <h1>{headLine[view]}</h1>
-          <p>{information[view]}</p>
-
-          <div className="filter">
-            <h2>What do you want to know more about?</h2>
-            <ImmigrationButton name={view} value="0" onClick={changeView}>
-              Show Immigration
-            </ImmigrationButton>
-            <MigrationButton name={view} value="2" onClick={changeView}>
-              Show Net Migration
-            </MigrationButton>
-            <EmigrationButton name={view} value="1" onClick={changeView}>
-              Show Emigration
-            </EmigrationButton>
-          </div>
-
           <Slider
+            id={`slider-${view != 3 ? view : "3"}`}
+            className={calculation}
             getAriaLabel={() => ""}
-            value={value}
+            value={sliderValue}
+            min={scale[0]}
+            max={scale[1]}
             onChange={handleChange}
-            valueLabelDisplay="auto"
             getAriaValueText={valuetext}
+            valueLabelDisplay="auto"
+            valueLabelFormat={value => numberWithComma(value)}
           />
-
-          <div id="searchBox">
-            <h2>What country are you looking for?</h2>
-            <input
-              type="text"
-              id="inputField"
-              onChange={onInput}
-              onKeyDown={searchCountry}
-              value={input}
-              placeholder="Search..."
-            />
-            <select name="countries" style={{ minWidth: 180 }}>
-              {selCountries.map((x) => (
-                <option key={x.id} value={x.name}>
-                  {" "}
-                  {x.name}{" "}
-                </option>
-              ))}
-            </select>
-          </div>
+          <br />
+          <label id="lower" className={`${view != 3 ? "" : "hide"}`}>
+            {numberWithComma(scale[0])}
+          </label>
+          <label id="upper" className={`${view != 3 ? "" : "hide"}`}>
+            {numberWithComma(scale[1])}
+          </label>
         </>
       )}
     </div>

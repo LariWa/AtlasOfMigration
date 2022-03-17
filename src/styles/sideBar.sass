@@ -1,5 +1,10 @@
 @import base
 
+$ImmigrationGradient: linear-gradient(90.89deg, #EEEEEE 1.36%, #F29F05 30%)
+$EmigrationGradient: linear-gradient(90.89deg, #EEEEEE 1.36%, #00DFF0 30%)
+$MigrationGradient: linear-gradient(90.89deg, #F29F05 1.36%, #EEEEEE 10%, #00DFF0 40%)
+$MigrationGradientPercent: linear-gradient(90.89deg, #F29F05 20%, #EEEEEE 50%, #00DFF0 80%)
+
 .sideBar
   position: absolute
   left: 0
@@ -19,13 +24,33 @@
   -moz-user-select: none
   -ms-user-select: none
   user-select: none
+  h1.country
+    margin-top: 5vh
   p
     width: 90%
+    height: 12vh
+  .year
+    margin-top: -1.3vh
   .filter
-    margin-top: 5vh
+    h2
+      margin-top: 5vh
     button
       margin-top: 10px
-      height: 80px
+      padding-bottom: 15px
+    img
+      filter: invert(90%)
+      width: 65%
+      padding-top: 10px
+      padding-bottom: 3px
+  .calculationMode
+    margin-top: 4vh
+    h2
+      padding-bottom: 5px
+    button
+      width: 46%
+      height: 35px
+  ul
+    margin-left: -10px
 
 #searchBox
   background: linear-gradient(180deg, #0F354A 0%, rgba(8, 22, 39, 0.61) 100%)
@@ -35,9 +60,10 @@
   min-width: 265px
   height: 10vh
   margin-top: 10vw
-  padding-bottom: 10vh
+  padding-bottom: 19vh
   position: absolute
-  bottom: 9vh
+  bottom: 4vh
+  color: $text-color
   h2, input
     margin: 0 12%
   h2
@@ -45,10 +71,100 @@
   input
     font-size: $text-size
     color: $text-color
-    width: 76%
+    width: 100%
     font-family: $roboto
     background: none
     border: none
     border-bottom: solid 1px $text-color
-    padding-bottom: 5px
+    padding-bottom: 8px
     margin-top: 20px
+    margin-left: -7%
+    padding-left: 30px
+  .search-icon
+    margin-left: 12%
+    margin-bottom: -5px
+  .clear-icon
+    margin-bottom: -5px
+    margin-right: 12%
+    margin-left: -18%
+  .wrapper
+    color: $text-color
+    font-size: $text-size
+    font-family: $roboto
+    background: none
+    div:nth-child(2)
+      padding: 2px 0
+      .search-icon
+        fill: transparent
+      .line
+        display: none
+  .result
+    &:hover
+      color: #0F354A
+
+
+#slider-0, #slider-1, #slider-2, #slider-3
+  background: $dark
+  color: transparent
+  padding: 6px !important
+  width: 85% !important
+  margin-left: 3%
+  margin-top: 2vh
+  border-radius: 6px !important
+  margin-bottom: 4px
+  height: 0 !important
+  color: $text-color !important
+  .MuiSlider-thumb
+    width: 18px !important
+    height: 18px !important
+
+#slider-1
+  background: $ImmigrationGradient
+
+#slider-0
+  background: $EmigrationGradient
+
+#slider-2
+  background: $MigrationGradient
+
+#slider-2.false
+  background: $MigrationGradientPercent
+
+#slider-3
+  background: $dark
+  color: transparent !important
+  pointer-events: none
+  .MuiSlider-thumb
+    display: none
+
+.MuiSlider-thumb
+  height: 17px
+  width: 17px
+  background: #fff
+  border: 3px solid $dark
+
+#lower
+  font-size: 12px
+
+#upper
+  font-size: 12px
+  float: right
+  margin-right: 5%
+
+#world
+  width: 100%
+
+#world.backButton-0
+  &:hover
+    background: $blue
+
+#world.backButton-1
+  &:hover
+    background: $orange
+
+#world.backButton-2, #world.backButton-3
+  &:hover
+    background: $purple
+
+.hide
+  display: none

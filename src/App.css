@@ -2,8 +2,12 @@
   position: relative;
   left: 0;
   top: 0;
+  background-color: #060918;
 }
-
+.mapContainer {
+  float: right;
+  margin-top: 7vh;
+}
 
 /*  START old react stuff ----------------------------------------------------- */
 .App-logo {
@@ -19,7 +23,7 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 0vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -34,7 +38,6 @@
 
 /* END Old react stuff ----------------------------------------------------- */
 
-
 .countryOutline {
   opacity: 0.8;
 }
@@ -47,18 +50,20 @@
 }
 /* Tooltip--------------------------------------------------------------------- */
 
-.d3-tip {
+.d3-tip,
+.d3-tip-map {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
+  background: linear-gradient(#0c2c3d, #0a2132, #081627);
+  color: white;
+  border-radius: 10px;
   pointer-events: none;
 }
 
 /* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
+.d3-tip:after,
+.d3-tip-map:after {
   box-sizing: border-box;
   display: inline;
   font-size: 10px;
@@ -70,7 +75,8 @@
 }
 
 /* Northward tooltips */
-.d3-tip.n:after {
+.d3-tip.n:after,
+.d3-tip-map.n:after {
   content: "\25BC";
   margin: -1px 0 0 0;
   top: 100%;
@@ -79,7 +85,8 @@
 }
 
 /* Eastward tooltips */
-.d3-tip.e:after {
+.d3-tip.e:after,
+.d3-tip-map.e:after {
   content: "\25C0";
   margin: -4px 0 0 0;
   top: 50%;

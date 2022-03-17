@@ -1,6 +1,6 @@
-import { TotalEmBothSex } from "./const/TotalEmBothSex";
-import { TotalEmMale } from "./const/TotalEmMale";
-import { TotalEmFemale } from "./const/TotalEmFemale";
+import { TotalImBothSex } from "./const/TotalImBothSex";
+import { TotalImMale } from "./const/TotalImMale";
+import { TotalImFemale } from "./const/TotalImFemale";
 import { CountryNameID } from "./const/CountryNameID";
 /* These objects also includes the world */
 
@@ -14,11 +14,12 @@ handles state (year, country) of the app and fetches data from database
  */
 class DataModel {
   constructor(year = 2020, countryID = WORLD) {
+    this.max = 0;
     this.numberOfArrows = 5;
     this.year = year;
     this.countryID = countryID;
     this.countryName = this.codeToName(this.countryID);
-    this.timeData = this.getTotalEmigration();
+    this.timeData = this.getImmigration_Sex();
   }
 
   setYear(x) {
@@ -38,38 +39,24 @@ class DataModel {
     //console.log("name: ", this.countryName);
   }
 
-  setView(x) {
-    this.view = x;
-  }
+  // setView(x) {
+  //   this.view = x;
+  // }
 
   /* get name of a country by code */
   codeToName(x = WORLD) {
-    //console.log(x);
     let obj = CountryNameID.filter((item) => item.id == x); // catch both ints and strings
     return obj[0] == null ? null : obj[0].name;
   }
 
-  /* TODO: return an array with unique objects {name: ID, id: countryname}
-    with ID and countrynames as listed in the UN dataset */
-  getCountryNameID(res) {
-    let cnid = res.map((x) => ({
-      name: x.DestinationName,
-      id: x.DestinationID,
-    }));
-    console.log(cnid);
-
-    //TODO: remove duplicates
-  }
-
   /*
-    Net emigration from destination for all years and sex
+    Net immigration to destination for all years and sex
         destination: countrycode, sex (optional): m = -1 / f = 1 / both = 0
         Return: An array of objects with {date: year (Date), total: total emigration (int)}  */
-  getTotalEmigration(destination = WORLD, sex = 0) {
-    let path = TotalEmBothSex;
-    if (sex != 0) path = sex === 1 ? TotalEmFemale : TotalEmMale;
+  getImmigration_Sex(destination = WORLD, sex = 0) {
+    let path = TotalImBothSex;
+    if (sex != 0) path = sex === 1 ? TotalImFemale : TotalImMale;
     let data = path[destination];
-    //console.log(data &&data[0]);
 
     //filter everything that is not year data
     // Object.key(data[0])
@@ -80,11 +67,17 @@ class DataModel {
       delete data[0].Area; //quick fix
       let res = Object.entries(data[0]).map(([key, value]) => ({
         date: new Date(key, 6), // 6 equals 1 July
-        total: Number(value.replaceAll(" ", "")),
+        total: this.getValue(value),
       }));
       //console.log(res);
       return res;
     }
+  }
+
+  getValue(x) {
+    if (x === 0) return 0;
+    if (x === "..") return -1;
+    else return Number(x.split(" ").join(""));
   }
 
   /*  Net immigration to destination for all years
@@ -118,6 +111,14 @@ class DataModel {
         return data.DestinationID == destination;
       });
       if (value && value[0]) {
+        if (
+          this.max < parseInt(value[0][year].split(" ").join("")) &&
+          destination &&
+          destination != 900
+        ) {
+          this.max = parseInt(value[0][year].split(" ").join(""));
+          this.maxCountry = value[0];
+        }
         return parseInt(value[0][year].split(" ").join(""));
       }
     }
@@ -183,6 +184,26 @@ class DataModel {
     if (immi && emmi) return immi / emmi;
     return 0;
   }
+
+  getNetMigrationValue(country, year) {
+    //TODO decide on ratio or substract
+    if (!year) year = this.year;
+    var immi = this.getImmigrationValue(country, year);
+    var emmi = this.getEmigrationValue(country, year);
+    if (immi && emmi) return immi - emmi;
+    return 0;
+  }
+
+  getNetMigrationValuePopulation(country, year) {
+    //TODO decide on ratio or substract
+    if (!year) year = this.year;
+    var immi = this.getImmigrationValue(country, year);
+    var emmi = this.getEmigrationValue(country, year);
+    var pop = this.getPopulationValue(country, year);
+
+    if (immi && emmi && pop) return ((immi - emmi) / (pop * 1000)) * 100;
+    return 0;
+  }
   //this calculation does not make sense for a ratio?
   getNetRatioOverPopulationValue(country, year) {
     //(The Net migration value / the population value) * 1000
@@ -198,7 +219,14 @@ class DataModel {
     if (!year) year = this.year;
     var pop = this.getPopulationValue(country, year);
     var emmi = this.getEmigrationValue(country, year);
-    if (pop && emmi) return (emmi / (pop * 1000)) * 100; // I multiplied the population value by 1000
+    if (pop && emmi) {
+      var value = (emmi / (pop * 1000)) * 100;
+      // if (this.max < value) {
+      //   this.max = value;
+      //   this.maxCountry = this.codeToName(country);
+      // }
+      return (emmi / (pop * 1000)) * 100;
+    } // I multiplied the population value by 1000
     // as the value is presented in thousands;
     return 0;
   }
@@ -214,6 +242,7 @@ class DataModel {
     return 0;
   }
   //get emigration value for specified country
+
   getEmigrationValue(origin, year) {
     if (!year) year = this.year;
     if (this.emigrationData)
@@ -221,11 +250,10 @@ class DataModel {
         return data.OriginID == origin;
       });
     if (value && value[0]) {
-      if (this.max < parseInt(value[0][year].split(" ").join("")))
-        this.max = parseInt(value[0][year].split(" ").join(""));
       return parseInt(value[0][year].split(" ").join(""));
     }
   }
+
   getPopulationValue(country, year) {
     if (!year) year = this.year;
     if (this.populationData)
@@ -274,6 +302,7 @@ class DataModel {
       console.log(this.c_data);
     }
   }
+
   loadData() {
     const component = this;
     return Promise.all([getMigrationData(), getPopulationData()]).then();

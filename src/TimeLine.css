@@ -1,21 +1,18 @@
 /* Temp CSS ------------------------------------------ */
 
-
-#timeLine{
+#timeLine {
   position: absolute;
-
-
+  /* top: 80vh;
+  left: 20vw; */
 }
 
-
-
 .tooltip {
-    position: absolute;
-    text-align: center;
-    width: 120px;
-    padding: 2px;
-    font-size: 0.7em;
-    background: black;
-    color: white;
-    pointer-events: none;
+  position: absolute;
+  text-align: center;
+  width: 120px;
+  padding: 2px;
+  font-size: 0.7em;
+  background: black;
+  color: white;
+  pointer-events: none;
 }
