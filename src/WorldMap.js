@@ -19,7 +19,7 @@ let arrows;
 function WorldMap(props) {
   const height = useWindowDimensions().height * 0.8;
   var width = useWindowDimensions().width * 0.73;
-  if (useWindowDimensions().width * 0.2)
+  if (useWindowDimensions().width * 0.2 < 270)
     width =
       useWindowDimensions().width - (270 + useWindowDimensions().width * 0.07);
   const mapContainerRef = useRef();
