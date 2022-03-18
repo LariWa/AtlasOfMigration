@@ -166,6 +166,7 @@ function WorldMap(props) {
 
       //arrows
       if (arrows && selectedCountryFeature) {
+        console.log(arrows);
         svg.selectAll(".arrow").remove();
         svg
           .selectAll("arrows")
@@ -178,7 +179,7 @@ function WorldMap(props) {
           })
           .style("fill", "none")
           .style("stroke", getArrowColor())
-          .style("stroke-width", 4)
+          .style("stroke-width", (feature) => getArrowWidth(feature.data))
           .attr("markerWidth", 50)
           .attr("markerHeight", 50)
           .attr("marker-end", "url(#arrow)")
@@ -348,8 +349,8 @@ function WorldMap(props) {
       migrationCountries &&
       migrationCountries.find((item) => item.id == country)
     ) {
-      if (props.view == 0) return emiColor;
-      if (props.view == 1) return immiColor;
+      if (props.view == 0) return getColorTop5(true, country);
+      if (props.view == 1) return getColorTop5(false, country);
       if (props.view == 2) return "LightGrey";
     }
     if (selectedCountryFeature.id == country) {
@@ -363,9 +364,29 @@ function WorldMap(props) {
     }
     return "lightgrey";
   }
+  function getColorTop5(immi, country) {
+    var index =
+      migrationCountries.findIndex((item) => item.id == country) * -1 + 4;
+    var colorScale;
+    if (immi)
+      colorScale = d3
+        .scaleLinear()
+        .domain([0, 4])
+        .range(["#ffedae", "#ffcc13"]);
+    else
+      colorScale = d3
+        .scaleLinear()
+        .domain([0, 4])
+        .range(["#E0FFFF", "#008B8B"]);
+    return colorScale(index);
+  }
   function getArrowColor() {
     if (props.view == 0) return "#a88905";
     if (props.view == 1) return "darkcyan";
+  }
+  function getArrowWidth(id) {
+    //get index of migrationCountries with id
+    return migrationCountries.findIndex((item) => item.id == id) * -1 + 5;
   }
   function getMigrationDataByCountry(countryId) {
     if (!props.isPopulationView) {
@@ -385,10 +406,11 @@ function WorldMap(props) {
     var val = getMigrationDataByCountry(countryId);
 
     if (val) {
-      var number = Math.abs(val)
-        .toFixed(2)
-        .toLocaleString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      var number = Math.abs(val);
+      props.isPopulationView
+        ? (number = number.toFixed(2))
+        : (number = number.toFixed(0));
+      number.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       var header = props.model.codeToName(countryId) + "<br/>";
       var displayValue = "";
       var color;
@@ -419,7 +441,7 @@ function WorldMap(props) {
         if (data) {
           if (props.isPopulationView) {
             displayValue +=
-              (data.value / props.model.getPopulationValue(countryId))
+              (data.value / props.model.getPopulationValue(data.id))
                 .toFixed(2)
                 .toLocaleString() + " %";
           } else {
@@ -429,10 +451,21 @@ function WorldMap(props) {
               .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             displayValue += value + " people";
           }
-          if (props.view == 0) displayValue += " emigrated to ";
-          if (props.view == 1) displayValue += " immigrated from ";
+          if (props.view == 0) {
+            color = emiColor;
+            displayValue += " emigrated to ";
+          }
+          if (props.view == 1) {
+            color = immiColor;
+            displayValue += " immigrated from ";
+          }
           displayValue += props.model.codeToName(props.countryId);
-          return header + displayValue;
+          header +
+            "<span style=color:" +
+            color +
+            ">" +
+            displayValue +
+            "</span>";
         }
       } else if (
         //main view or selected country
@@ -442,7 +475,10 @@ function WorldMap(props) {
         props.countryId == 900
       ) {
         if (props.isPopulationView) number += "%";
-        else number += " people";
+        else {
+          number += " people";
+        }
+
         if (props.view == 0) {
           color = immiColor;
           let value = number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -460,12 +496,6 @@ function WorldMap(props) {
       );
     } else
       return props.model.codeToName(countryId) + "<br/>" + " no data available";
-  }
-  function getArrowTipText(id) {
-    ////console.log(migrationCountries.find((el) => el.id == id));
-    if (props.view == 0) {
-    }
-    return migrationCountries.find((el) => el.id == id).value;
   }
 }
 
