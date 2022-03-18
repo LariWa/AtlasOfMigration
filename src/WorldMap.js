@@ -72,7 +72,7 @@ function WorldMap(props) {
       .attr("class", "d3-tip-map")
 
       .html(function (event) {
-        return displayMigrationValue(event.target.id);
+        return displayMigrationValue(event.target);
       });
 
     var arrowTip = d3
@@ -81,7 +81,7 @@ function WorldMap(props) {
 
       .html(function (event) {
         //TODO nice text
-        return displayMigrationValue(event.target.id);
+        return displayMigrationValue(event.target);
       });
 
     const mapContainer = d3.select(mapContainerRef.current);
@@ -202,7 +202,7 @@ function WorldMap(props) {
 
     function changeCountry(target) {
       //TODO topography, if time
-      showDetailView(target.id);
+      if (target) showDetailView(target.id);
     }
     function getMigrationCountries(countryId) {
       if (countryId != 900) {
@@ -278,7 +278,7 @@ function WorldMap(props) {
         return props.countryId == country.id;
       })[0];
       selectedCountry = props.countryId;
-      changeCountry(selectedCountryFeature);
+      if (selectedCountryFeature) changeCountry(selectedCountryFeature);
     }
     //go back to main view
     if (data && props.countryId == 900 && selectedCountryFeature) {
@@ -319,8 +319,7 @@ function WorldMap(props) {
   function getColor(country) {
     if (selectedCountryFeature) return getDetailViewColor(country);
     var val = getMigrationDataByCountry(country);
-
-    if (!val) return "darkgray"; //no data available
+    if (!val || country == null) return "darkgray"; //no data available
     if (checkFilter(val))
       return colorScales[+props.isPopulationView][props.view](val);
     else return "grey";
@@ -402,16 +401,18 @@ function WorldMap(props) {
         return props.model.getNetMigrationValuePopulation(countryId);
     }
   }
-  function displayMigrationValue(countryId) {
+  function displayMigrationValue(target) {
+    var countryId = target.id;
     var val = getMigrationDataByCountry(countryId);
-
     if (val) {
       var number = Math.abs(val);
       props.isPopulationView
         ? (number = number.toFixed(2))
         : (number = number.toFixed(0));
       number.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
       var header = props.model.codeToName(countryId) + "<br/>";
+      if (!target.id) header = target.name + "<br/>";
       var displayValue = "";
       var color;
 
@@ -494,8 +495,14 @@ function WorldMap(props) {
       return (
         header + "<span style=color:" + color + ">" + displayValue + "</span>"
       );
-    } else
-      return props.model.codeToName(countryId) + "<br/>" + " no data available";
+    } else {
+      var header = props.model.codeToName(countryId);
+      if (!target.id) {
+        header = target.getAttribute("name");
+      }
+
+      return header + "<br/>" + " no data available";
+    }
   }
 }
 
