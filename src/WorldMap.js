@@ -18,8 +18,10 @@ let arrows;
 
 function WorldMap(props) {
   const height = useWindowDimensions().height * 0.8;
-  const width = useWindowDimensions().width * 0.75;
-
+  var width = useWindowDimensions().width * 0.73;
+  if (useWindowDimensions().width * 0.2)
+    width =
+      useWindowDimensions().width - (270 + useWindowDimensions().width * 0.07);
   const mapContainerRef = useRef();
   const svgRef = useRef();
   const data = useMapData();
@@ -298,6 +300,7 @@ function WorldMap(props) {
     props.countryId,
     props.view,
     props.filterValues,
+    useWindowDimensions(),
   ]);
 
   if (!data) {
