@@ -55,17 +55,14 @@ function WorldMap(props) {
 
   useEffect(() => {
     d3.selectAll(".d3-tip-map").remove(); //remove all tooltips --> fixes bug
-    var rootProjection = d3.geoEquirectangular().fitSize([width, height], data);
 
-    var projection;
-    if (zoomCountriesCurrent)
-      projection = d3
-        .geoEquirectangular()
-        .fitSize([width, height], zoomCountriesCurrent || data);
-    else projection = d3.geoEquirectangular().fitSize([width, height], data);
+    var projection = d3
+      .geoEquirectangular()
+      .fitSize([width, height], zoomCountriesCurrent || data);
+    var rootProjection = d3
+      .geoEquirectangular()
+      .fitSize([width, height], zoomCountriesCurrent || data);
 
-    // .fitSize([width, height], selectedCountryFeature || data);
-    //   .precision(50); //might be good to avoid glitching
     const svg = d3.select(svgRef.current);
 
     //tooltip-----------------------------------------------------------
@@ -108,18 +105,18 @@ function WorldMap(props) {
         zoomed(event);
       });
     function zoomed(event) {
-      if (!selectedCountryFeature) {
-        var scale = rootProjection.scale();
-        var translate = rootProjection.translate();
-        var t = event.transform;
-        var tx = translate[0] - t.invertX(translate[0]);
-        var ty = translate[1] * t.k + t.y;
-        projection
-          .scale(t.k * scale)
-          .rotate([yaw(tx), 0, 0])
-          .translate([translate[0], ty]);
-        mapContainer.selectAll("path").attr("d", path.projection(projection));
-      }
+      // if (!selectedCountryFeature) {
+      var scale = rootProjection.scale();
+      var translate = rootProjection.translate();
+      var t = event.transform;
+      var tx = translate[0] - t.invertX(translate[0]);
+      var ty = translate[1] * t.k + t.y;
+      projection
+        .scale(t.k * scale)
+        .rotate([yaw(tx), 0, 0])
+        .translate([translate[0], ty]);
+      mapContainer.selectAll("path").attr("d", path.projection(projection));
+      // }
     }
     mapContainer.call(zoom);
     //keep track of view changes
