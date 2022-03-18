@@ -166,7 +166,6 @@ function WorldMap(props) {
 
       //arrows
       if (arrows && selectedCountryFeature) {
-        console.log(arrows);
         svg.selectAll(".arrow").remove();
         svg
           .selectAll("arrows")
@@ -216,35 +215,37 @@ function WorldMap(props) {
       if (
         //check if immi/emi detail view
         id &&
-        (props.view == 0 || props.view == 1) &&
+        (props.view == 0 || props.view == 1 || props.view == 2) &&
         props.countryId != 900
       ) {
-        getMigrationCountries(selectedCountry);
+        if (props.view == 0 || props.view == 1) {
+          getMigrationCountries(selectedCountry);
 
-        if (props.view != 2 && migrationCountries) {
-          var zoomFeatures = data.features.filter((country) => {
-            return migrationCountries.some((e) => e.id == country.id);
-          });
-          createArrows(zoomFeatures);
-          zoomFeatures.push(selectedCountryFeature);
-
-          if (
-            !zoomCountriesChange ||
-            JSON.stringify(zoomFeatures) !=
-              JSON.stringify(zoomCountriesChange.features)
-          ) {
-            setZoomCountriesChange({
-              type: "FeatureCollection",
-              features: zoomFeatures,
+          if (props.view != 2 && migrationCountries) {
+            var zoomFeatures = data.features.filter((country) => {
+              return migrationCountries.some((e) => e.id == country.id);
             });
-            zoomCountriesCurrent = {
-              type: "FeatureCollection",
-              features: zoomFeatures,
-            };
+            createArrows(zoomFeatures);
+            zoomFeatures.push(selectedCountryFeature);
+
+            if (
+              !zoomCountriesChange ||
+              JSON.stringify(zoomFeatures) !=
+                JSON.stringify(zoomCountriesChange.features)
+            ) {
+              setZoomCountriesChange({
+                type: "FeatureCollection",
+                features: zoomFeatures,
+              });
+              zoomCountriesCurrent = {
+                type: "FeatureCollection",
+                features: zoomFeatures,
+              };
+            }
           }
         } else {
           setZoomCountriesChange(selectedCountryFeature);
-          zoomCountriesCurrent = undefined;
+          zoomCountriesCurrent = selectedCountryFeature;
         }
       }
     }
