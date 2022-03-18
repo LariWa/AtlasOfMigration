@@ -443,8 +443,8 @@ function WorldMap(props) {
         if (data) {
           if (props.isPopulationView) {
             displayValue +=
-              (data.value / props.model.getPopulationValue(data.id))
-                .toFixed(2)
+              (data.value / (props.model.getPopulationValue(data.id) * 1000))
+                .toFixed(3)
                 .toLocaleString() + " %";
           } else {
             let value = data.value
