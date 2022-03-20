@@ -16,6 +16,7 @@ function App() {
 
   const [view, setViewState] = useState(3); //immigration = 0, emmigration 1, net migration=2, start=3
   const [loading, setLoading] = useState(true);
+  const [about, setabout] = useState(true);
   const [pressed, setPressed] =
     useState(true); /* change this to false to make startpage stay open */
   const [year, setYear] = useState(dataModel.year); //just a hack to make components rerender on year change
@@ -98,7 +99,12 @@ function App() {
         <Start enter={setPressed} loading={loading} />
       ) : (
         <>
-          <TimeLine model={dataModel} year={year} setYear={setYear} view={view} />
+          <TimeLine
+            model={dataModel}
+            year={year}
+            setYear={setYear}
+            view={view}
+          />
           <WorldMap
             scale={sliderValue}
             countryId={countryID}

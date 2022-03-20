@@ -103,20 +103,16 @@ function SideBar({
   const showImmigrationCountries = () => {
     let country = countryID;
     let countries = model.getImmigrantionCountries(country);
-    const html = []
-      countries.forEach((value) => (
-        html.push(<li>{value.name}</li>)
-      ))
+    const html = [];
+    countries.forEach((value) => html.push(<li>{value.name}</li>));
     return html;
   };
 
   const showEmigrationCountries = () => {
     let country = countryID;
     let countries = model.getEmigrantionCountries(country);
-    const html = []
-      countries.forEach((value) => (
-        html.push(<li>{value.name}</li>)
-      ))
+    const html = [];
+    countries.forEach((value) => html.push(<li>{value.name}</li>));
     return html;
   };
 
@@ -126,6 +122,11 @@ function SideBar({
 
   return (
     <div className="sideBar">
+      <div>
+        <a href="About.html">
+          <button> About </button>
+        </a>
+      </div>
       {detailView && (
         <div>
           <button
@@ -141,54 +142,57 @@ function SideBar({
           </button>
         </div>
       )}
-      {detailView ? <h1 className="country"> {name} </h1>: <h1> {headLine[view]} </h1>}
+      {detailView ? (
+        <h1 className="country"> {name} </h1>
+      ) : (
+        <h1> {headLine[view]} </h1>
+      )}
 
       {detailView && view == 0 && (
         <div>
           <h2>Top 5 Immigration Destinations</h2>
-          <ul>
-          {showImmigrationCountries()}
-          </ul>
+          <ul>{showImmigrationCountries()}</ul>
         </div>
       )}
 
       {detailView && view == 1 && (
         <div>
           <h2>Top 5 Emigration Destinations</h2>
-          <ul>
-          {showEmigrationCountries()}
-          </ul>
+          <ul>{showEmigrationCountries()}</ul>
         </div>
       )}
-
 
       {detailView ? "" : <p>{information[view]}</p>}
 
       {!detailView && (
-      <div id="searchBox">
-        <h2>What country are you looking for?</h2>
-        <ReactSearchAutocomplete
-          items={CountryNameID}
-          onSelect={(item) => {
-            setDetailView(true);
-            setCountryID(item.id);
-            model.setCountryID(item.id);
-          }}
-          formatResult={formatResult}
-          maxResults={3}
-          styling={{
-            backgroundColor: "transparent",
-            color: "white",
-            iconColor: "#EEEEEE",
-            borderRadius: "0px",
-            border: "0px solid transparent",
-          }}
-        />
-      </div>
+        <div id="searchBox">
+          <h2>What country are you looking for?</h2>
+          <ReactSearchAutocomplete
+            items={CountryNameID}
+            onSelect={(item) => {
+              setDetailView(true);
+              setCountryID(item.id);
+              model.setCountryID(item.id);
+            }}
+            formatResult={formatResult}
+            maxResults={3}
+            styling={{
+              backgroundColor: "transparent",
+              color: "white",
+              iconColor: "#EEEEEE",
+              borderRadius: "0px",
+              border: "0px solid transparent",
+            }}
+          />
+        </div>
       )}
 
       <div className="filter">
-      {view == 3 || detailView ? <h2>What do you want to know more about?</h2> : ""}
+        {view == 3 || detailView ? (
+          <h2>What do you want to know more about?</h2>
+        ) : (
+          ""
+        )}
         <ImmigrationButton name={view} value="0" onClick={changeView}>
           <img src={immigrationIcon} />
           <br />
@@ -207,25 +211,25 @@ function SideBar({
       </div>
 
       {view != 3 && (
-      <div className="calculationMode">
-      <h2>Choose calculation mode:</h2>
-        <CalculationButton
-          name={calculation.toString()}
-          onClick={changeCalculation}
-          value="true"
-          className={view}
-        >
-          Total Numbers
-        </CalculationButton>
-        <CalculationButton
-          name={calculation.toString()}
-          onClick={changeCalculation}
-          value="false"
-          className={view}
-        >
-          % of Population
-        </CalculationButton>
-      </div>
+        <div className="calculationMode">
+          <h2>Choose calculation mode:</h2>
+          <CalculationButton
+            name={calculation.toString()}
+            onClick={changeCalculation}
+            value="true"
+            className={view}
+          >
+            Total Numbers
+          </CalculationButton>
+          <CalculationButton
+            name={calculation.toString()}
+            onClick={changeCalculation}
+            value="false"
+            className={view}
+          >
+            % of Population
+          </CalculationButton>
+        </div>
       )}
 
       {!detailView && view != 3 && (
@@ -240,7 +244,7 @@ function SideBar({
             onChange={handleChange}
             getAriaValueText={valuetext}
             valueLabelDisplay="auto"
-            valueLabelFormat={value => numberWithComma(value)}
+            valueLabelFormat={(value) => numberWithComma(value)}
           />
           <br />
           <label id="lower" className={`${view != 3 ? "" : "hide"}`}>
