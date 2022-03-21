@@ -243,11 +243,11 @@ function SideBar({
           />
           <br />
           <label id="lower" className={`${view != 3 ? "" : "hide"}`}>
-            {view == 2 ? ">" : ""}
+            {view == 2 ? "<" : ""}
             {numberWithComma(scale[0])}
           </label>
           <label id="upper" className={`${view != 3 ? "" : "hide"}`}>
-            {"<"}
+            {">"}
             {numberWithComma(scale[1])}
           </label>
         </>
