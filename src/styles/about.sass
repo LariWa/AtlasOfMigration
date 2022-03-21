@@ -1,0 +1,53 @@
+@import base
+
+.about
+  margin: 0
+  padding: 0
+  z-index: 100
+  position: absolute
+  top: 10.2vh
+  right: 4vw
+  background: none
+  font-size: $text-size
+  font-family: $krona-one
+  box-shadow: none
+  text-align: right
+  display: flex
+  div
+    margin-left: auto
+  span
+    font-size: 12px
+    font-family: $roboto
+  img
+    height: 35px
+    float: right
+    padding-left: 10px
+  &:hover
+    color: #BD07DB
+
+#aboutButton-0
+  &:hover
+    color: #00DFF0
+
+#aboutButton-1
+  &:hover
+    color: #F29F05
+
+.blur
+  width: 100vw
+  height: 100vh
+  position: absolute
+  top: 0
+  left: 0
+  z-index: 90
+  backdrop-filter: $backdrop-filter
+
+.about-container
+  position: absolute
+  z-index: 100
+  top: 10vh
+  left: 10vw
+  width: 80vw
+  height: 80vh
+  background: linear-gradient(180deg, #0F354A 0%, #0B2235 100%)
+  box-shadow: 0px 0px 22px rgba(8, 12, 29, 0.39)

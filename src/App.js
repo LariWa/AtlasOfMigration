@@ -7,6 +7,7 @@ import "./styles/base.min.css";
 import WorldMap from "./WorldMap";
 import DataModel from "./DataModel";
 import Start from "./Start";
+import About from "./About";
 
 const dataModel = new DataModel();
 
@@ -16,7 +17,7 @@ function App() {
 
   const [view, setViewState] = useState(3); //immigration = 0, emmigration 1, net migration=2, start=3
   const [loading, setLoading] = useState(true);
-  const [about, setabout] = useState(true);
+  const [about, setAbout] = useState(false);
   const [pressed, setPressed] =
     useState(true); /* change this to false to make startpage stay open */
   const [year, setYear] = useState(dataModel.year); //just a hack to make components rerender on year change
@@ -81,6 +82,11 @@ function App() {
 
   return (
     <div className="container">
+      <About
+        about={about}
+        setAbout={setAbout}
+        view={view}
+      />
       <SideBar
         model={dataModel}
         year={year}

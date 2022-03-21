@@ -122,11 +122,6 @@ function SideBar({
 
   return (
     <div className="sideBar">
-      <div>
-        <a href="About.html">
-          <button> About </button>
-        </a>
-      </div>
       {detailView && (
         <div>
           <button
