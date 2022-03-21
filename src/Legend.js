@@ -2,34 +2,23 @@ import React, { useEffect, useLayoutEffect } from "react";
 import List from "@mui/material/List";
 //import * as d3 from "d3";
 
-/*
+const immiColor = "cyan";
+const emiColor = "#F29F05";
+const netColor = "purple";
+const unDef = "darkgrey";
+//immigration = 0, emmigration 1, net migration=2, start=3
+const colors = [immiColor, emiColor, netColor, unDef];
 
-
-*/
 function Legend({ enter, loading }) {
-  /*  use LayoutEffect() for updating d3 components? */
   useEffect(() => {
     //  console.log(loading);
     //d3.select(".nav").style("background-color", "red");
   }, []);
 
-  const onMouseClick = () => {
-    console.log("enter app");
-    //enter app
-  };
-
   return (
-    <div className=".legend" width="80vw" height="100%">
-      <h1>Welcome to the app year 1990 info...</h1>
-      {/*
-      <button
-        onClick={() => enter(true)}
-        disabled={loading}
-        style={{ zIndex: 99 }}
-      >
-      Start Exploring
-      </button>
-    */}
+    <div className=".legend" width="80vw" height="100%" background="red">
+      <h1>Legend</h1>
+      <List />
     </div>
   );
 }

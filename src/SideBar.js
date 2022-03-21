@@ -137,7 +137,7 @@ function SideBar({
               setCountryID(900);
             }}
           >
-            Back to World View
+            {/*Back to*/} World View
           </button>
         </div>
       )}
@@ -195,23 +195,28 @@ function SideBar({
         <ImmigrationButton name={view} value="0" onClick={changeView}>
           <img src={immigrationIcon} />
           <br />
-          Show Immigration
+          {/*Show */}
+          Immigration
+          <br />
+          <br />
         </ImmigrationButton>
         <MigrationButton name={view} value="2" onClick={changeView}>
           <img src={migrationIcon} />
           <br />
-          Show Net Migration
+          {/*Show*/}Net Migration
         </MigrationButton>
         <EmigrationButton name={view} value="1" onClick={changeView}>
           <img src={emigrationIcon} />
           <br />
-          Show Emigration
+          {/*Show*/}Emigration
+          <br />
+          <br />
         </EmigrationButton>
       </div>
 
       {view != 3 && (
         <div className="calculationMode">
-          <h2>Choose calculation mode:</h2>
+          <h2>{/*Choose calculation mode:*/}</h2>
           <CalculationButton
             name={calculation.toString()}
             onClick={changeCalculation}
