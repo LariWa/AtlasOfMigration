@@ -7,6 +7,7 @@ import "./styles/base.min.css";
 import WorldMap from "./WorldMap";
 import DataModel from "./DataModel";
 import Start from "./Start";
+import Legend from "./Legend";
 
 const dataModel = new DataModel();
 
@@ -44,6 +45,7 @@ function App() {
     ////console.log(dataModel.getMigrationValueAll(900, 300));
     setLoading(false);
   });
+
   function setTotalNumberView(val) {
     if (val) {
       //console.log(val);
@@ -104,6 +106,7 @@ function App() {
             setYear={setYear}
             view={view}
           />
+          <Legend />
           <WorldMap
             filterValues={sliderValue}
             sliderValues={scale}

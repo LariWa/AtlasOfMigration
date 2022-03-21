@@ -104,7 +104,9 @@ function SideBar({
     let country = countryID;
     let countries = model.getImmigrantionCountries(country);
     const html = [];
-    countries.forEach((value) => html.push(<li>{value.name}</li>));
+    countries.forEach((value) =>
+      html.push(<li key={value.id}>{value.name}</li>)
+    );
     return html;
   };
 
@@ -112,7 +114,9 @@ function SideBar({
     let country = countryID;
     let countries = model.getEmigrantionCountries(country);
     const html = [];
-    countries.forEach((value) => html.push(<li>{value.name}</li>));
+    countries.forEach((value) =>
+      html.push(<li key={value.id}>{value.name}</li>)
+    );
     return html;
   };
 
