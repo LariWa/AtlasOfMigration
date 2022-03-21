@@ -152,6 +152,22 @@ function About({ about, setAbout, view }) {
                       </li>
                     </ol>
                   </p>
+                  <h4>Refrences</h4>
+                  <p>
+                    [1] Shneiderman, Ben. "The eyes have it: A task by data type
+                    taxonomy for information visualizations." In Visual
+                    Languages, 1996. Proceedings., IEEE Symposium on, pp.
+                    336-343. IEEE, 1996.
+                  </p>
+                  <p>
+                    [2] Mazza, R. (2009). Introduction to Information
+                    Visualization. London: Springer London, Limited.
+                  </p>
+                  <p>
+                    [3] North, Chris (2012). Information Visualization. (2012).
+                    Handbook of Human Factors and Ergonomics (4. Aufl.) ed.
+                    Savendy, G. New York: Wiley.
+                  </p>
                 </p>
               </div>
             </body>
