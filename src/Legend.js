@@ -48,7 +48,13 @@ function Legend({ enter, loading }) {
   }, []);
 
   return (
-    <div className=".legend" width="10vw" height="10%">
+    <div
+      className=".legend"
+      width="10vw"
+      height="10%"
+      position="absolute"
+      top="200"
+    >
       <svg id="legend" height="50" width="250"></svg>
     </div>
   );
