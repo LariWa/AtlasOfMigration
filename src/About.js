@@ -32,50 +32,50 @@ function About({ about, setAbout, view }) {
         <>
           <div className="blur"></div>
           <div className="about-container">
-            <button onClick={hideAbout}>Back to application</button>
-              <div>
+            <button className="back" onClick={hideAbout}>Back to application</button>
+              <div className="about-content">
                 <h4> Who we are?</h4>
                 <ul>
                   <li>
                     <p>
-                      Fatemeh Bakhshoudeh. Role: Front-end development, UX
-                      design and User test. Email:
+                      Fatemeh Bakhshoudeh - Role: Front-end development, UX
+                      design and User test. Email:{" "}
                       <a href="fatemehb@kth.se">fatemehb@kth.se</a>
                     </p>
                   </li>
                   <li>
                     <p>
-                      Navya Sanjna Joshi. Role: Front-end, UI/UX design, User
-                      test. Email:
+                      Navya Sanjna Joshi - Role: Front-end, UI/UX design, User
+                      test. Email:{" "}
                       <a href="nawa@kth.se">nawa@kth.se</a>
                     </p>
                   </li>
                   <li>
                     <p>
-                      Larissa wagnerberge. Role: Data handling and calculation,
-                      back-end and front-end development. Email:
+                      Larissa Wagnerberger - Role: Data handling and calculation,
+                      back-end and front-end development. Email:{" "}
                       <a href="larissaw@kth.se">larissaw@kth.se</a>
                     </p>
                   </li>
                   <li>
                     <p>
-                      Anna Neander. Role: Data handling and calculation,
-                      back-end and front-end development. Email:
+                      Anna Neander - Role: Data handling and calculation,
+                      back-end and front-end development. Email:{" "}
                       <a href="neander@kth.se">neander@kth.se</a>
                     </p>
                   </li>
                   <li>
                     <p>
-                      Andrea Made haner. Role: Front-end development and UI/UX
-                      design. Email:
-                      <a href="neander@kth.se">neander@kth.se</a>
+                      Andrea Maderthaner - Role: Front-end development and UI/UX
+                      design. Email:{" "}
+                      <a href="andmad@kth.se">andmad@kth.se</a>
                     </p>
                   </li>
                 </ul>
                 <p>
                   We are an international group of KTH students who are
                   motivated to fight misconceptions about the migration pattern
-                  and trends. We implemented the “Atlas of Migration '' to
+                  and trends. We implemented the “Atlas of Migration" to
                   visually represent historical migration information of the
                   world and each country in detail (from 1990- 2020). The
                   platform can be used for explorative analysis. We defined this
@@ -87,11 +87,11 @@ function About({ about, setAbout, view }) {
                   </a>
                   .
                 </p>
-                <h4> What was Our goal?</h4>
+                <h4> What was our goal?</h4>
                 <p>
                   Based on Shnietherman’s “Mantra” we set our goal to build a
-                  platform that provides a historical Overview of migration data
-                  and enables users to perform Zooming and Filtering tasks and
+                  platform that provides a historical overview of migration data
+                  and enables users to perform zooming and filtering tasks and
                   view “More Details” if they will.
                 </p>
                 <h4>Data and API</h4>
@@ -125,7 +125,7 @@ function About({ about, setAbout, view }) {
                     course in the 2021{" "}
                     <a href="https://agyllang.github.io/DH2321-POP.FLO/about">
                       {" "}
-                      (POP.FLO){" "}
+                      (POP.FLO)
                     </a>
                     , to calculate net migration value as well as emigration,
                     immigration and net migration percentage.

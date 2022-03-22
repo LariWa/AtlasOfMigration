@@ -13,6 +13,7 @@
   box-shadow: none
   text-align: right
   display: flex
+  text-shadow: 0px 0px 22px rgba(8, 12, 50, 0.8)
   div
     margin-left: auto
   span
@@ -23,6 +24,7 @@
     float: right
     padding-left: 10px
     filter: invert(99%) sepia(6%) saturate(214%) hue-rotate(197deg) brightness(113%) contrast(87%)
+    text-shadow: 0px 0px 22px rgba(8, 12, 50, 0.8)
   &:hover
     color: #BD07DB
     img
@@ -52,13 +54,26 @@
 .about-container
   position: absolute
   z-index: 100
-  top: 10vh
+  top: 9vh
   left: 10vw
   width: 80vw
-  height: 80vh
-  background: linear-gradient(180deg, #0F354A 0%, #0B2235 100%)
-  box-shadow: 0px 0px 22px rgba(8, 12, 29, 0.39)
-  color: $text-color
-  overflow-y: scroll
-  div
-    padding: 0 5vw
+  a
+    color: #00DFF0
+  .back
+    margin-bottom: 10px
+    width: 20vw
+    margin-left: 60vw
+    &:hover
+      background: $blue
+  .about-content
+    background: linear-gradient(180deg, #0F354A 0%, #0B2235 100%)
+    box-shadow: 0px 0px 22px rgba(8, 12, 29, 0.39)
+    color: $text-color
+    overflow-y: scroll
+    padding: 0vh 5vw
+    height: 80vh
+    h4
+      padding-top: 22px
+    p
+      &:last-of-type
+        padding-bottom: 22px
