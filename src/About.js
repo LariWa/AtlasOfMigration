@@ -33,10 +33,6 @@ function About({ about, setAbout, view }) {
           <div className="blur"></div>
           <div className="about-container">
             <button onClick={hideAbout}>Back to application</button>
-            <head>
-              <title>About Atlas of Migration</title>
-            </head>
-            <body>
               <div>
                 <h4> Who we are?</h4>
                 <ul>
@@ -170,7 +166,6 @@ function About({ about, setAbout, view }) {
                   </p>
                 </p>
               </div>
-            </body>
           </div>
         </>
       )}
