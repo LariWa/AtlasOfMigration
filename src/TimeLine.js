@@ -193,15 +193,19 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .attr("value", (d) => d.total)
         .attr("class", "time")
         .attr("x", (d) => xScale(d.date))
-        .attr("y", (d) => yScale(d.total) - (height - margin.bottom))
+        .attr("y", (d) => yScale(d.total) - margin.top) //-35
         .attr("height", (d) => {
-          height - yScale(d.total);
-          //console.log("height:" + (height - yScale(d.total)));
-          //console.log(d.date);
-          //console.log("x:" + xScale(d.date));
-          //  console.log(xScale.invert(d.date));
-          //  console.log("test 80 " + xScale.invert(102.2));
+          height - margin.top - margin.bottom - yScale(d.total);
+          console.log(yScale(d.total));
+          console.log(height - margin.top - margin.bottom - yScale(d.total));
+          console.log(200.67);
         })
+        //.attr("height", 200.67)
+
+        //console.log("x:" + xScale(d.date));
+        //  console.log(xScale.invert(d.date));
+        //  console.log("test 80 " + xScale.invert(102.2));
+
         .attr("width", 30) //overridden by css?
         .attr("opacity", (d) => (year != timeFormat(d.date) ? "0.3" : "1")) //overridden?
         .style("fill", colors[view]);

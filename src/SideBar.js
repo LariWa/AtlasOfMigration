@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useLayoutEffect } from "react";
 import Slider from "@mui/material/Slider";
+import Legend from "./Legend";
 import "./styles/sideBar.min.css";
 import {
   ImmigrationButton,
@@ -259,6 +260,7 @@ function SideBar({
             {">"}
             {numberWithComma(scale[1])}
           </label>
+          <Legend />
         </>
       )}
     </div>

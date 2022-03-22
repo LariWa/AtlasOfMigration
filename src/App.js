@@ -7,7 +7,6 @@ import "./styles/base.min.css";
 import WorldMap from "./WorldMap";
 import DataModel from "./DataModel";
 import Start from "./Start";
-//import Legend from "./Legend";
 
 const dataModel = new DataModel();
 
