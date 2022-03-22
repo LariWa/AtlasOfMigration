@@ -323,10 +323,10 @@ function WorldMap(props) {
   function getColor(country) {
     if (selectedCountryFeature) return getDetailViewColor(country);
     var val = getMigrationDataByCountry(country);
-    if (!val || country == null) return "darkgray"; //no data available
+    if (!val || country == null) return "DimGray"; //no data available
     if (checkFilter(val))
       return colorScales[+props.isPopulationView][props.view](val);
-    else return "grey";
+    else return "lightgray";
   }
   function checkFilter(val) {
     if (val < props.filterValues[1] && val > props.filterValues[0]) return true;
