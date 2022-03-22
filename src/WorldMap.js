@@ -46,7 +46,7 @@ function WorldMap(props) {
       //netmigration
       d3
         .scaleLinear()
-        .domain([-20, 0, 20])
+        .domain([-30, 0, 30])
         .range([emiColor, "white", immiColor]),
     ],
   ];

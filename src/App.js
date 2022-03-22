@@ -33,7 +33,7 @@ function App() {
     [
       [0, 30], //immigration
       [0, 30], //emigration
-      [-20, 20], //net migration
+      [-30, 30], //net migration
       ,
     ],
   ];
