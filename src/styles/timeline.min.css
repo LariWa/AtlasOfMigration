@@ -42,7 +42,7 @@ button {
   filter: blur(400px);
   transform: rotate(-131.57deg);
 }
-#timeLine {
+#timelineContainer {
   position: absolute;
   box-shadow: 0px 0px 22px rgba(8, 12, 29, 0.08);
   background: rgba(8, 35, 53, 0.5);
@@ -50,10 +50,9 @@ button {
   border-radius: 14px;
   color: #eeeeee;
   bottom: -98vh;
-  left: 28.5vw;
-  padding-top: 15px;
+  left: 30vw;
 }
-#timeLine rect {
+#timeline rect {
   width: 40px;
   cursor: pointer;
 }

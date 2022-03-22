@@ -1,8 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import useWindowDimensions from "./useWindowDimensions.js";
-import * as d3module from "d3";
 import "./styles/timeline.min.css";
 import styled from "styled-components";
+import * as d3module from "d3";
 import d3tip from "d3-tip";
 import { timeParse } from "d3";
 const d3 = {
@@ -12,6 +12,7 @@ const d3 = {
 
 /* time runs 1990-2020, in 5 year interval + 2017 and 2019 */
 const yearRange = [
+  new Date(1985, 6, 1), //added just to not put a bar into the y axis
   new Date(1990, 6, 1), //6 equals 1 July
   new Date(1995, 6, 1),
   new Date(2000, 6, 1),
@@ -23,7 +24,6 @@ const yearRange = [
   new Date(2020, 6, 1),
 ];
 
-const yData = ["Pandemics", "Nature disaster"];
 const WORLD = 900;
 const immiColor = "cyan";
 const emiColor = "#F29F05";
@@ -38,10 +38,14 @@ function TimeLine({ model, setYear, view, year }) {
   const [countryID, setCountryID] = useState(model.countryID);
   const [sex, setSex] = useState(0);
   const [color, setColor] = useState("purple");
-  const dx = 40; //for now, set to responsive
+  //const dx = 40; //for now, set to responsive
   const timeFormat = d3.timeFormat("%Y");
   const timeDomain = yearRange.map((x) => timeFormat(x));
-  const axisMargin = 50; //for now
+  const ticks = yearRange.filter(
+    (x) => x != new Date(1985, 6, 1) && x != new Date(2025, 6, 1)
+  );
+  //  console.log(ticks);
+  //const axisMargin = 50; //for now
   let data = model.migrationData;
 
   /* get data for one year */
@@ -59,14 +63,9 @@ net migration: 2 --> ? destination = origin immi - emi ??
 */
 
   const getMigration = () => {
-    ////console.log(view);
     let obj = {};
-    let origin = WORLD,
-      destination = WORLD;
-    // //////console.log(model.countryID);
-    // //////console.log(view); //quick fix to take care of rerender and undefined view
-    ////console.log(model.countryID);
-    ////console.log(view); //quick fix to take care of rerender and undefined view
+    let origin, destination;
+    origin = destination = WORLD;
     if (true) {
       if (view == 0 || view == 1) {
         if (view == 0) destination = model.countryID;
@@ -78,13 +77,8 @@ net migration: 2 --> ? destination = origin immi - emi ??
           let key = i.toString();
           obj[key] = model.getNetMigrationValue(model.getCountryId(), i);
         }
-      ////console.log(model.getCountryId());
-      ////console.log(origin);
-      ////console.log(destination);
       if (view === 3) obj = model.getMigrationValueAll(origin, destination);
-      // //////console.log(obj);
       if (obj && obj != "undefined" && Object.keys(obj).length > 0) {
-        ////console.log(obj);
         delete obj.DestinationID;
         delete obj.DestinationName;
         delete obj.OriginName;
@@ -94,14 +88,13 @@ net migration: 2 --> ? destination = origin immi - emi ??
           date: new Date(key, 6), // 6 equals 1 July
           total: getValue(value),
         }));
-        ////console.log(res);
         return res;
       }
     }
   };
 
+  /* helper to check and parse value to number */
   const getValue = (x) => {
-    ////console.log("value ", x);
     if (typeof x == "number") return x;
     if (x === 0) return 0;
     if (x === "..") return -1;
@@ -110,20 +103,23 @@ net migration: 2 --> ? destination = origin immi - emi ??
 
   /* update this local or update model? */
   const updateYear = (x) => {
-    //format input to right year?
     setYear(x);
     model.setYear(x);
-    ////////console.log("new year", model.year);
   };
 
-  /* set to size of container ? */
+  /* adapt to window size */
   const dimensions = {
-    width: useWindowDimensions().width * 0.7,
+    width: useWindowDimensions().width * 0.4,
     height: useWindowDimensions().height * 0.17,
+    //width: 300,
+    //height: 120,
   };
 
-  const margin = { top: 8, left: 60, bottom: 20, right: 10 };
-  /* color of bars */
+  const margin = { top: 35, left: 45, bottom: 25, right: 25 };
+  const width = dimensions.width;
+  const height = dimensions.height;
+
+  /* diminish op bars of not selected year */
   const showSelect = () => {
     document.querySelectorAll(".time").forEach((element) => {
       if (element.id != year) {
@@ -133,53 +129,53 @@ net migration: 2 --> ? destination = origin immi - emi ??
   };
 
   showSelect();
+
   //  useLayoutEffect(() => {
   useEffect(() => {
-    ////console.log(view, ": 0: imi, 1:emi");
     data = getMigration();
     if (data) {
       if (view) setColor(colors[view]);
-      ////////console.log(data);
+
       const xScale = d3
         .scaleTime()
         .domain(d3.extent(yearRange))
-        .range([margin.left, dimensions.width - margin.right])
+        .range([margin.left, width - margin.right])
         .nice();
-
-      const shiftXAxis = 100;
-      const shiftYAxis = 55;
 
       const yScale = d3
         .scaleLinear()
         .domain([0, d3.max(data, (d) => d.total)])
-        .range([dimensions.height - 20, margin.bottom])
+        .range([height - margin.bottom, margin.top])
         .nice();
 
-      // Clear svg content before adding new elements
+      /* clear svg content before adding new elements */
       const svgEl = d3.select(svgContainerRef.current);
       svgEl.selectAll("*").remove();
 
-      ////////console.log(data)
+      svgEl.attr("viewBox", [0, 0, width, height]);
 
-      svgEl
-        .append("g")
-        .attr("transform", `translate(30,${shiftXAxis})`)
-        .attr("id", "bottom");
-
+      /* x-axis */
       const xAxis = d3
         .axisBottom(xScale)
-        //.ticks(d3.timeYear.every(5))
+        //.ticks(d3.timeYear.every(5));
         .ticks(7);
-      //.tickValues(timeFormat)
+      //  .tickValues([1990, 1995, 2000, 2010]);
       //.tickFormat(x => timeFormat(x))
-      svgEl.select("#bottom").call(xAxis);
-
-      /*  add barchart with values corresponding to ... */
-      const yAxis = d3.axisLeft(yScale).ticks(3).tickFormat(d3.format(".2s"));
+      //.tickFormat(function (d) {
+      //if (d != 1985 && d != 2025) return d;
+      //  });
 
       svgEl
         .append("g")
-        .attr("transform", `translate(${shiftYAxis} , -15)`)
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .attr("id", "bottom");
+      svgEl.select("#bottom").call(xAxis);
+
+      /*  y-axis */
+      const yAxis = d3.axisLeft(yScale).ticks(3).tickFormat(d3.format(".2s"));
+      svgEl
+        .append("g")
+        .attr("transform", `translate(${margin.left} , 0)`)
         .attr("id", "left");
       svgEl.select("#left").call(yAxis);
 
@@ -188,42 +184,54 @@ net migration: 2 --> ? destination = origin immi - emi ??
 
       //TODO check for NAN show some warning when value does not exist!
 
+      /* bars */
       d3.select("#bottom")
         .selectAll("rect")
         .data(data)
-
         .join("rect")
         .attr("id", (d) => timeFormat(d.date))
         .attr("value", (d) => d.total)
         .attr("class", "time")
-        .attr("x", (d) => xScale(d.date) - 35)
-        .attr("y", (d) => yScale(d.total) - shiftXAxis - 15) //This value is strange!!
-        .attr("width", dx)
-        .attr("opacity", (d) => (year != timeFormat(d.date) ? "0.3" : "1"))
-        .attr(
-          "height",
-          (d) =>
-            dimensions.height - margin.top - margin.bottom - yScale(d.total)
-        )
-        //.attr("height", d => yScale(d.total)/2) //base on data
+        .attr("x", (d) => xScale(d.date))
+        .attr("y", (d) => yScale(d.total) - (height - margin.bottom))
+        .attr("height", (d) => {
+          height - yScale(d.total);
+          //console.log("height:" + (height - yScale(d.total)));
+          //console.log(d.date);
+          //console.log("x:" + xScale(d.date));
+          //  console.log(xScale.invert(d.date));
+          //  console.log("test 80 " + xScale.invert(102.2));
+        })
+        .attr("width", 30) //overridden by css?
+        .attr("opacity", (d) => (year != timeFormat(d.date) ? "0.3" : "1")) //overridden?
         .style("fill", colors[view]);
+      /* set bars to zero at start to later animate */
 
+      // /* animate bars */
+      // svgEl
+      //   .selectAll("rect")
+      //   .transition()
+      //   //.duration(2000)
+      //   .attr("y", (d) => yScale(d.total))
+      //   .attr("height", (d) => height - yScale(d.total))
+      //   .delay((d, i) => {
+      //     //console.log(i);
+      //     return i * 100;
+      //   });
+
+      /* tooltip */
       var arrowTip = d3
         .tip()
         .attr("class", "d3-tip")
         .html(function (event) {
-          // ////console.log(event.target.getAttribute("x"));
-
-          // ////console.log(xScale(Number(event.target.getAttribute("x"))));
-          // return "Total: " + event.target.getAttribute("value");
           let number = event.target
             .getAttribute("value")
             .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
           return "Total: " + number;
         });
+      d3.select("#timeline").call(arrowTip);
 
-      d3.select("#timeLine").call(arrowTip);
-
+      /*  tooltip on mouseover  */
       d3.selectAll("rect")
         .on("click", (d, i) => {
           updateYear(timeFormat(i.date));
@@ -238,14 +246,16 @@ net migration: 2 --> ? destination = origin immi - emi ??
     }
   }, [data, view, color]);
 
+  /*
+  width={dimensions.width}
+  height={dimensions.height}
+  */
+
   // position is set with css
   return (
-    <svg
-      id="timeLine"
-      width={dimensions.width}
-      height={dimensions.height}
-      ref={svgContainerRef}
-    ></svg>
+    <div id="timelineContainer">
+      <svg id="timeline" ref={svgContainerRef}></svg>
+    </div>
   );
 }
 
