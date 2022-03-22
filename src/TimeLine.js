@@ -34,18 +34,15 @@ const colors = [immiColor, emiColor, netColor, unDef];
 
 function TimeLine({ model, setYear, view, year }) {
   const svgContainerRef = useRef(null);
-  //const [year, setYear] = useState(model.year);
   const [countryID, setCountryID] = useState(model.countryID);
   const [sex, setSex] = useState(0);
   const [color, setColor] = useState("purple");
-  //const dx = 40; //for now, set to responsive
   const timeFormat = d3.timeFormat("%Y");
   const timeDomain = yearRange.map((x) => timeFormat(x));
   const ticks = yearRange.filter(
     (x) => x != new Date(1985, 6, 1) && x != new Date(2025, 6, 1)
   );
-  //  console.log(ticks);
-  //const axisMargin = 50; //for now
+
   let data = model.migrationData;
 
   /* get data for one year */
@@ -111,10 +108,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
   const dimensions = {
     width: useWindowDimensions().width * 0.4,
     height: useWindowDimensions().height * 0.17,
-    //width: 300,
-    //height: 120,
   };
-
   const margin = { top: 35, left: 45, bottom: 25, right: 25 };
   const width = dimensions.width;
   const height = dimensions.height;
@@ -144,7 +138,12 @@ net migration: 2 --> ? destination = origin immi - emi ??
 
       const yScale = d3
         .scaleLinear()
-        .domain([0, d3.max(data, (d) => d.total)])
+        .domain([
+          0,
+          d3.max(data, (d) => {
+            return d.total != 0 ? d.total : 2000; //to prevent zero scale
+          }),
+        ])
         .range([height - margin.bottom, margin.top])
         .nice();
 
@@ -179,11 +178,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .attr("id", "left");
       svgEl.select("#left").call(yAxis);
 
-      //  data.forEach(x => //////console.log("total: " ,x.total," --> y: " ,yScale(x.total)))
-      //data.forEach(x => //////console.log("date: " ,x.date," --> x: " ,xScale(x.date)))
-
       //TODO check for NAN show some warning when value does not exist!
-
       /* bars */
       d3.select("#bottom")
         .selectAll("rect")
@@ -195,10 +190,10 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .attr("x", (d) => xScale(d.date))
         .attr("y", (d) => yScale(d.total) - margin.top) //-35
         .attr("height", (d) => {
-          height - margin.top - margin.bottom - yScale(d.total);
           console.log(yScale(d.total));
           console.log(height - margin.top - margin.bottom - yScale(d.total));
           console.log(200.67);
+          return height - margin.top - margin.bottom - yScale(d.total);
         })
         //.attr("height", 200.67)
 
