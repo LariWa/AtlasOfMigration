@@ -119,7 +119,34 @@ function SideBar({
   const numberWithComma = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
-
+  function kFormatter(num) {
+    return Math.abs(num) > 999
+      ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "k"
+      : Math.sign(num) * Math.abs(num);
+  }
+  var minLabel = view == 2 ? "<" : "";
+  var marks = [
+    {
+      value: scale[0],
+      label: (view == 2 ? "<" : "") + kFormatter(scale[0]),
+    },
+    {
+      value: scale[1],
+      label: ">" + kFormatter(scale[1]),
+    },
+    {
+      value: ((scale[1] - scale[0]) / 4 + scale[0]) * 1,
+      label: kFormatter(((scale[1] - scale[0]) / 4 + scale[0]) * 1),
+    },
+    {
+      value: ((scale[1] - scale[0]) / 4) * 2 + scale[0],
+      label: kFormatter(((scale[1] - scale[0]) / 4) * 2 + scale[0]),
+    },
+    {
+      value: ((scale[1] - scale[0]) / 4) * 3 + scale[0],
+      label: kFormatter(((scale[1] - scale[0]) / 4) * 3 + scale[0]),
+    },
+  ];
   return (
     <div className="sideBar">
       {detailView && (
@@ -236,20 +263,30 @@ function SideBar({
             value={sliderValue}
             min={scale[0]}
             max={scale[1]}
+            sx={{
+              "& .MuiSlider-markLabel": {
+                "font-size": "12px",
+                color: "#eee",
+                "margin-top": "-10px",
+                "font-family":
+                  "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+              },
+            }}
+            marks={marks}
             onChange={handleChange}
             getAriaValueText={valuetext}
             valueLabelDisplay="auto"
             valueLabelFormat={(value) => numberWithComma(value)}
           />
           <br />
-          <label id="lower" className={`${view != 3 ? "" : "hide"}`}>
+          {/* <label id="lower" className={`${view != 3 ? "" : "hide"}`}>
             {view == 2 ? "<" : ""}
-            {numberWithComma(scale[0])}
+            {kFormatter(scale[0])}
           </label>
           <label id="upper" className={`${view != 3 ? "" : "hide"}`}>
             {">"}
-            {numberWithComma(scale[1])}
-          </label>
+            {kFormatter(scale[1])}
+          </label> */}
         </>
       )}
     </div>
