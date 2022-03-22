@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect } from "react";
-import List from "@mui/material/List";
+//import List from "@mui/material/List";
 //import * as d3 from "d3";
 
 const immiColor = "cyan";
@@ -16,9 +16,8 @@ function Legend({ enter, loading }) {
   }, []);
 
   return (
-    <div className=".legend" width="80vw" height="100%" background="red">
+    <div className=".legend" width="10vw" height="100%" color="red">
       <h1>Legend</h1>
-      <List />
     </div>
   );
 }
