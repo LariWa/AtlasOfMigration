@@ -44,15 +44,6 @@ function TimeLine({ model, setYear, view, year }) {
   );
 
   let data = model.migrationData;
-
-  /* get data for one year */
-  // let groupYear = d3.group(worldData,
-  //     d => d.DestinationID,
-  //     d => d.OriginID)
-  //     .get(900)
-  //     .get(900)
-  //   ////////console.log(groupYear);
-
   /*
 view: immigration: 0  --> origin = WORLD
 emigration 1 --> destination = WORLD
@@ -63,7 +54,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
     let obj = {};
     let origin, destination;
     origin = destination = WORLD;
-    if (true) {
+    if (view) {
       if (view == 0 || view == 1) {
         if (view == 0) destination = model.countryID;
         if (view == 1) origin = model.countryID;
@@ -90,7 +81,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
     }
   };
 
-  /* helper to check and parse value to number */
+  /* helper to check and parse value to number, undefined --> -1 */
   const getValue = (x) => {
     if (typeof x == "number") return x;
     if (x === 0) return 0;
@@ -109,7 +100,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
     width: useWindowDimensions().width * 0.4,
     height: useWindowDimensions().height * 0.17,
   };
-  const margin = { top: 35, left: 45, bottom: 25, right: 25 };
+  const margin = { top: 20, left: 45, bottom: 25, right: 25 };
   const width = dimensions.width;
   const height = dimensions.height;
 
@@ -141,7 +132,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .domain([
           0,
           d3.max(data, (d) => {
-            return d.total != 0 ? d.total : 2000; //to prevent zero scale
+            return d.total <= 0 ? 2000 : d.total; //to prevent zero scale
           }),
         ])
         .range([height - margin.bottom, margin.top])
@@ -187,21 +178,16 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .attr("id", (d) => timeFormat(d.date))
         .attr("value", (d) => d.total)
         .attr("class", "time")
-        .attr("x", (d) => xScale(d.date))
-        .attr("y", (d) => yScale(d.total) - margin.top) //-35
+        .attr("x", (d) => xScale(d.date) - margin.right)
+        .attr("y", (d) => yScale(d.total) - height + margin.bottom + margin.top) //-35
         .attr("height", (d) => {
-          console.log(yScale(d.total));
-          console.log(height - margin.top - margin.bottom - yScale(d.total));
-          console.log(200.67);
+          if (d.total === undefined) console.log("undefined total");
+          //console.log(yScale(d.total));
+          //console.log(height - margin.top - margin.bottom - yScale(d.total));
           return height - margin.top - margin.bottom - yScale(d.total);
         })
-        //.attr("height", 200.67)
 
-        //console.log("x:" + xScale(d.date));
-        //  console.log(xScale.invert(d.date));
-        //  console.log("test 80 " + xScale.invert(102.2));
-
-        .attr("width", 30) //overridden by css?
+        .attr("width", 25) //overridden by css?
         .attr("opacity", (d) => (year != timeFormat(d.date) ? "0.3" : "1")) //overridden?
         .style("fill", colors[view]);
       /* set bars to zero at start to later animate */

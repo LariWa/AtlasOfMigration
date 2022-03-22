@@ -195,10 +195,13 @@ function WorldMap(props) {
     }
     function clickedACB(target) {
       //TODO topography, if time
-      getMigrationCountries(target.id);
-      showDetailView(target.id);
-      props.setCountryID(target.id);
-      props.model.setCountryID(target.id);
+      if (target.id != "") {
+        getMigrationCountries(target.id);
+        showDetailView(target.id);
+        console.log(target.id);
+        props.setCountryID(target.id);
+        props.model.setCountryID(target.id);
+      }
     }
 
     function changeCountry(target) {
