@@ -342,7 +342,11 @@ net migration: 2 -->  immi - emi
           }
         }}
       >
-        <img id="playIcon" src="play-solid.svg" />
+        <img
+          style={{ width: 30 + "px", height: "30px" }}
+          id="playIcon"
+          src="play-solid.svg"
+        />
 
         {/* {playing && "⏹︎"}
         {!playing &&} */}
