@@ -68,36 +68,6 @@ function WorldMap(props) {
     // .fitSize([width, height], selectedCountryFeature || data);
     //   .precision(50); //might be good to avoid glitching
     const svg = d3.select(svgRef.current);
-    //arrow gradient
-    const gradient1 = svg
-      .append("linearGradient")
-      .attr("gradientUnits", "userSpaceOnUse")
-      .attr("id", "linegradient1");
-
-    gradient1
-      .append("stop")
-      .attr("offset", "0%")
-      .attr("stop-color", "rbg(0,139,139)");
-
-    gradient1
-      .append("stop")
-      .attr("offset", "100%")
-      .attr("stop-color", "rbg(255, 219, 88)");
-
-    const gradient2 = svg
-      .append("linearGradient")
-      .attr("gradientUnits", "userSpaceOnUse")
-      .attr("id", "linegradient2");
-
-    gradient2
-      .append("stop")
-      .attr("offset", "0%")
-      .attr("stop-color", "rbg(255, 219, 88)");
-
-    gradient2
-      .append("stop")
-      .attr("offset", "100%")
-      .attr("stop-color", "rbg(0,139,139)");
     //tooltip-----------------------------------------------------------
     var countryTip = d3
       .tip()
@@ -209,7 +179,7 @@ function WorldMap(props) {
             return path(d);
           })
           .style("fill", "none")
-          .style("stroke", getArrowColor())
+          .style("stroke", (feature) => getArrowColor(feature))
           .style("stroke-width", (feature) => getArrowWidth(feature.data))
           .attr("markerWidth", 50)
           .attr("markerHeight", 50)
@@ -338,7 +308,22 @@ function WorldMap(props) {
   }
   return (
     <div ref={mapContainerRef} className="mapContainer">
-      <svg ref={svgRef} width={width} height={height} id="map"></svg>
+      <svg ref={svgRef} width={width} height={height} id="map">
+        <defs>
+          <linearGradient id="linegradient1">
+            <stop offset="0%" stopColor="darkcyan" />
+            <stop offset="100%" stopColor="#F29F05" />
+            {/* <stop offset="0%" stopColor="rbg(0,139,139)" />
+            <stop offset="100%" stopColor="rbg(255, 219, 88)" /> */}
+          </linearGradient>
+          <linearGradient id="linegradient2">
+            <stop offset="0%" stopColor="#F29F05" />
+            <stop offset="100%" stopColor="darkcyan" />
+            {/* <stop offset="0%" stopColor="rbg(0,139,139)" />
+            <stop offset="100%" stopColor="rbg(255, 219, 88)" /> */}
+          </linearGradient>
+        </defs>
+      </svg>
     </div>
   );
   function mouseOverACB(event) {
@@ -413,10 +398,48 @@ function WorldMap(props) {
         .range(["#E0FFFF", "#008B8B"]);
     return colorScale(index);
   }
-  function getArrowColor() {
-    if (props.view == 0) {
+  function getArrowColor(feature) {
+    // console.log(feature);
+    // console.log(document.getElementById(feature.data).getBBox());
+    console.log("######");
+    console.log(props.model.codeToName(feature.data));
+    var boundingBoxDest = document.getElementById(feature.data).getBBox();
+    var xDest = boundingBoxDest.x + boundingBoxDest.width;
+    var yDest = boundingBoxDest.y + boundingBoxDest.height;
+
+    // console.log(props.countryId);
+    var boundingBoxOrig = document.getElementById(props.countryId).getBBox();
+    // console.log(boundingBoxOrig);
+    // console.log(boundingBoxOrig.x);
+
+    // console.log(boundingBoxOrig.width);
+    console.log("dest" + xDest + "  y " + yDest);
+    var xOrig = boundingBoxOrig.x + boundingBoxOrig.width;
+    var yOrig = boundingBoxOrig.x + boundingBoxOrig.height;
+    console.log("origin" + xOrig + "  y " + yOrig);
+
+    // console.log(xOrig);
+    console.log(xOrig + " " + xDest);
+    // if (xDest > xOrig && yDest > yOrig) return "url(#linegradient2)";
+
+    // if (xDest > xOrig || yDest > yOrig) {
+    //   console.log("switch");
+    //   // if (props.view == 0) {
+    //   return "url(#linegradient1)";
+    // }
+    if (yOrig < yDest && xDest < xOrig) {
+      console.log("condition1");
       return "url(#linegradient1)";
     }
+
+    if (yOrig < yDest) {
+      console.log("condition2");
+      return "url(#linegradient2)";
+    }
+
+    return "url(#linegradient1)";
+
+    // }
     if (props.view == 1) return "url(#linegradient2)";
   }
   function getArrowWidth(id) {
