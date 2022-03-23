@@ -302,7 +302,6 @@ function WorldMap(props) {
     props.countryId,
     props.view,
     props.filterValues,
-    useWindowDimensions(),
   ]);
 
   if (!data) {
