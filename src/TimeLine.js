@@ -25,6 +25,7 @@ const yearRange = [
   // new Date(2019, 6, 1),
   new Date(2020, 6, 1),
 ];
+let animate;
 
 const WORLD = 900;
 const immiColor = "cyan";
@@ -94,8 +95,8 @@ net migration: 2 --> ? destination = origin immi - emi ??
 
   /* update model */
   const updateYear = (x) => {
-    setYear(x);
-    model.setYear(x);
+    setYear(Number(x));
+    model.setYear(Number(x));
   };
 
   /* adapt to window size */
@@ -256,8 +257,6 @@ net migration: 2 --> ? destination = origin immi - emi ??
         });
     }
   }, [data, view, color]);
-
-  let animate;
 
   const play = () => {
     if (!animate) {
