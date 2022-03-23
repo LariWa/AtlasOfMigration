@@ -124,7 +124,10 @@ net migration: 2 --> ? destination = origin immi - emi ??
   };
 
   useEffect(() => {
+    d3.selectAll(".d3-tip").remove(); //remove all tooltips --> fixes bug
+
     data = getMigration();
+
     if (data) {
       if (view) setColor(colors[view]);
 
@@ -215,21 +218,32 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .style("fill", colors[view]);
 
       /* animate bars */
-      svgEl
-        .selectAll("rect")
-        .transition()
-        .duration(800)
-        .attr("y", (d) => yScale(d.total) - height + margin.bottom)
-        .attr("height", (d) => {
-          if (d.total === -1) {
-            showUndefined(timeFormat(d.date));
-          }
-          return height - margin.bottom - yScale(d.total);
-        })
-        .delay((d, i) => {
-          //console.log(i);
-          return i * 50;
-        });
+      if (animate)
+        svgEl
+          .selectAll("rect")
+          .attr("y", (d) => yScale(d.total) - height + margin.bottom)
+          .attr("height", (d) => {
+            if (d.total === -1) {
+              showUndefined(timeFormat(d.date));
+            }
+            return height - margin.bottom - yScale(d.total);
+          });
+      else
+        svgEl
+          .selectAll("rect")
+          .transition()
+          .duration(800)
+          .attr("y", (d) => yScale(d.total) - height + margin.bottom)
+          .attr("height", (d) => {
+            if (d.total === -1) {
+              showUndefined(timeFormat(d.date));
+            }
+            return height - margin.bottom - yScale(d.total);
+          })
+          .delay((d, i) => {
+            //console.log(i);
+            return i * 50;
+          });
 
       /* tooltip */
       var arrowTip = d3
