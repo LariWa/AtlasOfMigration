@@ -8,6 +8,7 @@ import * as d3module from "d3";
 import d3tip from "d3-tip";
 import { timeParse } from "d3";
 import { getByLabelText } from "@testing-library/react";
+import { getThemeProps } from "@mui/system";
 const d3 = {
   ...d3module,
   tip: d3tip,
@@ -37,7 +38,7 @@ const unDef = "DimGray";
 //immigration = 0, emmigration 1, net migration=2, start=3
 const colors = [immiColor, emiColor, netColor, unDef];
 
-function TimeLine({ model, setYear, view, year }) {
+function TimeLine({ model, setYear, view, year, countryId }) {
   //const [playing, setPlaying] = useState(false);
   const svgContainerRef = useRef(null);
   const [countryID, setCountryID] = useState(model.countryID);
@@ -282,7 +283,7 @@ net migration: 2 -->  immi - emi
           arrowTip.hide(d);
         });
     }
-  }, [data, view, color]);
+  }, [data, view, color, countryId]);
 
   /* highlight year tick */
   showSelect();
@@ -310,6 +311,21 @@ net migration: 2 -->  immi - emi
   } // position is set with css
   return (
     <div id="timelineContainer">
+      {view == 2 && countryId == 900 ? (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%,-50%)",
+          }}
+        >
+          The net migration for the world is zero
+        </div>
+      ) : (
+        ""
+      )}
+
       <Button
         id="PlayButton"
         style={{ width: 10 + "px", position: "absolute", top: 40 + "%" }}
@@ -332,7 +348,6 @@ net migration: 2 -->  immi - emi
       </Button>
       <svg id="timeline" ref={svgContainerRef}></svg>
       {/*<TimeSlider updateYear={updateYear} year={year} />*/}
-
       {/* <Button
         variant="contained"
         //color="secondary"
