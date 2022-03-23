@@ -41,7 +41,6 @@ function TimeLine({ model, setYear, view, year }) {
   const [sex, setSex] = useState(0);
   const [color, setColor] = useState("purple");
   const timeFormat = d3.timeFormat("%Y");
-  //const [play, setPlay] = useState(0);
   const timeDomain = yearRange.map((x) => timeFormat(x));
   const ticks = yearRange.filter(
     (x) => x != new Date(1985, 6, 1) && x != new Date(2025, 6, 1)
@@ -51,7 +50,7 @@ function TimeLine({ model, setYear, view, year }) {
   /*
 view: immigration: 0  --> origin = WORLD
 emigration 1 --> destination = WORLD
-net migration: 2 --> ? destination = origin immi - emi ??
+net migration: 2 -->  immi - emi 
 */
 
   const getMigration = () => {
