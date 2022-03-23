@@ -288,7 +288,7 @@ function SideBar({
             max={scale[1]}
             sx={{
               "& .MuiSlider-markLabel": {
-                "font-size": "12px",
+                "font-size": "10px",
                 color: "#eee",
                 "margin-top": "-10px",
                 "font-family":
