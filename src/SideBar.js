@@ -297,9 +297,9 @@ function SideBar({
             {">"}
             {kFormatter(scale[1])}
           </label> */}
-          <Legend />
         </>
       )}
+      <Legend />
     </div>
   );
 }

@@ -28,7 +28,7 @@ const WORLD = 900;
 const immiColor = "cyan";
 const emiColor = "#F29F05";
 const netColor = "purple";
-const unDef = "darkgrey";
+const unDef = "DimGray";
 //immigration = 0, emmigration 1, net migration=2, start=3
 const colors = [immiColor, emiColor, netColor, unDef];
 
@@ -100,7 +100,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
     width: useWindowDimensions().width * 0.4,
     height: useWindowDimensions().height * 0.17,
   };
-  const margin = { top: 20, left: 45, bottom: 25, right: 25 };
+  const margin = { top: 15, left: 45, bottom: 25, right: 25 };
   const width = dimensions.width;
   const height = dimensions.height;
 
@@ -114,6 +114,10 @@ net migration: 2 --> ? destination = origin immi - emi ??
   };
 
   showSelect();
+
+  const showUndefined = (x) => {
+    d3.select("#bottom").select(`#t_${x}`).attr("color", unDef);
+  };
 
   //  useLayoutEffect(() => {
   useEffect(() => {
@@ -132,7 +136,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .domain([
           0,
           d3.max(data, (d) => {
-            return d.total <= 0 ? 2000 : d.total; //to prevent zero scale
+            return d.total === 0 || d.total === -1 ? 2000 : d.total; //to prevent zero scale
           }),
         ])
         .range([height - margin.bottom, margin.top])
@@ -149,7 +153,6 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .axisBottom(xScale)
         //.ticks(d3.timeYear.every(5));
         .ticks(7);
-      //  .tickValues([1990, 1995, 2000, 2010]);
       //.tickFormat(x => timeFormat(x))
       //.tickFormat(function (d) {
       //if (d != 1985 && d != 2025) return d;
@@ -161,6 +164,19 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .attr("id", "bottom");
       svgEl.select("#bottom").call(xAxis);
 
+      /* quick and ugly remove first and last tick + set ID*/
+      let elems = document.getElementById("bottom").children;
+      elems[9].remove();
+      elems[1].remove();
+      elems[1].id = "t_1990";
+      elems[2].id = "t_1995";
+      elems[3].id = "t_2000";
+      elems[4].id = "t_2005";
+      elems[5].id = "t_2010";
+      elems[6].id = "t_2015";
+      elems[7].id = "t_2020";
+      //elems[0].remove();  //-------> UNCOMMENT TO REMOVE X-AXIS
+
       /*  y-axis */
       const yAxis = d3.axisLeft(yScale).ticks(3).tickFormat(d3.format(".2s"));
       svgEl
@@ -169,8 +185,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .attr("id", "left");
       svgEl.select("#left").call(yAxis);
 
-      //TODO check for NAN show some warning when value does not exist!
-      /* bars */
+      /* bars NB: Both negative and positive don't show! */
       d3.select("#bottom")
         .selectAll("rect")
         .data(data)
@@ -179,15 +194,15 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .attr("value", (d) => d.total)
         .attr("class", "time")
         .attr("x", (d) => xScale(d.date) - margin.right)
-        .attr("y", (d) => yScale(d.total) - height + margin.bottom + margin.top) //-35
+        .attr("y", (d) => yScale(d.total) - height + margin.bottom)
         .attr("height", (d) => {
-          if (d.total === undefined) console.log("undefined total");
-          //console.log(yScale(d.total));
-          //console.log(height - margin.top - margin.bottom - yScale(d.total));
-          return height - margin.top - margin.bottom - yScale(d.total);
+          if (d.total === -1) {
+            showUndefined(timeFormat(d.date));
+          }
+          return height - margin.bottom - yScale(d.total);
         })
 
-        .attr("width", 25) //overridden by css?
+        .attr("width", 35) //overridden by css?
         .attr("opacity", (d) => (year != timeFormat(d.date) ? "0.3" : "1")) //overridden?
         .style("fill", colors[view]);
       /* set bars to zero at start to later animate */
