@@ -7,6 +7,7 @@ import styled from "styled-components";
 import * as d3module from "d3";
 import d3tip from "d3-tip";
 import { timeParse } from "d3";
+import { getByLabelText } from "@testing-library/react";
 const d3 = {
   ...d3module,
   tip: d3tip,
@@ -28,7 +29,6 @@ const yearRange = [
 let animate;
 let dur = 1000;
 let del = 50;
-
 const WORLD = 900;
 const immiColor = "cyan";
 const emiColor = "#F29F05";
@@ -38,6 +38,7 @@ const unDef = "DimGray";
 const colors = [immiColor, emiColor, netColor, unDef];
 
 function TimeLine({ model, setYear, view, year }) {
+  //const [playing, setPlaying] = useState(false);
   const svgContainerRef = useRef(null);
   const [countryID, setCountryID] = useState(model.countryID);
   const [sex, setSex] = useState(0);
@@ -111,7 +112,7 @@ net migration: 2 -->  immi - emi
 
   /* diminish op of bars and ticks of not selected year */
   const showSelect = () => {
-    console.log("show: ", year);
+    // console.log("show: ", year);
     document.querySelectorAll(".time").forEach((element) => {
       if (element.id != year) {
         element.style.opacity = 0.4;
@@ -119,8 +120,8 @@ net migration: 2 -->  immi - emi
     });
     /* this only works once then id is empty  */
     document.querySelectorAll(".tick").forEach((element) => {
-      console.log(element.id);
-      console.log(`t_${year}`);
+      // console.log(element.id);
+      // console.log(`t_${year}`);
       if (element.id != `t_${year}`) {
         element.style.opacity = 0.4;
       }
@@ -303,23 +304,36 @@ net migration: 2 -->  immi - emi
     del = 50;
     animate = null;
   };
-
-  // position is set with css
+  function getLabel() {
+    // if (animate) return "&#x23F9";
+    // else return &#9658;;
+  } // position is set with css
   return (
     <div id="timelineContainer">
-      <svg id="timeline" ref={svgContainerRef}></svg>
-      {/*<TimeSlider updateYear={updateYear} year={year} />*/}
       <Button
+        id="PlayButton"
+        style={{ width: 10 + "px", position: "absolute", top: 40 + "%" }}
         variant="contained"
         //color="primary"
         size="small"
         onClick={() => {
-          play();
+          if (animate) {
+            stop();
+            document.getElementById("PlayButton").innerHTML = "⏹︎";
+          } else {
+            play();
+            document.getElementById("PlayButton").innerHTML = "⏵︎";
+          }
         }}
       >
-        Play
+        ⏵︎
+        {/* {playing && "⏹︎"}
+        {!playing &&} */}
       </Button>
-      <Button
+      <svg id="timeline" ref={svgContainerRef}></svg>
+      {/*<TimeSlider updateYear={updateYear} year={year} />*/}
+
+      {/* <Button
         variant="contained"
         //color="secondary"
         size="small"
@@ -327,8 +341,8 @@ net migration: 2 -->  immi - emi
           stop();
         }}
       >
-        Stop
-      </Button>
+        &#x23F9;
+      </Button> */}
     </div>
   );
 }
