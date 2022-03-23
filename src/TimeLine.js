@@ -119,7 +119,6 @@ net migration: 2 --> ? destination = origin immi - emi ??
     d3.select("#bottom").select(`#t_${x}`).attr("color", unDef);
   };
 
-  //  useLayoutEffect(() => {
   useEffect(() => {
     data = getMigration();
     if (data) {
@@ -131,11 +130,18 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .range([margin.left, width - margin.right])
         .nice();
 
+      /* if both < 0 flip scale else check for undef and 0 scale */
+      let min = d3.min(data, (d) => d.total);
+      let max = d3.max(data, (d) => d.total);
       const yScale = d3
         .scaleLinear()
         .domain([
-          0,
+          d3.min(data, (d) => {
+            if (min < -2 && max < -2) return max;
+            return d.total < -2 ? d.total : 0;
+          }),
           d3.max(data, (d) => {
+            if (min < -2 && max < -2) return min;
             return d.total === 0 || d.total === -1 ? 2000 : d.total; //to prevent zero scale
           }),
         ])
@@ -185,7 +191,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .attr("id", "left");
       svgEl.select("#left").call(yAxis);
 
-      /* bars NB: Both negative and positive don't show! */
+      /* bars NB: Both negative and positive now show but 0 y axis is then raised */
       d3.select("#bottom")
         .selectAll("rect")
         .data(data)
@@ -194,6 +200,21 @@ net migration: 2 --> ? destination = origin immi - emi ??
         .attr("value", (d) => d.total)
         .attr("class", "time")
         .attr("x", (d) => xScale(d.date) - margin.right)
+        /* set bars to zero at start to later animate */
+        //.attr("y", (d) => yScale(0))
+        .attr("y", (d) => yScale(0) - height + margin.bottom)
+        .attr("height", (d) => {
+          return height - yScale(0) - margin.bottom;
+        })
+        .attr("width", 35) //overridden by css?
+        .attr("opacity", (d) => (year != timeFormat(d.date) ? "0.3" : "1")) //overridden?
+        .style("fill", colors[view]);
+
+      /* animate bars */
+      svgEl
+        .selectAll("rect")
+        .transition()
+        .duration(800)
         .attr("y", (d) => yScale(d.total) - height + margin.bottom)
         .attr("height", (d) => {
           if (d.total === -1) {
@@ -201,23 +222,10 @@ net migration: 2 --> ? destination = origin immi - emi ??
           }
           return height - margin.bottom - yScale(d.total);
         })
-
-        .attr("width", 35) //overridden by css?
-        .attr("opacity", (d) => (year != timeFormat(d.date) ? "0.3" : "1")) //overridden?
-        .style("fill", colors[view]);
-      /* set bars to zero at start to later animate */
-
-      // /* animate bars */
-      // svgEl
-      //   .selectAll("rect")
-      //   .transition()
-      //   //.duration(2000)
-      //   .attr("y", (d) => yScale(d.total))
-      //   .attr("height", (d) => height - yScale(d.total))
-      //   .delay((d, i) => {
-      //     //console.log(i);
-      //     return i * 100;
-      //   });
+        .delay((d, i) => {
+          //console.log(i);
+          return i * 100;
+        });
 
       /* tooltip */
       var arrowTip = d3
