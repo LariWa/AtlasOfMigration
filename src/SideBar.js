@@ -312,7 +312,16 @@ function SideBar({
           </label> */}
         </>
       )}
-      <Legend />
+      {/* <Legend /> */}
+      <div className="legendContainer">
+        <span style={{ marginRight: 10 + "px" }}>
+          <div className="legend" id="noDataLegend"></div>No Data Available
+        </span>
+        <span>
+          <div className="legend" id="filterLegend"></div>
+          Filtered Data
+        </span>
+      </div>
     </div>
   );
 }

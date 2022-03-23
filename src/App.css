@@ -109,3 +109,18 @@
   top: 50%;
   left: 100%;
 }
+.legend {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  margin-right: 2px;
+}
+#filterLegend {
+  background: lightgray;
+}
+#noDataLegend {
+  background: dimgray;
+}
+.legendContainer {
+  font-size: 12px;
+}
