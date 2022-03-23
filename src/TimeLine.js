@@ -26,6 +26,8 @@ const yearRange = [
   new Date(2020, 6, 1),
 ];
 let animate;
+let dur = 1000;
+let del = 50;
 
 const WORLD = 900;
 const immiColor = "cyan";
@@ -103,20 +105,27 @@ net migration: 2 -->  immi - emi
     width: useWindowDimensions().width * 0.45,
     height: useWindowDimensions().height * 0.17,
   };
-  const margin = { top: 15, left: 50, bottom: 25, right: 25 };
+  const margin = { top: 20, left: 70, bottom: 25, right: 25 };
   const width = dimensions.width;
   const height = dimensions.height;
 
-  /* diminish op bars of not selected year */
+  /* diminish op of bars and ticks of not selected year */
   const showSelect = () => {
+    console.log("show: ", year);
     document.querySelectorAll(".time").forEach((element) => {
       if (element.id != year) {
         element.style.opacity = 0.4;
       }
     });
+    /* this only works once then id is empty  */
+    document.querySelectorAll(".tick").forEach((element) => {
+      console.log(element.id);
+      console.log(`t_${year}`);
+      if (element.id != `t_${year}`) {
+        element.style.opacity = 0.4;
+      }
+    });
   };
-
-  showSelect();
 
   const showUndefined = (x) => {
     d3.select("#bottom").select(`#t_${x}`).attr("color", unDef);
@@ -173,7 +182,8 @@ net migration: 2 -->  immi - emi
       svgEl
         .append("g")
         .attr("transform", `translate(0,${height - margin.bottom})`)
-        .attr("id", "bottom");
+        .attr("id", "bottom")
+        .style("font", "14px Roboto");
       svgEl.select("#bottom").call(xAxis);
 
       /* quick and ugly remove first and last tick + set ID*/
@@ -194,7 +204,8 @@ net migration: 2 -->  immi - emi
       svgEl
         .append("g")
         .attr("transform", `translate(${margin.left} , 0)`)
-        .attr("id", "left");
+        .attr("id", "left")
+        .style("font", "14px Roboto");
       svgEl.select("#left").call(yAxis);
 
       /* bars NB: Both negative and positive now show but 0 y axis is then raised */
@@ -217,32 +228,33 @@ net migration: 2 -->  immi - emi
         .style("fill", colors[view]);
 
       /* animate bars */
-      if (animate)
-        svgEl
-          .selectAll("rect")
-          .attr("y", (d) => yScale(d.total) - height + margin.bottom)
-          .attr("height", (d) => {
-            if (d.total === -1) {
-              showUndefined(timeFormat(d.date));
-            }
-            return height - margin.bottom - yScale(d.total);
-          });
-      else
-        svgEl
-          .selectAll("rect")
-          .transition()
-          .duration(800)
-          .attr("y", (d) => yScale(d.total) - height + margin.bottom)
-          .attr("height", (d) => {
-            if (d.total === -1) {
-              showUndefined(timeFormat(d.date));
-            }
-            return height - margin.bottom - yScale(d.total);
-          })
-          .delay((d, i) => {
-            //console.log(i);
-            return i * 50;
-          });
+
+      // if (animate)
+      //   svgEl
+      //     .selectAll("rect")
+      //     .attr("y", (d) => yScale(d.total) - height + margin.bottom)
+      //     .attr("height", (d) => {
+      //       if (d.total === -1) {
+      //         showUndefined(timeFormat(d.date));
+      //       }
+      //       return height - margin.bottom - yScale(d.total);
+      //     });
+      // else
+
+      svgEl
+        .selectAll("rect")
+        .transition()
+        .duration(dur)
+        .attr("y", (d) => yScale(d.total) - height + margin.bottom)
+        .attr("height", (d) => {
+          if (d.total === -1) {
+            showUndefined(timeFormat(d.date));
+          }
+          return height - margin.bottom - yScale(d.total);
+        })
+        .delay((d, i) => {
+          return i * del;
+        });
 
       /* tooltip */
       var arrowTip = d3
@@ -271,8 +283,13 @@ net migration: 2 -->  immi - emi
     }
   }, [data, view, color]);
 
+  /* highlight year tick */
+  showSelect();
+
   const play = () => {
     if (!animate) {
+      dur = 0;
+      del = 0;
       animate = setInterval(() => {
         year = year === 2020 ? 1990 : year + 5;
         updateYear(year);
@@ -282,6 +299,8 @@ net migration: 2 -->  immi - emi
 
   const stop = () => {
     clearInterval(animate);
+    dur = 1000;
+    del = 50;
     animate = null;
   };
 
