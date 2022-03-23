@@ -17,14 +17,18 @@ let view;
 let arrows;
 
 function WorldMap(props) {
-  const height = useWindowDimensions().height * 0.8;
-  var width = useWindowDimensions().width * 0.73;
-  if (useWindowDimensions().width * 0.2 < 270)
-    width =
-      useWindowDimensions().width - (270 + useWindowDimensions().width * 0.07);
+  var height, width;
+  height = window.innerHeight * 0.8;
+
+  width = window.innerWidth * 0.73;
+  if (window.innerWidth * 0.2 < 270)
+    width = window.innerWidth - (270 + window.innerWidth * 0.07);
+
   const mapContainerRef = useRef();
   const svgRef = useRef();
   const data = useMapData();
+  const [zoomCountriesChange, setZoomCountriesChange] = useState(null);
+
   const colorScales = [
     [
       //immigration
@@ -51,7 +55,6 @@ function WorldMap(props) {
     ],
   ];
   // const [selectedCountryFeature, setSelectedCountry] = useState(null);
-  const [zoomCountriesChange, setZoomCountriesChange] = useState(null);
 
   useEffect(() => {
     d3.selectAll(".d3-tip-map").remove(); //remove all tooltips --> fixes bug
@@ -297,11 +300,12 @@ function WorldMap(props) {
   }, [
     data,
     selectedCountryFeature,
-    zoomCountriesChange,
     props.year,
     props.countryId,
     props.view,
     props.filterValues,
+    migrationCountries,
+    useWindowDimensions(),
   ]);
 
   if (!data) {
