@@ -36,6 +36,19 @@ function About({ about, setAbout, view }) {
               Back to application
             </button>
             <div className="about-content" target="_blank">
+              <p>
+                <h4> Atlas of Migration Demo</h4>{" "}
+                <iframe
+                  width="560"
+                  height="315"
+                  src="https://www.youtube.com/embed/iZX_VmzbT3w"
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; 
+            encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </p>
               <h4> Who we are?</h4>
               <p>
                 <ul>
