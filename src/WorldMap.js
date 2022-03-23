@@ -251,8 +251,9 @@ function WorldMap(props) {
             }
           }
         } else {
-          setZoomCountriesChange(selectedCountryFeature);
           zoomCountriesCurrent = selectedCountryFeature;
+
+          setZoomCountriesChange(selectedCountryFeature);
         }
       }
     }
@@ -304,7 +305,7 @@ function WorldMap(props) {
     props.countryId,
     props.view,
     props.filterValues,
-    migrationCountries,
+    zoomCountriesChange,
     useWindowDimensions(),
   ]);
 
@@ -418,8 +419,7 @@ function WorldMap(props) {
       props.isPopulationView
         ? (number = number.toFixed(2))
         : (number = number.toFixed(0));
-      number.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
+      number = number.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       var header = props.model.codeToName(countryId) + "<br/>";
       if (!target.id) header = target.name + "<br/>";
       var displayValue = "";
