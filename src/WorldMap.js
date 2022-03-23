@@ -50,6 +50,7 @@ function WorldMap(props) {
         .range([emiColor, "white", immiColor]),
     ],
   ];
+
   // const [selectedCountryFeature, setSelectedCountry] = useState(null);
   const [zoomCountriesChange, setZoomCountriesChange] = useState(null);
 
@@ -67,7 +68,36 @@ function WorldMap(props) {
     // .fitSize([width, height], selectedCountryFeature || data);
     //   .precision(50); //might be good to avoid glitching
     const svg = d3.select(svgRef.current);
+    //arrow gradient
+    const gradient1 = svg
+      .append("linearGradient")
+      .attr("gradientUnits", "userSpaceOnUse")
+      .attr("id", "linegradient1");
 
+    gradient1
+      .append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "rbg(0,139,139)");
+
+    gradient1
+      .append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "rbg(255, 219, 88)");
+
+    const gradient2 = svg
+      .append("linearGradient")
+      .attr("gradientUnits", "userSpaceOnUse")
+      .attr("id", "linegradient2");
+
+    gradient2
+      .append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "rbg(255, 219, 88)");
+
+    gradient2
+      .append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "rbg(0,139,139)");
     //tooltip-----------------------------------------------------------
     var countryTip = d3
       .tip()
@@ -384,8 +414,10 @@ function WorldMap(props) {
     return colorScale(index);
   }
   function getArrowColor() {
-    if (props.view == 0) return "#a88905";
-    if (props.view == 1) return "darkcyan";
+    if (props.view == 0) {
+      return "url(#linegradient1)";
+    }
+    if (props.view == 1) return "url(#linegradient2)";
   }
   function getArrowWidth(id) {
     //get index of migrationCountries with id
