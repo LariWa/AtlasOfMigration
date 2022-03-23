@@ -31,47 +31,51 @@ function About({ about, setAbout, view }) {
       ) : (
         <>
           <div className="blur"></div>
-          <div className="about-container">
+          <div className="about-container" target="_blank">
             <button className="back" onClick={hideAbout}>
               Back to application
             </button>
-            <div className="about-content">
+            <div className="about-content" target="_blank">
               <h4> Who we are?</h4>
-              <ul>
-                <li>
-                  <p>
-                    Fatemeh Bakhshoudeh - Role: Front-end development, UX design
-                    and User test. Email:{" "}
-                    <a href="fatemehb@kth.se">fatemehb@kth.se</a>
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Navya Sanjna Joshi - Role: Front-end, UI/UX design, User
-                    test. Email: <a href="nawa@kth.se">nawa@kth.se</a>
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Larissa Wagnerberger - Role: Data handling and calculation,
-                    back-end and front-end development. Email:{" "}
-                    <a href="larissaw@kth.se">larissaw@kth.se</a>
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Anna Neander - Role: Data handling and calculation, back-end
-                    and front-end development. Email:{" "}
-                    <a href="neander@kth.se">neander@kth.se</a>
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    Andrea Maderthaner - Role: Front-end development and UI/UX
-                    design. Email: <a href="andmad@kth.se">andmad@kth.se</a>
-                  </p>
-                </li>
-              </ul>
+              <p>
+                <ul>
+                  <li>
+                    Fatemeh Bakhshoudeh from Iran - Role: Front-end development,
+                    UX design and User test. Email:{" "}
+                    <a href="fatemehb@kth.se" target="_blank">
+                      fatemehb@kth.se
+                    </a>
+                  </li>
+                  <li>
+                    Navya Sanjna Joshi from India - Role: Front-end, UI/UX
+                    design, User test. Email:{" "}
+                    <a href="nawa@kth.se" target="_blank">
+                      nawa@kth.se
+                    </a>
+                  </li>
+                  <li>
+                    Larissa Wagnerberger from Germany - Role: Data handling and
+                    calculation, back-end and front-end development. Email:{" "}
+                    <a href="larissaw@kth.se" target="_blank">
+                      larissaw@kth.se
+                    </a>
+                  </li>
+                  <li>
+                    Anna Neander from Austria - Role: Data handling and
+                    calculation, back-end and front-end development. Email:{" "}
+                    <a href="neander@kth.se" target="_blank">
+                      neander@kth.se
+                    </a>
+                  </li>
+                  <li>
+                    Andrea Maderthaner from Sweden- Role: Front-end development
+                    and UI/UX design. Email:{" "}
+                    <a href="andmad@kth.se" target="_blank">
+                      andmad@kth.se
+                    </a>
+                  </li>
+                </ul>
+              </p>
               <p>
                 We are an international group of KTH students who are motivated
                 to fight misconceptions about the migration pattern and trends.
@@ -81,7 +85,10 @@ function About({ about, setAbout, view }) {
                 explorative analysis. We defined this project to learn more
                 about implementation tools related to information visualization
                 via course{" "}
-                <a href=" https://www.kth.se/student/kurser/kurs/DH2321?l=en ">
+                <a
+                  href=" https://www.kth.se/student/kurser/kurs/DH2321?l=en "
+                  target="_blank"
+                >
                   {" "}
                   DH2321
                 </a>
@@ -90,20 +97,27 @@ function About({ about, setAbout, view }) {
               </p>
               <h4> What was our goal?</h4>
               <p>
-                Based on Shnietherman’s [1] “Mantra” we set our goal to build a
-                platform that provides a historical overview of migration data
-                and enables users to perform zooming and filtering tasks and
-                view “More Details” if they will.
+                Based on Shnietherman's Mantra [1]: "Overview first, zoom and
+                filter, details on demand", we set our goal to build a platform
+                which provides a historical overview of migration information,
+                enables users to perform zooming and filtering tasks, and view
+                more Details if they will.
               </p>
               <h4>Data and API</h4>
               <p>
                 Data and API: We used the world migration data from
-                <a href=" https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2020_ims_stock_by_sex_destination_and_origin.xlsx ">
+                <a
+                  href=" https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2020_ims_stock_by_sex_destination_and_origin.xlsx "
+                  target="_blank"
+                >
                   {" "}
                   The International Migration Stock{" "}
                 </a>
                 and the world population from UN data{" "}
-                <a href=" https://data.un.org/Data.aspx?q=population&d=PopDiv&f=variableID%3a12#PopDiv ">
+                <a
+                  href=" https://data.un.org/Data.aspx?q=population&d=PopDiv&f=variableID%3a12#PopDiv "
+                  target="_blank"
+                >
                   {" "}
                   The UN Data{" "}
                 </a>
@@ -120,7 +134,10 @@ function About({ about, setAbout, view }) {
                 <p>
                   Regarding the net migration we got inspiration from a previous
                   project done within the course in the 2021{" "}
-                  <a href="https://agyllang.github.io/DH2321-POP.FLO">
+                  <a
+                    href="https://agyllang.github.io/DH2321-POP.FLO"
+                    target="_blank"
+                  >
                     {" "}
                     (POP.FLO)
                   </a>
@@ -128,7 +145,7 @@ function About({ about, setAbout, view }) {
                 <h4>What did we learn?</h4>
                 <p>
                   <ol>
-                    <li>Handling and visualizing complex data</li>
+                    <li>We learned how to handle and visualize complex data</li>
                     <li>We gained a better knowledge of d3.js and React</li>
                     <li>
                       We understood that we should have a Git manager in our
@@ -162,40 +179,62 @@ function About({ about, setAbout, view }) {
                   [2] Liem, J., Perin, C. and Wood, J. (2020), Structure and
                   Empathy in Visual Data Storytelling: Evaluating their
                   Influence on Attitude. Computer Graphics Forum, 39: 277-289.
-                  https://doi.org/10.1111/cgf.13980 [Accessed 22.03.14]{" "}
-                </p>
-                <p>
-                  [3] "Risam, R. (2019). Beyond the Migrant “Problem”:
-                  Visualizing Global Migration. Television & New Media, 20(6),
-                  566–580. doi: 10.1177/1527476419857679{" "}
-                </p>
-                <p>
-                  [4] Dominguez, David & Soria, Pablo & Gonzalez, Mario &
-                  Rodríguez Ortiz, Francisco de Borja & Sanchez, Angel. (2019).
-                  A Classification and Data Visualization Tool Applied to Human
-                  Migration Analysis. 256-261. 10.1109/ICEDEG.2019.8734393.
+                  <a href="https://doi.org/10.1111/cgf.13980" target="_blank">
+                    {" "}
+                    https://doi.org/10.1111/cgf.13980
+                  </a>{" "}
                   [Accessed 22.03.14]{" "}
                 </p>
                 <p>
+                  [3] Risam, R. (2019). Beyond the migrant “problem”:
+                  Visualizing global migration. Television & New Media, 20(6),
+                  566-580.{" "}
+                </p>
+                <p>
+                  [4] Dominguez, D., Soria, P., González, M., Rodríguez, F. B.,
+                  & Sánchez, Á. (2019, April). A Classification and Data
+                  Visualization Tool Applied to Human Migration Analysis. In
+                  2019 Sixth International Conference on eDemocracy &
+                  eGovernment (ICEDEG) (pp. 256-261). IEEE.{" "}
+                </p>
+                <p>
                   [5] “React – A JavaScript library for building user
-                  interfaces.” https://reactjs.org/ (accessed Mar. 22, 2022).
+                  interfaces.”{" "}
+                  <a href="https://reactjs.org/" target="_blank">
+                    https://reactjs.org/{" "}
+                  </a>{" "}
+                  (accessed Mar. 22, 2022).
                 </p>
                 <p>
                   [6] M. Bostock, “D3.js - Data-Driven Documents.”
-                  https://d3js.org/ (accessed Mar. 22, 2022).{" "}
+                  <a href="https://d3js.org/" target="_blank">
+                    https://d3js.org/{" "}
+                  </a>{" "}
+                  (accessed Mar. 22, 2022).{" "}
                 </p>
                 <p>
                   [7] d3-geo. D3, 2022. Accessed: Mar. 22, 2022. [Online].
-                  Available: https://github.com/d3/d3-geo
+                  Available:{" "}
+                  <a href="https://github.com/d3/d3-geo" target="_blank">
+                    https://github.com/d3/d3-geo
+                  </a>
                 </p>
                 <p>
                   [8] J. Palmer, d3.tip: Tooltips for d3.js visualizations.
-                  2022. Accessed: Mar. 22, 2022. [Online]. Available:
-                  https://github.com/caged/d3-tip{" "}
+                  2022. Accessed: Mar. 22, 2022. [Online]. Available:{" "}
+                  <a href="https://github.com/caged/d3-tip" target="_blank">
+                    https://github.com/caged/d3-tip
+                  </a>
                 </p>
                 <p>
                   [9] TopoJSON. TopoJSON, 2022. Accessed: Mar. 22, 2022.
-                  [Online]. Available: https://github.com/topojson/topojson{" "}
+                  [Online]. Available:{" "}
+                  <a
+                    href="https://github.com/topojson/topojson"
+                    target="_blank"
+                  >
+                    https://github.com/topojson/topojson
+                  </a>
                 </p>
                 {/* would need reference in text */}
                 {/* <p>
