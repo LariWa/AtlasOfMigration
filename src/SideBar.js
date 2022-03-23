@@ -172,14 +172,14 @@ function SideBar({
 
       {detailView && view == 0 && (
         <div>
-          <h2>Top 5 Immigration Destinations</h2>
+          <h2>Top 5 Immigration Origins</h2>
           <ul>{showImmigrationCountries()}</ul>
         </div>
       )}
 
       {detailView && view == 1 && (
         <div>
-          <h2>Top 5 Emigration Destinations</h2>
+          <h2>Top 5 Emigration Origins</h2>
           <ul>{showEmigrationCountries()}</ul>
         </div>
       )}
@@ -215,17 +215,17 @@ function SideBar({
         ) : (
           ""
         )}
-        <ImmigrationButton name={view} value="0" onClick={changeView}>
+        <ImmigrationButton name={view} value="0" onClick={changeView} className="immigration-icon">
           <img src={immigrationIcon} />
           <br />
           Show Immigration
         </ImmigrationButton>
-        <MigrationButton name={view} value="2" onClick={changeView}>
+        <MigrationButton name={view} value="2" onClick={changeView} className="migration-icon">
           <img src={migrationIcon} />
           <br />
           Show Net Migration
         </MigrationButton>
-        <EmigrationButton name={view} value="1" onClick={changeView}>
+        <EmigrationButton name={view} value="1" onClick={changeView} className="emigration-icon">
           <img src={emigrationIcon} />
           <br />
           Show Emigration

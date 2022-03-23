@@ -9,14 +9,17 @@ const colors = [blue, orange, purple, dark]
 
 const ImmigrationButton = styled.button`
   background: ${props =>  (props.name == props.value ? blue : dark)};
+  color: ${props =>  (props.name == props.value ? '#EEEEEE' : '#00DFF0')};
 `;
 
 const EmigrationButton = styled.button`
   background: ${props =>  (props.name == props.value ? orange : dark)};
+  color: ${props =>  (props.name == props.value ? '#EEEEEE' : '#F29F05')};
 `;
 
 const MigrationButton = styled.button`
   background: ${props =>  (props.name == props.value ? purple : dark)};
+  color: ${props =>  (props.name == props.value ? '#EEEEEE' : '#BD07DB')};
 `;
 
 const CalculationButton = styled.button`
