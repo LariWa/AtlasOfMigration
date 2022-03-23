@@ -1,5 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import useWindowDimensions from "./useWindowDimensions.js";
+import TimeSlider from "./TimeSlider.js";
+import Button from "@mui/material/Button";
 import "./styles/timeline.min.css";
 import styled from "styled-components";
 import * as d3module from "d3";
@@ -38,6 +40,7 @@ function TimeLine({ model, setYear, view, year }) {
   const [sex, setSex] = useState(0);
   const [color, setColor] = useState("purple");
   const timeFormat = d3.timeFormat("%Y");
+  //const [play, setPlay] = useState(0);
   const timeDomain = yearRange.map((x) => timeFormat(x));
   const ticks = yearRange.filter(
     (x) => x != new Date(1985, 6, 1) && x != new Date(2025, 6, 1)
@@ -89,7 +92,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
     else return Number(x.split(" ").join(""));
   };
 
-  /* update this local or update model? */
+  /* update model */
   const updateYear = (x) => {
     setYear(x);
     model.setYear(x);
@@ -224,7 +227,7 @@ net migration: 2 --> ? destination = origin immi - emi ??
         })
         .delay((d, i) => {
           //console.log(i);
-          return i * 100;
+          return i * 50;
         });
 
       /* tooltip */
@@ -254,15 +257,47 @@ net migration: 2 --> ? destination = origin immi - emi ??
     }
   }, [data, view, color]);
 
-  /*
-  width={dimensions.width}
-  height={dimensions.height}
-  */
+  let animate;
+
+  const play = () => {
+    if (!animate) {
+      animate = setInterval(() => {
+        year = year === 2020 ? 1990 : year + 5;
+        updateYear(year);
+      }, 2000);
+    }
+  };
+
+  const stop = () => {
+    clearInterval(animate);
+    animate = null;
+  };
 
   // position is set with css
   return (
     <div id="timelineContainer">
       <svg id="timeline" ref={svgContainerRef}></svg>
+      {/*<TimeSlider updateYear={updateYear} year={year} />*/}
+      <Button
+        variant="contained"
+        //color="primary"
+        size="small"
+        onClick={() => {
+          play();
+        }}
+      >
+        Play
+      </Button>
+      <Button
+        variant="contained"
+        //color="secondary"
+        size="small"
+        onClick={() => {
+          stop();
+        }}
+      >
+        Stop
+      </Button>
     </div>
   );
 }
