@@ -37,7 +37,7 @@ function About({ about, setAbout, view }) {
             </button>
             <div className="about-content" target="_blank">
               <p>
-                <h4> Atlas of Migration Demo</h4>{" "}
+                <h1> Atlas of Migration</h1>{" "}
                 <iframe
                   width="560"
                   height="315"
@@ -155,102 +155,96 @@ function About({ about, setAbout, view }) {
                     (POP.FLO)
                   </a>
                 </p>
-                <h4>What did we learn?</h4>
-                <p>
-                  <ol>
-                    <li>We learned how to handle and visualize complex data</li>
-                    <li>We gained a better knowledge of d3.js and React</li>
-                    <li>
-                      We understood that we should have a Git manager in our
-                      group
-                    </li>
-                    <li>
-                      We understood that it is necessary to spend a reasonable
-                      amount of time on finding a good dataset and understanding
-                      it
-                    </li>
-                  </ol>
-                </p>
-                <h4>What tools did we use</h4>
-                <p>
-                  <ol>
-                    <li>React [5]</li>
-                    <li>d3 [6]</li>
-                    <li>d3-geo [7]</li>
-                    <li>d3-tip [8]</li>
-                    <li>topojson [9]</li>
-                  </ol>
-                </p>
-                <h4>References</h4>
-                <p>
-                  [1] Shneiderman, Ben. "The eyes have it: A task by data type
-                  taxonomy for information visualizations." In Visual Languages,
-                  1996. Proceedings., IEEE Symposium on, pp. 336-343. IEEE,
-                  1996.
-                </p>
-                <p>
-                  [2] Liem, J., Perin, C. and Wood, J. (2020), Structure and
-                  Empathy in Visual Data Storytelling: Evaluating their
-                  Influence on Attitude. Computer Graphics Forum, 39: 277-289.
-                  <a href="https://doi.org/10.1111/cgf.13980" target="_blank">
-                    {" "}
-                    https://doi.org/10.1111/cgf.13980
-                  </a>{" "}
-                  [Accessed 22.03.14]{" "}
-                </p>
-                <p>
-                  [3] Risam, R. (2019). Beyond the migrant “problem”:
-                  Visualizing global migration. Television & New Media, 20(6),
-                  566-580.{" "}
-                </p>
-                <p>
-                  [4] Dominguez, D., Soria, P., González, M., Rodríguez, F. B.,
-                  & Sánchez, Á. (2019, April). A Classification and Data
-                  Visualization Tool Applied to Human Migration Analysis. In
-                  2019 Sixth International Conference on eDemocracy &
-                  eGovernment (ICEDEG) (pp. 256-261). IEEE.{" "}
-                </p>
-                <p>
-                  [5] “React – A JavaScript library for building user
-                  interfaces.”{" "}
-                  <a href="https://reactjs.org/" target="_blank">
-                    https://reactjs.org/{" "}
-                  </a>{" "}
-                  (accessed Mar. 22, 2022).
-                </p>
-                <p>
-                  [6] M. Bostock, “D3.js - Data-Driven Documents.”
-                  <a href="https://d3js.org/" target="_blank">
-                    https://d3js.org/{" "}
-                  </a>{" "}
-                  (accessed Mar. 22, 2022).{" "}
-                </p>
-                <p>
-                  [7] d3-geo. D3, 2022. Accessed: Mar. 22, 2022. [Online].
-                  Available:{" "}
-                  <a href="https://github.com/d3/d3-geo" target="_blank">
-                    https://github.com/d3/d3-geo
-                  </a>
-                </p>
-                <p>
-                  [8] J. Palmer, d3.tip: Tooltips for d3.js visualizations.
-                  2022. Accessed: Mar. 22, 2022. [Online]. Available:{" "}
-                  <a href="https://github.com/caged/d3-tip" target="_blank">
-                    https://github.com/caged/d3-tip
-                  </a>
-                </p>
-                <p>
-                  [9] TopoJSON. TopoJSON, 2022. Accessed: Mar. 22, 2022.
-                  [Online]. Available:{" "}
-                  <a
-                    href="https://github.com/topojson/topojson"
-                    target="_blank"
-                  >
-                    https://github.com/topojson/topojson
-                  </a>
-                </p>
-                {/* would need reference in text */}
-                {/* <p>
+              </p>
+              <h4>What did we learn?</h4>
+              <p>
+                <ol>
+                  <li>We learned how to handle and visualize complex data</li>
+                  <li>We gained a better knowledge of d3.js and React</li>
+                  <li>
+                    We understood that we should have a Git manager in our group
+                  </li>
+                  <li>
+                    We understood that it is necessary to spend a reasonable
+                    amount of time on finding a good dataset and understanding
+                    it
+                  </li>
+                </ol>
+              </p>
+              <h4>What tools did we use?</h4>
+              <p>
+                <ol>
+                  <li>React [5]</li>
+                  <li>d3 [6]</li>
+                  <li>d3-geo [7]</li>
+                  <li>d3-tip [8]</li>
+                  <li>topojson [9]</li>
+                </ol>
+              </p>
+              <h4>References</h4>
+              <p>
+                [1] Shneiderman, Ben. "The eyes have it: A task by data type
+                taxonomy for information visualizations." In Visual Languages,
+                1996. Proceedings., IEEE Symposium on, pp. 336-343. IEEE, 1996.
+              </p>
+              <p>
+                [2] Liem, J., Perin, C. and Wood, J. (2020), Structure and
+                Empathy in Visual Data Storytelling: Evaluating their Influence
+                on Attitude. Computer Graphics Forum, 39: 277-289.
+                <a href="https://doi.org/10.1111/cgf.13980" target="_blank">
+                  {" "}
+                  https://doi.org/10.1111/cgf.13980
+                </a>{" "}
+                [Accessed 22.03.14]{" "}
+              </p>
+              <p>
+                [3] Risam, R. (2019). Beyond the migrant “problem”: Visualizing
+                global migration. Television & New Media, 20(6), 566-580.{" "}
+              </p>
+              <p>
+                [4] Dominguez, D., Soria, P., González, M., Rodríguez, F. B., &
+                Sánchez, Á. (2019, April). A Classification and Data
+                Visualization Tool Applied to Human Migration Analysis. In 2019
+                Sixth International Conference on eDemocracy & eGovernment
+                (ICEDEG) (pp. 256-261). IEEE.{" "}
+              </p>
+              <p>
+                [5] “React – A JavaScript library for building user interfaces.”{" "}
+                <a href="https://reactjs.org/" target="_blank">
+                  https://reactjs.org/{" "}
+                </a>{" "}
+                (accessed Mar. 22, 2022).
+              </p>
+              <p>
+                [6] M. Bostock, “D3.js - Data-Driven Documents.”
+                <a href="https://d3js.org/" target="_blank">
+                  https://d3js.org/{" "}
+                </a>{" "}
+                (accessed Mar. 22, 2022).{" "}
+              </p>
+              <p>
+                [7] d3-geo. D3, 2022. Accessed: Mar. 22, 2022. [Online].
+                Available:{" "}
+                <a href="https://github.com/d3/d3-geo" target="_blank">
+                  https://github.com/d3/d3-geo
+                </a>
+              </p>
+              <p>
+                [8] J. Palmer, d3.tip: Tooltips for d3.js visualizations. 2022.
+                Accessed: Mar. 22, 2022. [Online]. Available:{" "}
+                <a href="https://github.com/caged/d3-tip" target="_blank">
+                  https://github.com/caged/d3-tip
+                </a>
+              </p>
+              <p>
+                [9] TopoJSON. TopoJSON, 2022. Accessed: Mar. 22, 2022. [Online].
+                Available:{" "}
+                <a href="https://github.com/topojson/topojson" target="_blank">
+                  https://github.com/topojson/topojson
+                </a>
+              </p>
+              {/* would need reference in text */}
+              {/* <p>
                   [2] Mazza, R. (2009). Introduction to Information
                   Visualization. London: Springer London, Limited.
                 </p>
@@ -259,7 +253,6 @@ function About({ about, setAbout, view }) {
                   Handbook of Human Factors and Ergonomics (4. Aufl.) ed.
                   Savendy, G. New York: Wiley.
                 </p> */}
-              </p>
             </div>
           </div>
         </>
