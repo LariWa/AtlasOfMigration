@@ -89,6 +89,7 @@ function About({ about, setAbout, view }) {
                   </li>
                 </ul>
               </p>
+              <br />
               <p>
                 We are an international group of KTH students who are motivated
                 to fight misconceptions about the migration pattern and trends.
@@ -106,11 +107,11 @@ function About({ about, setAbout, view }) {
                   DH2321
                 </a>
                 . We got inspirations from research papers about story telling
-                [2] and visualizing of migration data [3-4].
+                [1] and visualizing of migration data [2-3].
               </p>
               <h4> What was our goal?</h4>
               <p>
-                Based on Shnietherman's Mantra [1]: "Overview first, zoom and
+                Based on Shnietherman's Mantra [4]: "Overview first, zoom and
                 filter, details on demand", we set our goal to build a platform
                 which provides a historical overview of migration information,
                 enables users to perform zooming and filtering tasks, and view
@@ -118,7 +119,7 @@ function About({ about, setAbout, view }) {
               </p>
               <h4>Data and API</h4>
               <p>
-                Data and API: We used the world migration data from
+                We used the
                 <a
                   href=" https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2020_ims_stock_by_sex_destination_and_origin.xlsx "
                   target="_blank"
@@ -126,14 +127,14 @@ function About({ about, setAbout, view }) {
                   {" "}
                   The International Migration Stock{" "}
                 </a>
-                and the world population from UN data{" "}
+                [5] and the{" "}
                 <a
                   href=" https://data.un.org/Data.aspx?q=population&d=PopDiv&f=variableID%3a12#PopDiv "
                   target="_blank"
                 >
-                  {" "}
-                  The UN Data{" "}
-                </a>
+                  world population
+                </a>{" "}
+                [6] data from the UN.
               </p>
               <h4>Calculations</h4>
               <p>
@@ -174,21 +175,17 @@ function About({ about, setAbout, view }) {
               <h4>What tools did we use?</h4>
               <p>
                 <ol>
-                  <li>React [5]</li>
-                  <li>d3 [6]</li>
-                  <li>d3-geo [7]</li>
-                  <li>d3-tip [8]</li>
-                  <li>topojson [9]</li>
+                  <li>React [7]</li>
+                  <li>d3 [8]</li>
+                  <li>d3-geo [9]</li>
+                  <li>d3-tip [10]</li>
+                  <li>topojson [11]</li>
                 </ol>
               </p>
               <h4>References</h4>
+
               <p>
-                [1] Shneiderman, Ben. "The eyes have it: A task by data type
-                taxonomy for information visualizations." In Visual Languages,
-                1996. Proceedings., IEEE Symposium on, pp. 336-343. IEEE, 1996.
-              </p>
-              <p>
-                [2] Liem, J., Perin, C. and Wood, J. (2020), Structure and
+                [1] Liem, J., Perin, C. and Wood, J. (2020), Structure and
                 Empathy in Visual Data Storytelling: Evaluating their Influence
                 on Attitude. Computer Graphics Forum, 39: 277-289.
                 <a href="https://doi.org/10.1111/cgf.13980" target="_blank">
@@ -198,47 +195,75 @@ function About({ about, setAbout, view }) {
                 [Accessed 22.03.14]{" "}
               </p>
               <p>
-                [3] Risam, R. (2019). Beyond the migrant “problem”: Visualizing
+                [2] Risam, R. (2019). Beyond the migrant “problem”: Visualizing
                 global migration. Television & New Media, 20(6), 566-580.{" "}
               </p>
               <p>
-                [4] Dominguez, D., Soria, P., González, M., Rodríguez, F. B., &
+                [3] Dominguez, D., Soria, P., González, M., Rodríguez, F. B., &
                 Sánchez, Á. (2019, April). A Classification and Data
                 Visualization Tool Applied to Human Migration Analysis. In 2019
                 Sixth International Conference on eDemocracy & eGovernment
                 (ICEDEG) (pp. 256-261). IEEE.{" "}
               </p>
               <p>
-                [5] “React – A JavaScript library for building user interfaces.”{" "}
+                [4] Shneiderman, Ben. "The eyes have it: A task by data type
+                taxonomy for information visualizations." In Visual Languages,
+                1996. Proceedings., IEEE Symposium on, pp. 336-343. IEEE, 1996.
+              </p>
+              <p>
+                [5] “International Migrant Stock | Population Division.”
+                <a
+                  href=" https://www.un.org/development/desa/pd/content/international-migrant-stock"
+                  target="_blank"
+                >
+                  https://www.un.org/development/desa/pd/content/international-migrant-stock
+                  (accessed Feb. 11, 2022).{" "}
+                </a>
+                (accessed Mar. 23, 2022).
+              </p>
+              <p>
+                [6] “UNdata | record view | Total population, both sexes
+                combined (thousands).”
+                <a
+                  href="https://data.un.org/Data.aspx?q=population&d=PopDiv&f=variableID%3a12#PopDiv"
+                  target="_blank"
+                >
+                  {" "}
+                  https://data.un.org/Data.aspx?q=population&d=PopDiv&f=variableID%3a12#PopDiv
+                </a>
+                (accessed Mar. 23, 2022).
+              </p>
+              <p>
+                [7] “React – A JavaScript library for building user interfaces.”{" "}
                 <a href="https://reactjs.org/" target="_blank">
                   https://reactjs.org/{" "}
                 </a>{" "}
                 (accessed Mar. 22, 2022).
               </p>
               <p>
-                [6] M. Bostock, “D3.js - Data-Driven Documents.”
+                [8] M. Bostock, “D3.js - Data-Driven Documents.”
                 <a href="https://d3js.org/" target="_blank">
                   https://d3js.org/{" "}
                 </a>{" "}
                 (accessed Mar. 22, 2022).{" "}
               </p>
               <p>
-                [7] d3-geo. D3, 2022. Accessed: Mar. 22, 2022. [Online].
+                [9] d3-geo. D3, 2022. Accessed: Mar. 22, 2022. [Online].
                 Available:{" "}
                 <a href="https://github.com/d3/d3-geo" target="_blank">
                   https://github.com/d3/d3-geo
                 </a>
               </p>
               <p>
-                [8] J. Palmer, d3.tip: Tooltips for d3.js visualizations. 2022.
+                [10] J. Palmer, d3.tip: Tooltips for d3.js visualizations. 2022.
                 Accessed: Mar. 22, 2022. [Online]. Available:{" "}
                 <a href="https://github.com/caged/d3-tip" target="_blank">
                   https://github.com/caged/d3-tip
                 </a>
               </p>
               <p>
-                [9] TopoJSON. TopoJSON, 2022. Accessed: Mar. 22, 2022. [Online].
-                Available:{" "}
+                [11] TopoJSON. TopoJSON, 2022. Accessed: Mar. 22, 2022.
+                [Online]. Available:{" "}
                 <a href="https://github.com/topojson/topojson" target="_blank">
                   https://github.com/topojson/topojson
                 </a>
