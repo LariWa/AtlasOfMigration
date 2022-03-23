@@ -335,14 +335,15 @@ net migration: 2 -->  immi - emi
         onClick={() => {
           if (animate) {
             stop();
-            document.getElementById("PlayButton").innerHTML = "⏵︎";
+            document.getElementById("playIcon").src = "play-solid.svg";
           } else {
             play();
-            document.getElementById("PlayButton").innerHTML = "⏹︎";
+            document.getElementById("playIcon").src = "stop-solid.svg";
           }
         }}
       >
-        ⏵︎
+        <img id="playIcon" src="play-solid.svg" />
+
         {/* {playing && "⏹︎"}
         {!playing &&} */}
       </Button>
