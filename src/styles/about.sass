@@ -1,0 +1,79 @@
+@import base
+
+.about
+  margin: 0
+  padding: 0
+  z-index: 100
+  position: absolute
+  top: 10.2vh
+  right: 4vw
+  background: none
+  font-size: $text-size
+  font-family: $krona-one
+  box-shadow: none
+  text-align: right
+  display: flex
+  text-shadow: 0px 0px 22px rgba(8, 12, 50, 0.8)
+  div
+    margin-left: auto
+  span
+    font-size: 12px
+    font-family: $roboto
+  img
+    height: 35px
+    float: right
+    padding-left: 10px
+    filter: invert(99%) sepia(6%) saturate(214%) hue-rotate(197deg) brightness(113%) contrast(87%)
+    text-shadow: 0px 0px 22px rgba(8, 12, 50, 0.8)
+  &:hover
+    color: #BD07DB
+    img
+      filter: invert(21%) sepia(83%) saturate(5797%) hue-rotate(286deg) brightness(91%) contrast(115%)
+
+#aboutButton-0
+  &:hover
+    color: #00DFF0
+    img
+      filter: invert(74%) sepia(88%) saturate(2540%) hue-rotate(133deg) brightness(98%) contrast(101%)
+
+#aboutButton-1
+  &:hover
+    color: #F29F05
+    img
+      filter: invert(77%) sepia(79%) saturate(5298%) hue-rotate(13deg) brightness(113%) contrast(96%)
+
+.blur
+  width: 100vw
+  height: 100vh
+  position: absolute
+  top: 0
+  left: 0
+  z-index: 90
+  backdrop-filter: $backdrop-filter
+
+.about-container
+  position: absolute
+  z-index: 100
+  top: 9vh
+  left: 10vw
+  width: 80vw
+  a
+    color: #00DFF0
+  .back
+    margin-bottom: 10px
+    width: 20vw
+    margin-left: 60vw
+    &:hover
+      background: $blue
+  .about-content
+    background: linear-gradient(180deg, #0F354A 0%, #0B2235 100%)
+    box-shadow: 0px 0px 22px rgba(8, 12, 29, 0.39)
+    color: $text-color
+    overflow-y: scroll
+    padding: 0vh 5vw
+    height: 80vh
+    h4
+      padding-top: 22px
+    p
+      &:last-of-type
+        padding-bottom: 22px
