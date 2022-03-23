@@ -51,26 +51,26 @@ function SideBar({
     setDetailView(model.countryID != 900);
   }, [view, year, countryID, calculation]);
 
-  const searchCountry = (e) => {
-    if (e.key === "Enter") {
-      if (nbrChoices === 1) {
-        setInput(selCountries[0].name);
-        setDetailView(true);
-        setCountryID(selCountries[0].id);
-        model.setCountryID(selCountries[0].id);
-      }
-    }
-  };
+  // const searchCountry = (e) => {
+  //   if (e.key === "Enter") {
+  //     if (nbrChoices === 1) {
+  //       setInput(selCountries[0].name);
+  //       setDetailView(true);
+  //       setCountryID(selCountries[0].id);
+  //       model.setCountryID(selCountries[0].id);
+  //     }
+  //   }
+  // };
 
-  const onInput = (e) => {
-    setInput(e.target.value);
-
-    const filteredInput = CountryNameID.filter(
-      (x) => x.name.toLowerCase().indexOf(input.toLowerCase()) > -1
-    );
-    setNbrChoices(filteredInput.length);
-    setSelCountries(filteredInput);
-  };
+  // const onInput = (e) => {
+  //   setInput(e.target.value);
+  //
+  //   const filteredInput = CountryNameID.filter(
+  //     (x) => x.name.toLowerCase().indexOf(input.toLowerCase()) > -1
+  //   );
+  //   setNbrChoices(filteredInput.length);
+  //   setSelCountries(filteredInput);
+  // };
 
   /*  I need to check so this is not clicking outside   */
   const changeView = (e) => {
@@ -220,31 +220,44 @@ function SideBar({
         ) : (
           ""
         )}
-        <ImmigrationButton name={view} value="0" onClick={changeView} className="immigration-icon">
+        <ImmigrationButton
+          name={view}
+          value="0"
+          onClick={changeView}
+          className="immigration-icon"
+        >
           <img src={immigrationIcon} />
           <br />
-          {/*Show */}
-          Immigration
-          <br />
+          Show Immigration
           <br />
         </ImmigrationButton>
-        <MigrationButton name={view} value="2" onClick={changeView} className="migration-icon">
+        <MigrationButton
+          name={view}
+          value="2"
+          onClick={changeView}
+          className="migration-icon"
+        >
           <img src={migrationIcon} />
           <br />
-          {/*Show*/}Net Migration
+          Show Net Migration
+          <br />
         </MigrationButton>
-        <EmigrationButton name={view} value="1" onClick={changeView} className="emigration-icon">
+        <EmigrationButton
+          name={view}
+          value="1"
+          onClick={changeView}
+          className="emigration-icon"
+        >
           <img src={emigrationIcon} />
           <br />
-          {/*Show*/}Emigration
-          <br />
+          Show Emigration
           <br />
         </EmigrationButton>
       </div>
 
       {view != 3 && (
         <div className="calculationMode">
-          <h2>{/*Choose calculation mode:*/}</h2>
+          <h2>Choose calculation mode:</h2>
           <CalculationButton
             name={calculation.toString()}
             onClick={changeCalculation}

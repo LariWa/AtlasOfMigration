@@ -50,7 +50,7 @@ function TimeLine({ model, setYear, view, year }) {
   /*
 view: immigration: 0  --> origin = WORLD
 emigration 1 --> destination = WORLD
-net migration: 2 -->  immi - emi 
+net migration: 2 -->  immi - emi
 */
 
   const getMigration = () => {
@@ -100,10 +100,10 @@ net migration: 2 -->  immi - emi
 
   /* adapt to window size */
   const dimensions = {
-    width: useWindowDimensions().width * 0.4,
+    width: useWindowDimensions().width * 0.45,
     height: useWindowDimensions().height * 0.17,
   };
-  const margin = { top: 15, left: 45, bottom: 25, right: 25 };
+  const margin = { top: 15, left: 50, bottom: 25, right: 25 };
   const width = dimensions.width;
   const height = dimensions.height;
 

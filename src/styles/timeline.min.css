@@ -50,7 +50,8 @@ button {
   border-radius: 14px;
   color: #eeeeee;
   bottom: -98vh;
-  left: 30vw;
+  left: 35vw;
+  width: 55vw;
 }
 #timeline rect {
   cursor: pointer;

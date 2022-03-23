@@ -45,6 +45,8 @@ function Legend({ enter, loading }) {
       .text("Filtered data")
       .style("font-size", "13px")
       .attr("alignment-baseline", "middle");
+
+    svg.attr("transform", `translate(0,30)`);
   }, []);
 
   return (

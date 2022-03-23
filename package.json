@@ -2,6 +2,7 @@
   "name": "atlas_migration",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://gits-15.sys.kth.se/pages/neander/IVIS_Project/",
   "dependencies": {
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
