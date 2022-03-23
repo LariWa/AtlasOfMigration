@@ -335,10 +335,10 @@ net migration: 2 -->  immi - emi
         onClick={() => {
           if (animate) {
             stop();
-            document.getElementById("PlayButton").innerHTML = "⏹︎";
+            document.getElementById("PlayButton").innerHTML = "⏵︎";
           } else {
             play();
-            document.getElementById("PlayButton").innerHTML = "⏵︎";
+            document.getElementById("PlayButton").innerHTML = "⏹︎";
           }
         }}
       >
