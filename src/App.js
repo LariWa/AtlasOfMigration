@@ -134,6 +134,7 @@ function App() {
                 setYear={setYear}
                 view={view}
                 countryId={countryID}
+                isPopulationView={isPopulationView}
               />
               <WorldMap
                 filterValues={sliderValue}

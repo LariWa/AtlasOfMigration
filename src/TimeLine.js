@@ -9,6 +9,8 @@ import d3tip from "d3-tip";
 import { timeParse } from "d3";
 import { getByLabelText } from "@testing-library/react";
 import { getThemeProps } from "@mui/system";
+import playSolid from "./styles/icons/playSolid.svg";
+import stopSolid from "./styles/icons/stopSolid.svg";
 const d3 = {
   ...d3module,
   tip: d3tip,
@@ -38,7 +40,7 @@ const unDef = "DimGray";
 //immigration = 0, emmigration 1, net migration=2, start=3
 const colors = [immiColor, emiColor, netColor, unDef];
 
-function TimeLine({ model, setYear, view, year, countryId }) {
+function TimeLine({ model, setYear, view, year, countryId, isPopulationView }) {
   //const [playing, setPlaying] = useState(false);
   const svgContainerRef = useRef(null);
   const [countryID, setCountryID] = useState(model.countryID);
@@ -58,21 +60,30 @@ net migration: 2 -->  immi - emi
 */
 
   const getMigration = () => {
+    //console.log("popview :", isPopulationView);
     let obj = {};
     let origin, destination;
     origin = destination = WORLD;
+
+    /* 3 : start, only --> WORLD to WORLD */
     if (view) {
-      if (view == 0 || view == 1) {
-        if (view == 0) destination = model.countryID;
-        if (view == 1) origin = model.countryID;
+      if (view == 0 || view == 1 || view == 3) {
+        if (view == 0 || view == 3) destination = model.countryID;
+        if (view == 1 || view == 3) origin = model.countryID;
+        /*  TODO get total or percentage values  */
+
+        //obj = model.getImigrationOverPopulation(countryId)
         obj = model.getMigrationValueAll(origin, destination);
       }
       if (view == 2)
         for (let i = 1990; i <= 2020; i += 5) {
           let key = i.toString();
+
+          /*  TODO get total or percentage values  */
+          //obj[key] = model.getNetMigrationValuePopulation(countryId);
           obj[key] = model.getNetMigrationValue(model.getCountryId(), i);
         }
-      if (view === 3) obj = model.getMigrationValueAll(origin, destination);
+
       if (obj && obj != "undefined" && Object.keys(obj).length > 0) {
         delete obj.DestinationID;
         delete obj.DestinationName;
@@ -200,6 +211,13 @@ net migration: 2 -->  immi - emi
           return timeFormat(el) != `${year}` ? "0.3" : "1";
         });
 
+      /* change year on click axis */
+      d3.select("#bottom")
+        .selectAll(".tick")
+        .on("click", (d, i) => {
+          updateYear(timeFormat(i));
+        });
+
       /* animate bars */
       svgEl
         .selectAll("rect")
@@ -215,9 +233,6 @@ net migration: 2 -->  immi - emi
         .delay((d, i) => {
           return i * del;
         });
-
-      /* highlight year tick */
-      //  showSelect();
 
       /* tooltip */
       var arrowTip = d3
@@ -304,18 +319,19 @@ net migration: 2 -->  immi - emi
         size="small"
         onClick={() => {
           if (animate) {
+            console.log();
             stop();
-            document.getElementById("playIcon").src = "play-solid.svg";
+            document.getElementById("playIcon").src = { playSolid };
           } else {
             play();
-            document.getElementById("playIcon").src = "stop-solid.svg";
+            document.getElementById("playIcon").src = { stopSolid };
           }
         }}
       >
         <img
           style={{ width: 30 + "px", height: "30px" }}
           id="playIcon"
-          src="play-solid.svg"
+          src={playSolid}
         />
 
         {/* {playing && "⏹︎"}

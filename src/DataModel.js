@@ -93,7 +93,6 @@ class DataModel {
       return this.migrationData.find(
         (x) => x.DestinationID == destination && x.OriginID == origin
       );
-    //return this.migrationData.find(x => x.DestinationID == destination && x.OriginID == origin)[0];
   }
 
   /*  Migration from origin to destination for one year.
@@ -175,6 +174,7 @@ class DataModel {
       .sort(this.sortBy("value"))
       .slice(0, this.numberOfArrows);
   }
+
   //get NetRatio
   getNetRatioMigrationValue(country, year) {
     //TODO decide on ratio or substract
@@ -230,6 +230,7 @@ class DataModel {
     // as the value is presented in thousands;
     return 0;
   }
+
   getImigrationOverPopulation(country, year) {
     // Emigration value / popualtion value
     if (!year) year = this.year;
@@ -241,8 +242,8 @@ class DataModel {
     // as the value is presented in thousands
     return 0;
   }
-  //get emigration value for specified country
 
+  //get emigration value for specified country
   getEmigrationValue(origin, year) {
     if (!year) year = this.year;
     if (this.emigrationData)
