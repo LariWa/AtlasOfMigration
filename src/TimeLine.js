@@ -323,11 +323,11 @@ net migration: 2 -->  immi - emi
         onClick={() => {
           if (animate) {
             stop();
-            document.getElementById("playIcon").src = { playSolid };
+            document.getElementById("playIcon").src = "playSolid.svg";
             document.getElementById("playIcon").alt = "PLAY";
           } else {
             play();
-            document.getElementById("playIcon").src = { stopSolid };
+            document.getElementById("playIcon").src = "stopSolid.svg";
             document.getElementById("playIcon").alt = "STOP";
           }
         }}
