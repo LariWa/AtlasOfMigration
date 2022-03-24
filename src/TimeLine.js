@@ -11,6 +11,9 @@ import { getByLabelText } from "@testing-library/react";
 import { getThemeProps } from "@mui/system";
 import playSolid from "./styles/icons/playSolid.svg";
 import stopSolid from "./styles/icons/stopSolid.svg";
+//let playSolid = require("./styles/icons/playSolid.svg");
+//let stopSolid = require("./styles/icons/stopSolid.svg");
+
 const d3 = {
   ...d3module,
   tip: d3tip,
@@ -319,12 +322,13 @@ net migration: 2 -->  immi - emi
         size="small"
         onClick={() => {
           if (animate) {
-            console.log();
             stop();
             document.getElementById("playIcon").src = { playSolid };
+            document.getElementById("playIcon").alt = "PLAY";
           } else {
             play();
             document.getElementById("playIcon").src = { stopSolid };
+            document.getElementById("playIcon").alt = "STOP";
           }
         }}
       >
@@ -332,6 +336,7 @@ net migration: 2 -->  immi - emi
           style={{ width: 30 + "px", height: "30px" }}
           id="playIcon"
           src={playSolid}
+          alt="PLAY"
         />
 
         {/* {playing && "⏹︎"}
