@@ -111,33 +111,8 @@ net migration: 2 -->  immi - emi
   const width = dimensions.width;
   const height = dimensions.height;
 
-  /* diminish op of bars and ticks of not selected year */
-  const showSelect = () => {
-    // console.log("show: ", year);
-    document.querySelectorAll(".time").forEach((element) => {
-      if (element.id != year) {
-        element.style.opacity = 0.4;
-      }
-    });
-    /* this only works once then id is empty  */
-    document.querySelectorAll(".tick").forEach((element) => {
-      // console.log(element.id);
-      // console.log(`t_${year}`);
-      if (element.id != `t_${year}`) {
-        element.style.opacity = 0.4;
-      }
-    });
-  };
-
-  const showUndefined = (x) => {
-    d3.select("#bottom").select(`#t_${x}`).attr("color", unDef);
-  };
-
   useEffect(() => {
-    d3.selectAll(".d3-tip").remove(); //remove all tooltips --> fixes bug
-
     data = getMigration();
-
     if (data) {
       if (view) setColor(colors[view]);
 
@@ -168,7 +143,7 @@ net migration: 2 -->  immi - emi
       /* clear svg content before adding new elements */
       const svgEl = d3.select(svgContainerRef.current);
       svgEl.selectAll("*").remove();
-
+      d3.selectAll(".d3-tip").remove(); //remove all tooltips --> fixes bug
       svgEl.attr("viewBox", [0, 0, width, height]);
 
       /* x-axis */
@@ -187,19 +162,6 @@ net migration: 2 -->  immi - emi
         .attr("id", "bottom")
         .style("font", "14px Roboto");
       svgEl.select("#bottom").call(xAxis);
-
-      /* quick and ugly remove first and last tick + set ID*/
-      let elems = document.getElementById("bottom").children;
-      elems[9].remove();
-      elems[1].remove();
-      elems[1].id = "t_1990";
-      elems[2].id = "t_1995";
-      elems[3].id = "t_2000";
-      elems[4].id = "t_2005";
-      elems[5].id = "t_2010";
-      elems[6].id = "t_2015";
-      elems[7].id = "t_2020";
-      //elems[0].remove();  //-------> UNCOMMENT TO REMOVE X-AXIS
 
       /*  y-axis */
       const yAxis = d3.axisLeft(yScale).ticks(3).tickFormat(d3.format(".2s"));
@@ -226,23 +188,19 @@ net migration: 2 -->  immi - emi
           return height - yScale(0) - margin.bottom;
         })
         .attr("width", 35) //overridden by css?
-        .attr("opacity", (d) => (year != timeFormat(d.date) ? "0.3" : "1")) //overridden?
+        .attr("opacity", (d) => (year != timeFormat(d.date) ? "0.3" : "1"))
         .style("fill", colors[view]);
 
+      removeTicks();
+
+      /* highlight right year in ticks */
+      d3.select("#bottom")
+        .selectAll(".tick")
+        .attr("opacity", (el) => {
+          return timeFormat(el) != `${year}` ? "0.3" : "1";
+        });
+
       /* animate bars */
-
-      // if (animate)
-      //   svgEl
-      //     .selectAll("rect")
-      //     .attr("y", (d) => yScale(d.total) - height + margin.bottom)
-      //     .attr("height", (d) => {
-      //       if (d.total === -1) {
-      //         showUndefined(timeFormat(d.date));
-      //       }
-      //       return height - margin.bottom - yScale(d.total);
-      //     });
-      // else
-
       svgEl
         .selectAll("rect")
         .transition()
@@ -257,6 +215,9 @@ net migration: 2 -->  immi - emi
         .delay((d, i) => {
           return i * del;
         });
+
+      /* highlight year tick */
+      //  showSelect();
 
       /* tooltip */
       var arrowTip = d3
@@ -285,8 +246,19 @@ net migration: 2 -->  immi - emi
     }
   }, [data, view, color, countryId]);
 
-  /* highlight year tick */
-  showSelect();
+  /* --------- helpers ------------------    */
+
+  const showUndefined = (x) => {
+    d3.select("#bottom").select(`#t_${x}`).attr("color", unDef);
+  };
+
+  /* quick and ugly remove first and last tick */
+  const removeTicks = () => {
+    let elems = document.getElementById("bottom").children;
+    elems[9].remove();
+    elems[1].remove();
+    //elems[0].remove();  //-------> UNCOMMENT TO REMOVE X-AXIS
+  };
 
   const play = () => {
     if (!animate) {
@@ -305,10 +277,8 @@ net migration: 2 -->  immi - emi
     del = 50;
     animate = null;
   };
-  function getLabel() {
-    // if (animate) return "&#x23F9";
-    // else return &#9658;;
-  } // position is set with css
+
+  // position is set with css
   return (
     <div id="timelineContainer">
       {view == 2 && countryId == 900 ? (
