@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/static/css/main.c80b3d72.css",
-    "main.js": "/static/js/main.6f9e8d36.js",
-    "static/js/787.70e14c31.chunk.js": "/static/js/787.70e14c31.chunk.js",
-    "static/media/background.png": "/static/media/background.fb6921ff28d3129829d2.png",
-    "static/media/NetMigrationIcon.svg": "/static/media/NetMigrationIcon.63ea3a69feb0d9320ea606eadccba8a3.svg",
-    "static/media/ImmigrationIcon.svg": "/static/media/ImmigrationIcon.5f446546c8cad751f1a4fd282cf30ede.svg",
-    "static/media/AtlasOfMigration.svg": "/static/media/AtlasOfMigration.afbcf56e4d5df4d040a0cf30b6b6a703.svg",
-    "static/media/EmigrationIcon.svg": "/static/media/EmigrationIcon.b54ea023fe0636950a33fabffcbe6923.svg",
-    "index.html": "/index.html",
-    "static/media/playSolid.svg": "/static/media/playSolid.43f7f881d49eaccffc7568cb39a268db.svg",
-    "static/media/stopSolid.svg": "/static/media/stopSolid.00c97f7763f4e3706b36cea6604a7a85.svg",
-    "main.c80b3d72.css.map": "/static/css/main.c80b3d72.css.map",
-    "main.6f9e8d36.js.map": "/static/js/main.6f9e8d36.js.map",
-    "787.70e14c31.chunk.js.map": "/static/js/787.70e14c31.chunk.js.map"
+    "main.css": "/AtlasOfMigration/static/css/main.3b7521d6.css",
+    "main.js": "/AtlasOfMigration/static/js/main.39cc5c01.js",
+    "static/js/787.70e14c31.chunk.js": "/AtlasOfMigration/static/js/787.70e14c31.chunk.js",
+    "static/media/background.png": "/AtlasOfMigration/static/media/background.fb6921ff28d3129829d2.png",
+    "static/media/NetMigrationIcon.svg": "/AtlasOfMigration/static/media/NetMigrationIcon.63ea3a69feb0d9320ea606eadccba8a3.svg",
+    "static/media/ImmigrationIcon.svg": "/AtlasOfMigration/static/media/ImmigrationIcon.5f446546c8cad751f1a4fd282cf30ede.svg",
+    "static/media/AtlasOfMigration.svg": "/AtlasOfMigration/static/media/AtlasOfMigration.afbcf56e4d5df4d040a0cf30b6b6a703.svg",
+    "static/media/EmigrationIcon.svg": "/AtlasOfMigration/static/media/EmigrationIcon.b54ea023fe0636950a33fabffcbe6923.svg",
+    "index.html": "/AtlasOfMigration/index.html",
+    "static/media/playSolid.svg": "/AtlasOfMigration/static/media/playSolid.43f7f881d49eaccffc7568cb39a268db.svg",
+    "static/media/stopSolid.svg": "/AtlasOfMigration/static/media/stopSolid.00c97f7763f4e3706b36cea6604a7a85.svg",
+    "main.3b7521d6.css.map": "/AtlasOfMigration/static/css/main.3b7521d6.css.map",
+    "main.39cc5c01.js.map": "/AtlasOfMigration/static/js/main.39cc5c01.js.map",
+    "787.70e14c31.chunk.js.map": "/AtlasOfMigration/static/js/787.70e14c31.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c80b3d72.css",
-    "static/js/main.6f9e8d36.js"
+    "static/css/main.3b7521d6.css",
+    "static/js/main.39cc5c01.js"
   ]
 }
