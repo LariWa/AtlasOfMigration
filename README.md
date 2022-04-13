@@ -1,21 +1,11 @@
- Build and deploy to https://gits-15.sys.kth.se/pages/neander/IVIS_Project/
+# Atlas of Migration
+## Visualization of Migration Data over time
+A website which visualizes the Migration Data of the UN on a world map over time. D3.js and React were used for the implementation.  
+This project was developed in cooperation with Fatemeh Bakhshoudeh, Navya Sanjna Joshi, Anna Neander and Andrea Maderthaner during the course *Information Visualization* at KTH from February to March 2022.  
+The motivation of this project was to fight misconceptions about the migration pattern and trends. Our website represents historical migration information of the world and each country in detail (from 1990-2020) and can be used for explorative analysis.   
+During this project I learned to use D3 and React, as well as how to handle and visualize big datasets.  
+Try it out: https://lariwa.github.io/AtlasOfMigration/
 
-#### `npm run build`
-#### `npm run deploy`
+![Image2](https://user-images.githubusercontent.com/40071882/163177223-9bbe9d4d-d091-4426-ad95-57f45a6910f2.PNG)
 
-
-In the project directory, you can run:
-
-#### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-#### `npm test`
-
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![Image](https://user-images.githubusercontent.com/40071882/163177230-5e336d0b-ffa7-49df-96c5-1056703273d2.PNG)
